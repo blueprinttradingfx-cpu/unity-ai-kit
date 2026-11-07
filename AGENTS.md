@@ -5,7 +5,7 @@ This file is read by any AI tool (Claude, Codex, Gemini, Cursor, Copilot, local 
 Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per project.
 
 ## Start every session
-1. Read `ai/session-state.md` (the project/work board and handoff). Before asking any other question, ask the user for `session_username`; set the board's Session username and use it as Author when claiming or updating tasks.
+1. Ask the user for your `session_username` (each session is a separate agent; do not reuse a name from the file). Then read `ai/session-state.md` (Ready and In Progress tasks only). Blocked, done and backlog tasks are in `ai/blocked-tasks.md`, `ai/done-tasks.md` and `ai/backlog-tasks.md`. Before you start a task on the board, set its Author to your `session_username` and Status to `In Progress`. Never take a task owned by another name.
 2. Read `ai/project-brief.md` (what the game is, constraints).
 3. Before touching a topic, read its rule file (table below).
 4. Before finishing, follow `ai/definition-of-done.md` and update `ai/session-state.md`.
