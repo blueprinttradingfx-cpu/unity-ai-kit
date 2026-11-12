@@ -1,5 +1,6 @@
 # Copy to .github/workflows/dotnet-validation.yml.
-# Configure DOTNET_PROJECT_PATHS and/or DOTNET_TEST_PROJECT_PATHS as newline-separated repository variables.
+# Configure DOTNET_PROJECT_PATHS and optional DOTNET_TEST_PROJECT_PATHS as newline-separated repository variables.
+# DOTNET_SDK_VERSION defaults to 8.0.x; set it to the SDK required by your standalone .NET projects.
 # Keep Unity-generated .sln/.csproj files out of these lists: Unity code compiles in the Editor workflow.
 name: .NET Validation
 
@@ -18,12 +19,14 @@ concurrency:
 
 jobs:
   dotnet:
-    name: .NET build, test and format
+    name: .NET build, test, analyzers and dependency audit
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DOTNET_PROJECT_PATHS: ${{ vars.DOTNET_PROJECT_PATHS }}
       DOTNET_TEST_PROJECT_PATHS: ${{ vars.DOTNET_TEST_PROJECT_PATHS }}
+      DOTNET_SDK_VERSION: ${{ vars.DOTNET_SDK_VERSION || '8.0.x' }}
+      DOTNET_RUN_VULNERABILITY_AUDIT: ${{ vars.DOTNET_RUN_VULNERABILITY_AUDIT || 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -43,9 +46,9 @@ jobs:
         if: steps.projects.outputs.configured == 'true'
         uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
 
-      - name: Restore, build and verify formatting
+      - name: Restore, build, analyze and verify formatting
         if: steps.projects.outputs.configured == 'true'
         shell: bash
         run: |
@@ -57,19 +60,18 @@ jobs:
               echo "::error::Configured .NET project does not exist: $project"
               exit 1
             fi
-
             case "$project" in
-              *.sln|*.csproj) ;;
-              *)
-                echo "::error::Expected a .sln or .csproj path: $project"
-                exit 1
-                ;;
+              *.sln|*.slnx|*.csproj) ;;
+              *) echo "::error::Expected a .sln, .slnx or .csproj path: $project"; exit 1 ;;
             esac
-
             echo "::group::Validate $project"
             dotnet restore "$project"
             dotnet build "$project" --configuration Release --no-restore
             dotnet format whitespace "$project" --verify-no-changes --no-restore
+            dotnet format analyzers "$project" --verify-no-changes --no-restore
+            if [[ "$DOTNET_RUN_VULNERABILITY_AUDIT" == "true" ]]; then
+              dotnet list "$project" package --vulnerable --include-transitive
+            fi
             echo "::endgroup::"
           done <<< "$DOTNET_PROJECT_PATHS"
 
