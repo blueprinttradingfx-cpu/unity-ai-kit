@@ -22,17 +22,17 @@ Author = the agent that owns the task, `owner` = the human owner. Every task use
 | Status | Task | Author | Notes / next step |
 |---|---|---|---|
 | In Progress | KIT-001 — Harden the reusable agent workflow and verification safeguards | `gpt` | Implemented task lifecycle, safe claim/handoff guidance, and evidence-based completion checks. Awaiting independent review. |
-| In Progress | KIT-002 — Add Unity GitHub Actions and repository quality standards | `gpt` | Add configurable GameCI test/build templates, license/fork safety guidance, repository hygiene checks, meta integrity validation, and recommended branch/security/release checks. Keep templates inactive in the kit repository. |
+| In Progress | KIT-002 — Add Unity GitHub Actions and repository quality standards | `gpt` | Implemented configurable GameCI test/build and repository-quality templates, metadata validator, EditorConfig, Dependabot and PR templates, plus CI/CD guidance. Awaiting full-diff validation and independent review. |
 
 ## Project context
 - **Branch / build:** `gpt/harden-agent-workflow` / no Unity project in this reusable guidance repository.
 - **Last known good build:** Not applicable; documentation and workflow-template kit.
 
 ## Handoff
-- **In progress (exact stopping point):** KIT-001 is implemented on `gpt/harden-agent-workflow` and included in draft PR #1. KIT-002 has just been claimed; no CI template files have been written yet.
-- **Next concrete step:** Add reusable, inactive Unity CI and repository-quality workflow examples plus setup/security guidance; inspect the complete PR diff and validate YAML/script syntax.
+- **In progress (exact stopping point):** KIT-001 and KIT-002 changes are on `gpt/harden-agent-workflow` and included in draft PR #1. Added `ai/github-workflows.md`, `examples/workflows/unity-ci.yml`, `examples/workflows/repository-quality.yml`, `examples/scripts/validate_unity_meta.py`, `examples/Unity.editorconfig`, `examples/github/dependabot.yml`, and `examples/github/PULL_REQUEST_TEMPLATE.md`; updated README, AGENTS, and definition of done.
+- **Next concrete step:** Inspect the complete PR diff, validate the workflow templates with actionlint/YAML tooling if available, verify file references and action SHA pins, then request an independent review before marking PR #1 ready.
 - **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
-- **Verified (ran it):** Read current repository instructions/testing/Git rules and existing example Git attributes/ignore files. Checked current GameCI v4 action inputs and retrieved full commit SHAs for the pinned actions.
-- **Not verified (human must check on device/editor):** No actual Unity project exists in this kit repository, so CI templates cannot execute Unity here. They require project-specific Unity version/path/build target and GitHub license secrets. Independent review of PR #1 remains pending.
-- **Owner decisions waiting:** None for the template/documentation scope; consumers must select their platform, license type, and release policy when adopting the templates.
+- **Verified (ran it):** Retrieved current GameCI v4 action inputs and pinned full commit SHAs for checkout, cache, upload-artifact, unity-test-runner, and unity-builder. Ran the metadata validator against temporary valid, missing-sidecar, and duplicate-GUID fixtures; valid fixture passed and both fault fixtures failed as expected. Confirmed the new examples are under `examples/` and are not active workflows in this kit.
+- **Not verified (human must check on device/editor):** No actual Unity project exists in this kit repository, so Unity CI templates cannot execute here. Consumer setup must supply the actual project path, platform, Unity license secrets, and any protected signing configuration. Full actionlint run against the workflow templates and independent review are still pending.
+- **Owner decisions waiting:** Consumer projects must select their platform, license type, and release policy when adopting the templates; no choice is needed for this reusable kit change.
 - **Bug / regression watch:** Do not activate Unity workflows in this master kit; keep examples under `examples/` so they only run after a game project copies/configures them. Never expose Unity or signing secrets to fork PRs.
