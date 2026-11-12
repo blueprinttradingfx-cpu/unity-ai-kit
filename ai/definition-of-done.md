@@ -21,6 +21,18 @@ For each command/test/build, record:
 
 Do not invent a successful result from a command that was not run. For documentation-only changes, state the checks performed (for example: links and referenced paths checked, headings/code fences reviewed, and diff inspected); Unity compilation is not applicable.
 
+## Unity and CI checks
+- [ ] Unity Editor version matches `ProjectSettings/ProjectVersion.txt`; report the exact version.
+- [ ] EditMode tests run for changed logic/data; PlayMode tests run for affected scene/gameplay integration where applicable.
+- [ ] The relevant target build succeeds, or is explicitly marked not run with the reason and a precise human check.
+- [ ] Repository-quality checks pass: diff whitespace, workflow lint, and Unity metadata sidecar/GUID validation where configured.
+- [ ] Package manifest and lockfile changes are reviewed together; no unrequested package upgrades.
+- [ ] CI artifacts/logs are linked; state skipped jobs (including fork-PR Unity jobs) rather than describing them as passed.
+- [ ] Signing/release checks use protected environments; no signing secrets are available to ordinary PR jobs.
+- [ ] Real-device checks are recorded separately; a CI build is not evidence of device performance or UX.
+
+See `ai/github-workflows.md` for the recommended PR, main-branch, nightly, and release pipeline.
+
 ## Review
 - [ ] Review the complete diff, not only the edited snippets.
 - [ ] For changes to architecture, save data, security, build/release, or agent safety/workflow rules, request an independent review when another reviewer is available. If unavailable, mark the review as pending; do not call a self-review independent.
