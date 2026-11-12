@@ -8,7 +8,7 @@ A task is done only when every applicable line is true. The AI states which line
 - [ ] No new console errors/warnings introduced (state what was checked; do not imply a console check if no Editor was run).
 - [ ] No hard rule in `AGENTS.md` broken; no `.meta`/scene/prefab hazards.
 - [ ] Tuning numbers are in data, not code.
-- [ ] Logic changes have a test (or a stated reason there is none).
+- [ ] Logic changes have a test (or a stated reason there is none); project-specific catalog/save/config validators run where relevant.
 - [ ] Diff is small and explained in two sentences.
 - [ ] Task ID, owner, status, next step, and verification evidence are consistent across the board and handoff.
 
@@ -26,7 +26,7 @@ Do not invent a successful result from a command that was not run. For documenta
 - [ ] Unity Editor import/compile succeeds using the exact project Editor version; EditMode tests run for changed logic/data; PlayMode tests run for affected scene/gameplay integration where applicable.
 - [ ] Standalone SDK-style .NET projects (if present/configured) restore and build; test projects run; configured formatting/analyzer checks pass. Do not use generic `dotnet build` as a substitute for Unity Editor compilation.
 - [ ] The relevant target build succeeds, or is explicitly marked not run with the reason and a precise human check.
-- [ ] Repository-quality checks pass: diff whitespace, workflow lint, and Unity metadata sidecar/GUID validation where configured.
+- [ ] Repository-quality checks pass: diff whitespace, actionlint, tracked JSON/asmdef/asmref/YAML/Python/JavaScript syntax, conflict-marker scan, and Unity metadata sidecar/GUID validation where configured. Unity scene/prefab YAML is not generically parsed.
 - [ ] Package manifest and lockfile changes are reviewed together; no unrequested package upgrades.
 - [ ] CI artifacts/logs are linked; state skipped jobs (including fork-PR Unity jobs) rather than describing them as passed.
 - [ ] Signing/release checks use protected environments; no signing secrets are available to ordinary PR jobs.
