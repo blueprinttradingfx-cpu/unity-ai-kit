@@ -53,7 +53,8 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
         for environment in ("unity-pr-validation", "unity-ci", "release"):
             self.assertIn("`" + environment + "`", guide)
         self.assertIn("required reviewers", guide.lower())
-        self.assertIn("repository-wide secrets", guide.lower())
+        self.assertIn("repository-level or organization-level secrets", guide.lower())
+        self.assertIn("prevent self-review", guide.lower())
 
 
 if __name__ == "__main__":

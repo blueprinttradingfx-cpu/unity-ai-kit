@@ -14,6 +14,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 ## Scope
 ### In scope
 - Correct merged task/session records for KIT-001 through KIT-006.
+- Protect Unity license credentials from unreviewed same-repository PR code and document required environment setup.
 - Add phase readiness, integration ownership, bounded concurrency, and tracker ownership rules.
 - Restrict manual licensed Unity CI dispatch to the default branch.
 - Improve standalone .NET SDK configurability, analyzer formatting, and optional NuGet vulnerability audit.
