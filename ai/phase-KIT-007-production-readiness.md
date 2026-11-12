@@ -46,7 +46,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 
 ### KIT-007-WP3 — Validator regression tests
 - Owner: Gpt
-- Branch: `gpt/kit-007-production-readiness`
+- Branch: `gpt/kit-007-ci-secret-isolation` (tests added after PR #4 merge)
 - File/system boundary: `tests/`; validator scripts are exercised but not modified unless a failing test proves a defect.
 - Acceptance checks:
   - [ ] Tests cover valid metadata, missing/orphan metadata, malformed/duplicate GUIDs.
@@ -54,7 +54,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [ ] Test suite uses temporary repositories and does not mutate a consumer project.
 - Sub-items:
   - [x] Add unittest harness.
-  - [ ] Execute suite and record exact results.
+  - [x] Execute suite in Kit Validation run `43292788501`: 9 tests passed (pre-existing validator suite); rerun after adding workflow-policy tests.
 
 ### KIT-007-WP5 — Post-merge reconciliation and consumer handoff
 - Owner: Gpt

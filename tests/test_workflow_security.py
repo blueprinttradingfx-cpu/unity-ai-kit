@@ -29,7 +29,7 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
         for job_name in ("compile", "playmode"):
             job = jobs[job_name]
             self.assertEqual(job["environment"], pr_environment)
-            self.assertIn("UNITY_LICENSE", job["env"])
+            self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in job["steps"]))
             self.assertIn("github.event.pull_request.head.repo.full_name == github.repository", job["if"])
         self.assertEqual(jobs["build"]["environment"], "unity-ci")
         self.assertNotIn("pull_request_target", workflow)
@@ -39,11 +39,13 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
         self.assertEqual(set(jobs), {"editmode", "playmode", "platform-builds"})
         for job in jobs.values():
             self.assertEqual(job["environment"], "unity-ci")
+            self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in job["steps"]))
 
     def test_release_jobs_use_protected_release_environment(self) -> None:
         jobs = self.workflows["unity-release.yml"]["jobs"]
         for job_name in ("editmode", "playmode", "build"):
             self.assertEqual(jobs[job_name]["environment"], "release")
+            self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in jobs[job_name]["steps"]))
         self.assertIn("workflow_dispatch", self.workflows["unity-release.yml"]["on"])
 
     def test_setup_guide_documents_environment_secret_boundaries(self) -> None:

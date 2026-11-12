@@ -78,7 +78,7 @@ Do not automatically execute every `validate_*.py` file discovered in a reposito
 
 ## 5. Nightly regression
 
-Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix only after both test jobs pass. Adjust schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly.
+Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suites separately in the `unity-ci` environment, then builds the configured sample platform matrix only after both test jobs pass. Restrict `unity-ci` deployments to the default branch; scheduled runs execute from the default branch and manual dispatch is guarded likewise. Adjust schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly.
 
 ## 6. Release build
 
