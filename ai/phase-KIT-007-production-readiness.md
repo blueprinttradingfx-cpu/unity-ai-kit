@@ -50,21 +50,21 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - Branch: `gpt/kit-007-ci-secret-isolation` (tests added after PR #4 merge)
 - File/system boundary: `tests/`; validator scripts are exercised but not modified unless a failing test proves a defect.
 - Acceptance checks:
-  - [ ] Tests cover valid metadata, missing/orphan metadata, malformed/duplicate GUIDs.
-  - [ ] Tests cover valid/invalid JSON, conflict markers, and invalid YAML when PyYAML is installed.
-  - [ ] Test suite uses temporary repositories and does not mutate a consumer project.
+  - [x] Tests cover valid metadata, missing/orphan metadata, malformed/duplicate GUIDs.
+  - [x] Tests cover valid/invalid JSON, conflict markers, and invalid YAML when PyYAML is installed.
+  - [x] Test suite uses temporary repositories and does not mutate a consumer project.
 - Sub-items:
   - [x] Add unittest harness.
-  - [x] Execute suite in Kit Validation run `43292788501`: 9 tests passed (pre-existing validator suite); rerun after adding workflow-policy tests.
+  - [x] Execute suite in Kit Validation run `43318886327`: 13 tests passed (9 validator tests + 4 licensed-workflow policy tests).
 
 ### KIT-007-WP5 — Post-merge reconciliation and consumer handoff
 - Owner: Gpt
 - Branch: `gpt/kit-007-ci-secret-isolation`
 - File/system boundary: KIT-007 tracker, session-state, README and consumer setup guidance.
 - Acceptance checks:
-  - [ ] Reconcile the tracker with PR #4 merge SHA and actual validation run evidence.
-  - [ ] Record that PR #4 had no independent review; request a separate review before phase completion.
-  - [ ] Provide a clear consumer adoption and validation checklist without claiming Unity runtime validation.
+  - [x] Reconcile the tracker with PR #4 merge SHA `6e2e4f0` and Kit Validation run `43292788501`.
+  - [ ] Record that PR #4 had no independent review; obtain a separate review of PR #5 before phase completion.
+  - [x] Provide `ai/consumer-validation-checklist.md` without claiming Unity runtime validation.
 
 ### KIT-007-WP6 — Licensed workflow secret isolation
 - Owner: Gpt
@@ -75,7 +75,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [ ] Fork PRs remain unable to access licensed secrets and continue to receive repository-quality checks.
   - [ ] Push, scheduled, manual, and release-tag triggers have explicit, documented trust boundaries.
   - [ ] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
-  - [ ] All example workflows pass actionlint and kit validation.
+  - [x] All example workflows pass actionlint and kit validation in run `43318886327` (13 tests, syntax validation, actionlint). Re-run after the final checklist/README commit.
 
 ### KIT-007-WP4 — Unity reference and governance
 - Owner: Gpt
