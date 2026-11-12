@@ -59,9 +59,9 @@ jobs:
             fi
 
             case "$project" in
-              *.sln|*.slnx|*.csproj) ;;
+              *.sln|*.csproj) ;;
               *)
-                echo "::error::Expected a .sln, .slnx, or .csproj path: $project"
+                echo "::error::Expected a .sln or .csproj path: $project"
                 exit 1
                 ;;
             esac
