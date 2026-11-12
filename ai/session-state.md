@@ -30,7 +30,7 @@ Author = the agent that owns the task, `owner` = the human owner. Every task use
 - **Last known good build:** Not applicable; documentation and workflow-template kit.
 
 ## Handoff
-- **In progress (exact stopping point):** KIT-001, KIT-002, and KIT-003 changes are on `gpt/harden-agent-workflow`. Latest work adds `examples/workflows/dotnet-validation.yml`, splits `examples/workflows/unity-ci.yml` into an explicit Unity Editor import/C# compile + EditMode job and a PlayMode job, and updates `ai/github-workflows.md`, `README.md`, and `ai/definition-of-done.md`.
+- **In progress (exact stopping point):** KIT-001, KIT-002, and KIT-003 changes are on `gpt/harden-agent-workflow`. Latest work (latest prior commit `a440e0a1b0b36b5062fc46f0a2e6c55158e18132`) adds `examples/workflows/dotnet-validation.yml`, splits `examples/workflows/unity-ci.yml` into an explicit Unity Editor import/C# compile + EditMode job and a PlayMode job, and updates `ai/github-workflows.md`, `README.md`, and `ai/definition-of-done.md`.
 - **Next concrete step:** Validate all workflow YAML and shell snippets, verify every action reference is pinned to a full SHA, update PR #1 body, then inspect GitHub checks. Run actionlint in a network-enabled environment and request independent review before marking PR #1 ready.
 - **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
 - **Verified (ran it):** Previous metadata validator fixtures passed/fail as expected; prior workflow YAML parsed; previous action references used full SHAs. New workflow has not yet been validated in GitHub Actions.
