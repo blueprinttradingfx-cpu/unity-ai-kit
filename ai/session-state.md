@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Licensed workflow secret gates, consumer checklist, and Unity 6.3 reference corrections implemented; verify final CI, obtain independent review, and close KIT-007 |
+| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Licensed workflow secret gates, consumer checklist, Unity 6.3 reference corrections, and Node 24 action upgrades implemented; verify final CI, obtain independent review, and close KIT-007 |
 
 ## Completed milestones
 
@@ -34,7 +34,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** PR #4 is merged to `main` without a submitted review. Draft PR #5 contains protected Unity environment gates, workflow policy tests, and a consumer validation checklist. Kit Validation run `43319157538` passed 13 tests, syntax checks, and actionlint; a new run after the latest Unity 6.3 reference edits is pending.
+- **Exact stopping point:** PR #4 is merged to `main` without a submitted review. Draft PR #5 contains protected Unity environment gates, workflow policy tests, and a consumer validation checklist. Kit Validation run `43319157538` passed 13 tests, syntax checks, and actionlint before the Node 24 action upgrade; the new action-pin regression test and latest workflow lint are pending.
 - **Next step:** verify the latest CI run, obtain independent review of PR #5, resolve findings, and then complete KIT-007. Garden Alchemy remains deferred until the kit is ready.
 - **Verified:** PRs #1, #2, and #3 are merged into `main` (merge SHAs recorded above).
 - **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require the Garden Alchemy consumer project and its configuration.
