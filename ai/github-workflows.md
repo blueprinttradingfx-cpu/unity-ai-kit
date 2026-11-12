@@ -20,20 +20,24 @@ Do not run every expensive platform build on every PR by default. Start with one
 Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml` in the game repository.
 
 The template:
-- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on trusted PRs and pushes to main.
-- Runs PlayMode integration tests in a separate job on trusted PRs and pushes to main.
+- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on same-repository PRs only after approval of the protected `unity-pr-validation` environment, and on pushes to main through `unity-ci`.
+- Runs PlayMode integration tests in a separate job with the same protected-environment boundary.
 - Builds a sample Linux Standalone player after tests pass on main, or on a manual dispatch from the default branch only.
 - Caches only the Unity `Library/` import cache, keyed by OS, Unity version file, and Package Manager lockfile.
 - Uploads test results and build output as workflow artifacts.
 - Skips licensed Unity jobs for fork-originated PRs; the separate repository-quality workflow still runs on those PRs.
-- Restricts manual dispatch to the repository default branch because the workflow receives Unity license secrets. Do not remove this guard without a documented security review.
+- Restricts manual dispatch to the repository default branch. Licensed jobs consume environment-scoped secrets; same-repository PR jobs require explicit environment approval. Do not remove either guard without a documented security review.
 
 ### Configure it first
 
 1. If the Unity project is in a subfolder, define the repository variable `UNITY_PROJECT_PATH` (for example `game/`); leave it unset when the project is at the repository root.
 2. Change `targetPlatform` from the sample `StandaloneLinux64` to a platform the project actually ships.
 3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt`; GameCI's `auto` mode reads this file.
-4. Add only the Unity license secrets needed for the license type. Keep signing credentials separate and available only to a protected release job/environment.
+4. Configure GitHub Environments before adding Unity credentials; do not store Unity license values as repository-wide secrets:
+   - `unity-pr-validation`: add the required Unity license secrets and configure required reviewers. Allow the PR deployment refs used by your repository. Every same-repository PR that reaches licensed Unity jobs must be explicitly approved before those secrets are released.
+   - `unity-ci`: add the Unity license secrets; restrict deployments to the default branch. Main-branch CI and the default-branch-only nightly workflow use this environment.
+   - `release`: add the Unity license secrets plus only the signing credentials required by the project. Configure required reviewers and allow the intended version tags plus the default branch for manual dispatch. Release tests and builds wait for this protected environment.
+   - Fork PRs continue to skip licensed jobs and run repository-quality checks. Never switch to `pull_request_target` to expose secrets to fork code.
 5. Run the workflow manually from the default branch and inspect the test report/build artifact before making checks required.
 
 GameCI is community-maintained, not an official Unity service. Review action releases and permissions before adopting it. The examples pin actions to full commit SHAs; update pins deliberately and review upstream changes.
@@ -80,7 +84,7 @@ Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suite
 
 Copy `examples/workflows/unity-release.yml`. It validates a version tag, resolves it to an immutable commit SHA, tests and builds that exact SHA, and produces artifacts with source metadata and SHA-256 checksums.
 
-The build job uses the GitHub Environment named `release`. Configure required reviewers and only the platform-specific signing secrets needed by the project. Add actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does not invent signing commands or store credentials. Artifacts are uploaded to the workflow run only; publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. Apple platforms need a macOS runner and platform-specific setup.
+The EditMode, PlayMode, and build jobs use the GitHub Environment named `release`. Configure required reviewers, allow only intended release tags and the default branch for manual dispatch, and store Unity license plus only the platform-specific signing secrets needed by the project in that environment. Add actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does not invent signing commands or store credentials. Artifacts are uploaded to the workflow run only; publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. Apple platforms need a macOS runner and platform-specific setup.
 
 Manual release dispatch must be restricted to the default branch, validate the tag, and build the resolved commit SHA rather than resolving the tag again downstream.
 
