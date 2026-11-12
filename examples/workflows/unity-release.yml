@@ -60,6 +60,7 @@ jobs:
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
   editmode:
     name: Release EditMode tests
+    environment: release
     needs: validate-tag
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -90,6 +91,7 @@ jobs:
           retention-days: 30
   playmode:
     name: Release PlayMode tests
+    environment: release
     needs: validate-tag
     runs-on: ubuntu-latest
     timeout-minutes: 120
