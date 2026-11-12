@@ -37,7 +37,6 @@ jobs:
               echo "::error::Tag must follow vMAJOR.MINOR.PATCH with an optional prerelease suffix."
               exit 1
             fi
-            
           else
             tag="${PUSH_REF#refs/tags/}"
           fi
@@ -62,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }}
+          ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
       - id: tests
@@ -92,7 +91,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }}
+          ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
       - id: tests
@@ -127,7 +126,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }}
+          ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
       - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
@@ -145,6 +144,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ needs.validate-tag.outputs.tag }}
           PLATFORM: ${{ matrix.platform }}
+          RELEASE_COMMIT: ${{ needs.validate-tag.outputs.commit }}
         run: |
           set -euo pipefail
           printf 'tag=%s\ncommit=%s\nplatform=%s\n' "$RELEASE_TAG" "${{ needs.validate-tag.outputs.commit }}" "$PLATFORM" > build/RELEASE-METADATA.txt
