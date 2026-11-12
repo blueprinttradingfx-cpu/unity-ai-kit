@@ -84,6 +84,18 @@ Reusable CI should provide a stable place for each game to add domain checks. Ke
 
 Do not automatically execute every validate_*.py file discovered in a repository: some scripts may require arguments, modify data, or be unrelated. Explicit commands are safer and make required checks reviewable.
 
+### Nightly regression template
+
+Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.yml` in the game repository. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix (Linux Standalone and Android) only after both test jobs pass. Reports are retained for 14 days and nightly builds for 7 days. Adjust the cron schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly; the template does not assume every project has those test assemblies or tools.
+
+### Release build template
+
+Copy `examples/workflows/unity-release.yml` to `.github/workflows/unity-release.yml`. It runs from a `vMAJOR.MINOR.PATCH` tag or an approved manual dispatch naming an existing tag, checks EditMode and PlayMode tests on that exact tag, then builds Linux Standalone and Android artifacts. Each artifact includes the source commit/tag/platform metadata and a SHA-256 checksum manifest, with 90-day retention.
+
+The build job uses the GitHub Environment named `release`. Configure that environment with required reviewers and only the platform-specific signing secrets needed by the project. Add the project's actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does **not** invent signing commands or store credentials. Artifacts are uploaded to the workflow run only: publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. For Apple platforms, add a macOS runner and the appropriate signing/build setup rather than reusing the Linux sample.
+
+The manual-dispatch path validates the tag format and checks that the tag exists, but teams should still protect release tags and verify that the tag points to an approved commit. Configure the Unity Editor version and license secrets as for the standard Unity workflow.
+
 ## 3. Unity-specific checks to add as the project grows
 
 ### Code and compilation
