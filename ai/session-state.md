@@ -17,21 +17,21 @@ When a task's status changes, move its row to the list for its new status. Keep 
 
 ## Board
 
-Author = the agent that owns the task, `owner` = the human owner. Every task uses a stable ID (for example `KIT-001`) so handoffs and review comments refer to the same work.
+Author = the agent that owns the task, `owner` = the human owner. Every task uses a stable ID (for example `KIT-001`) prefixed in its Task text; preserve it when moving the task between lists.
 
-| Status | Task ID | Task | Author | Notes / next step |
-|---|---|---|---|---|
-| In Progress | KIT-001 | Harden the reusable agent workflow and verification safeguards | `gpt` | Audit the existing kit; add a clear task lifecycle, safer claim/handoff rules, and evidence-based completion checks. Keep changes documentation-only and backward-compatible. |
+| Status | Task | Author | Notes / next step |
+|---|---|---|---|
+| In Progress | KIT-001 — Harden the reusable agent workflow and verification safeguards | `gpt` | Implemented task lifecycle, safe claim/handoff guidance, and evidence-based completion checks. Acceptance: board workflow is explicit; task IDs persist across lists; verification and independent review are reported honestly. Awaiting independent review. |
 
 ## Project context
 - **Branch / build:** `gpt/harden-agent-workflow` / no Unity project in this reusable guidance repository.
 - **Last known good build:** Not applicable; documentation-only kit.
 
 ## Handoff
-- **In progress (exact stopping point):** Audited AGENTS.md, README.md, session board, task status lists, safety/testing rules, definition of done, Unity reference, and session prompt. Branch created from main commit `bb253bf6b520827b02872bbc57ab0149084b4354`.
-- **Next concrete step:** Add the task lifecycle guidance and align startup, board, README, and completion criteria.
-- **Known broken:** The current board can be empty but has no explicit user-goal-to-task creation path; task rows lack stable IDs; the Unity reference review date is still a placeholder.
-- **Verified (ran it):** Read repository files through GitHub; confirmed main branch commit and created working branch.
-- **Not verified (human must check on device/editor):** Not applicable; no Unity project or runtime code is included.
-- **Owner decisions waiting:** None for this documentation-only scope.
+- **In progress (exact stopping point):** Documentation changes are implemented on `gpt/harden-agent-workflow`. Files changed: `AGENTS.md`, `README.md`, `ai/session-state.md`, `ai/definition-of-done.md`, and new `ai/task-lifecycle.md`.
+- **Next concrete step:** Obtain an independent review of the full diff, resolve findings, then open a PR for owner review.
+- **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
+- **Verified (ran it):** Confirmed the branch is based on current main with no behind commits; inspected the full five-file compare; checked the task workflow references and status-list paths; confirmed the changes are documentation-only. No Unity compilation is applicable.
+- **Not verified (human must check on device/editor):** Independent second-provider review is pending. No Unity Editor/device checks apply to this kit-only change.
+- **Owner decisions waiting:** None for the current scope; owner review/approval of the eventual PR is required.
 - **Bug / regression watch:** Keep the master kit project-neutral; do not change game-project repositories.
