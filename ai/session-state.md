@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Owner audit recorded; PR #5 ready for maintainer merge; then hand off to Garden Alchemy consumer validation |
+| KIT-007 — Production readiness and validation | Done | `Gpt` | `main` / `ai/phase-KIT-007-production-readiness.md` | PR #5 merged as `f814ac4`; kit phase closed; Garden Alchemy consumer validation is next |
 
 ## Completed milestones
 
@@ -19,6 +19,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 | KIT-001–KIT-004 — Agent safeguards and CI quality foundation | Done | PR #1 merged into `main`; merge commit `74fe2433a46bce6bb9b63696a03c92b2c74f0238` |
 | KIT-005 — Nightly regression and protected release templates | Done | PR #2 merged into `main`; merge commit `39e0f2205b110034645dd21fdbb7ffe3c966e4a5` |
 | KIT-006 — Phase-based multi-agent coordination model | Done | PR #3 merged into `main`; merge commit `447b7618cd0bb0051a3c3224d316e3a4a1c6c69f` |
+| KIT-007 — Production readiness and validation | Done | PR #5 merged into `main`; merge commit `f814ac41560964ef5abb14ab31f724674cb754bc`; Kit Validation run `43320593384` passed 16 tests, syntax checks, and actionlint |
 
 ## Coordination rules at a glance
 - Phase or substantial work package is the normal ownership unit; sub-items are grouped inside its tracker.
@@ -34,9 +35,9 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** PR #5 is ready for maintainer merge consideration. It contains protected Unity environment gates, workflow/security regression coverage, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS default, and a consumer validation checklist. Owner audit comment `5883211309` is recorded; latest Kit Validation run `43320593384` passed 16 tests, source/config syntax checks, and actionlint.
-- **Next step:** merge PR #5 after maintainer authorization, then begin a separately scoped Garden Alchemy consumer-validation phase. Garden Alchemy remains deferred until the kit is merged.
-- **Verified:** PRs #1, #2, and #3 are merged into `main` (merge SHAs recorded above); PR #5 owner audit comment submitted and PR marked ready for review.
-- **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require the Garden Alchemy consumer project and its configuration.
+- **Exact stopping point:** PR #5 is merged into `main` as `f814ac41560964ef5abb14ab31f724674cb754bc`. KIT-007 is closed. The kit includes protected Unity environment gates, workflow/security regression coverage, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS default, and a consumer validation checklist. Owner audit comment `5883211309` is recorded; Kit Validation run `43320593384` passed 16 tests, source/config syntax checks, and actionlint.
+- **Next step:** begin a separately scoped Garden Alchemy consumer-validation phase. Confirm the consumer repo's current instructions, phase ownership, Unity version, target platforms, and GitHub Environment/secret configuration before changing it.
+- **Verified:** PRs #1–#3 and #5 are merged into `main`; PR #5 merge SHA is recorded above.
+- **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require validation in Garden Alchemy.
 - **Owner decisions waiting:** Garden Alchemy's exact Unity Editor version, target platforms, license configuration, required checks, and release environment must be confirmed during consumer setup.
 - **Known risks:** Workflow templates remain opt-in examples. Passing kit-level static checks does not prove they execute successfully in a consuming Unity repository.

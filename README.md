@@ -36,7 +36,7 @@ The kit includes optional, inactive templates for Unity CI and repository checks
 - Optionally copy `examples/workflows/unity-release.yml` for version-tagged test/build artifacts with SHA-256 checksums. Configure the protected GitHub Environment named `release`, required reviewers, and project-specific signing steps before using it for real releases; the template does not publish to stores.
 - Read `ai/github-workflows.md` before enabling workflows. It covers fork PR secret safety, Unity Editor C# compilation, EditMode/PlayMode tests, standalone .NET checks, source/config syntax and conflict-marker checks, Unity metadata integrity, project-specific data-validator patterns, nightly regression, protected release artifacts, branch protection, and action pinning.
 
-Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The consumer examples are not active in this master kit repository. The active `.github/workflows/kit-validation.yml` checks source syntax, lints the active and example workflows, and runs validator regression tests. Run `python -m unittest discover -s tests -v` locally as well. Validate licensed Unity workflows in a real consumer project before requiring their checks. Validate licensed Unity workflows in a real consumer project before requiring their checks.
+Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The consumer examples are not active in this master kit repository. The active `.github/workflows/kit-validation.yml` checks source syntax, lints the active and example workflows, and runs validator regression tests. Run `python -m unittest discover -s tests -v` locally as well. Validate licensed Unity workflows in a real consumer project before requiring their checks.
 
 ## How it works
 - `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, and working style.
@@ -68,7 +68,7 @@ Tool conventions change often. If a tool ignores its pointer, open its docs and 
 
 ## Limits (be aware)
 - These are instructions, not enforcement. Tools without permission controls can still ignore them; keep the git safety net (commit before AI sessions, work on branches).
-- `ai/unity6-reference.md` is a list of common mistakes written from general knowledge, not official docs. Its review date is intentionally a placeholder until someone checks the claims against official docs and the project's installed package versions. Entries marked Medium need verifying; do not treat this file as authoritative API documentation.
+- `ai/unity6-reference.md` contains a dated, limited spot-check against official Unity 6.3 documentation, not an exhaustive audit of every API or installed package version. Treat unverified entries and package-specific behavior as items to confirm in the consuming project's Editor and package documentation.
 - An AI without editor access cannot compile. The kit makes it say so and hand you a precise check list.
 - Keep `AGENTS.md` under ~120 lines. Long instruction files get skimmed and partially ignored.
 
