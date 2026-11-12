@@ -6,7 +6,7 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 
 ## Set up a new project (10 minutes)
 1. Copy everything except `README.md` into the **root of your Unity project repo** (next to `Assets/`).
-2. Rename `examples/Unity.gitignore` → `.gitignore` and `examples/Unity.gitattributes` → `.gitattributes` (skip if you already have good ones). In Unity: Editor settings → Asset Serialization = Force Text, Version Control = Visible Meta Files.
+2. Rename `examples/Unity.gitignore` → `.gitignore`, `examples/Unity.gitattributes` → `.gitattributes`, and `examples/Unity.editorconfig` → `.editorconfig` (skip any you already have good equivalents for). In Unity: Editor settings → Asset Serialization = Force Text, Version Control = Visible Meta Files.
 3. Edit `AGENTS.md`: game name, platform, folder layout, and the **Commands** section (Unity.exe path). This lets AIs that can run commands verify their work.
 4. Fill `ai/project-brief.md` (pillars, device, constraints). Short is fine.
 5. Delete the pointer files for tools you do not use (see table). Optional: `examples/claude-settings.json` → `.claude/settings.json`.
