@@ -17,8 +17,9 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 - Each tool gets a 1–3 line pointer to it, so you maintain one file.
 - Detail is in `ai/rules/*.md`, read only when the work matches (saves context, works in any tool).
 - `ai/session-state.md` carries "where we stopped" between sessions and between **different AIs**.
+- `ai/task-lifecycle.md` defines how tasks are created, claimed, handed off, and closed; task IDs stay with a task as it moves between status lists.
 - `ai/decisions/` holds one-page decisions so a new AI doesn't re-open or contradict them.
-- `ai/definition-of-done.md` is the checklist that stops "should work" from counting as "works".
+- `ai/definition-of-done.md` requires evidence, not an unsupported "done" claim.
 
 | Tool | Reads | Kit file |
 |---|---|---|
@@ -32,16 +33,16 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 Tool conventions change often. If a tool ignores its pointer, open its docs and look for "custom instructions" / "context file", or paste `AGENTS.md` into its instructions field. Windows note: the kit uses small pointer files instead of symlinks, because symlinks are unreliable on Windows git.
 
 ## Daily use
-- **Start:** tell the AI "follow AGENTS.md; read ai/session-state.md".
+- **Start:** identify your session username, read `ai/task-lifecycle.md` and `ai/session-state.md`, then claim the matching Ready task before editing. If the user's explicit goal has no board row, create and claim one; do not invent unrelated work.
 - **Feature:** use `ai/prompts/new-feature.md` (plan first, then "go").
-- **Unsure about a technical choice:** `ai/prompts/spike.md`, then record an ADR.
-- **Review:** give the diff to a *different* provider with `ai/prompts/review.md`.
-- **End:** ask the AI to rewrite `ai/session-state.md`; commit it.
+- **Unsure about a technical choice:** use `ai/prompts/spike.md`, then record an ADR.
+- **Review:** use `ai/prompts/review.md` with a different provider for meaningful code changes and high-risk guidance/architecture changes.
+- **End:** report the exact checks and evidence, update the handoff, and move the task to `ai/done-tasks.md`, `ai/blocked-tasks.md`, or `ai/backlog-tasks.md` as appropriate.
 - **Milestone:** run the 10-minute smoke test at the bottom of `ai/definition-of-done.md` on a real phone.
 
 ## Limits (be aware)
 - These are instructions, not enforcement. Tools without permission controls can still ignore them; keep the git safety net (commit before AI sessions, work on branches).
-- `ai/unity6-reference.md` is a list of common mistakes written from general knowledge, not official docs. Mark "last reviewed" and re-check it when you upgrade Unity. Entries marked Medium need verifying against your installed package versions.
+- `ai/unity6-reference.md` is a list of common mistakes written from general knowledge, not official docs. Its review date is intentionally a placeholder until someone checks the claims against official docs and the project's installed package versions. Entries marked Medium need verifying; do not treat this file as authoritative API documentation.
 - An AI without editor access cannot compile. The kit makes it say so and hand you a precise check list.
 - Keep `AGENTS.md` under ~120 lines. Long instruction files get skimmed and partially ignored.
 
