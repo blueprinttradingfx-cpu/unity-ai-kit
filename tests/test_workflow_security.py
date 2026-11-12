@@ -48,6 +48,32 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
             self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in jobs[job_name]["steps"]))
         self.assertIn("workflow_dispatch", self.workflows["unity-release.yml"]["on"])
 
+    def test_first_party_and_gameci_actions_are_sha_pinned_to_node24_releases(self) -> None:
+        expected = {
+            "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "actions/cache": "55cc8345863c7cc4c66a329aec7e433d2d1c52a9",
+            "actions/upload-artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+            "actions/setup-dotnet": "0f4a354dd5547a28c70b7853dbd95d5b67886e73",
+            "game-ci/unity-test-runner": "fa6ced25861c16ef56187828c43f76d00df43a23",
+            "game-ci/unity-builder": "eb1b9fba120c6e62c9fb7a7a81d6c107ce004c45",
+        }
+        found = set()
+        workflow_paths = list((ROOT / ".github" / "workflows").glob("*.yml"))
+        workflow_paths += list(WORKFLOWS.glob("*.yml"))
+        for path in workflow_paths:
+            workflow = yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+            for job in workflow.get("jobs", {}).values():
+                for step in job.get("steps", []):
+                    action = step.get("uses")
+                    if not action:
+                        continue
+                    name, ref = action.rsplit("@", 1)
+                    self.assertRegex(ref, r"^[0-9a-f]{40}$", msg=f"{path}: {action} is not pinned to a full SHA")
+                    if name in expected:
+                        self.assertEqual(ref, expected[name], msg=f"{path}: update reviewed pin for {name}")
+                        found.add(name)
+        self.assertEqual(found, set(expected))
+
     def test_setup_guide_documents_environment_secret_boundaries(self) -> None:
         guide = (ROOT / "ai" / "github-workflows.md").read_text(encoding="utf-8")
         for environment in ("unity-pr-validation", "unity-ci", "release"):

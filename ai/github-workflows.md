@@ -100,7 +100,20 @@ The kit includes optional starter material under `examples/github/`. Apply only 
 
 Branch protection/rulesets are repository settings and cannot be activated by copying files. Configure and verify them in GitHub Settings, then document which checks are required. Never make a required check name mandatory before its workflow is installed and has reported successfully.
 
-## 8. Reusable patterns from game repositories
+
+## 8. GitHub Actions runtime compatibility
+
+GitHub removed the Node 20 runtime from hosted Actions runners on 23 September 2026. The kit's pins were checked on 13 November 2026 and use Node 24-compatible releases:
+- `actions/checkout` v7.0.1
+- `actions/cache` v6.1.0
+- `actions/upload-artifact` v7.0.2
+- `actions/setup-dotnet` v6.1.0
+- `game-ci/unity-test-runner` v4.3.2
+- `game-ci/unity-builder` v6.0.0
+
+The GameCI actions were checked against their `action.yml` runtime declarations; all listed actions declare Node 24. All action references are pinned to full commit SHAs. Do not downgrade to older Node 20 pins. Self-hosted runners must meet the current minimum runner version required by each action. See the [GitHub Node 20 removal notice](https://github.blog/changelog/2026-09-23-node-20-is-no-longer-available-in-github-actions/).
+
+## 9. Reusable patterns from game repositories
 
 | Observed pattern | Kit treatment |
 |---|---|
