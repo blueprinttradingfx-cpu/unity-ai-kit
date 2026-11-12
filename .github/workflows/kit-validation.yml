@@ -1,0 +1,46 @@
+name: Kit Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kit-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Kit source, workflow templates and validator tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Create isolated Python validation environment
+        run: |
+          python3 -m venv .venv-ci
+          .venv-ci/bin/python -m pip install --disable-pip-version-check --no-input PyYAML==6.0.2
+
+      - name: Validate tracked source and configuration syntax
+        run: .venv-ci/bin/python examples/scripts/validate_source_syntax.py
+
+      - name: Run validator regression tests
+        run: .venv-ci/bin/python -m unittest discover -s tests -v
+
+      - name: Lint active and example GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml examples/workflows/*.yml
+
+      - name: Validate Unity metadata when a consumer project is present
+        run: |
+          if [ -d Assets ]; then
+            .venv-ci/bin/python examples/scripts/validate_unity_meta.py
+          else
+            echo "No Unity Assets/ directory in the kit repository; metadata validation is covered by validator fixture tests."
+          fi
