@@ -30,6 +30,8 @@ Do not invent a successful result from a command that was not run. For documenta
 - [ ] Package manifest and lockfile changes are reviewed together; no unrequested package upgrades.
 - [ ] CI artifacts/logs are linked; state skipped jobs (including fork-PR Unity jobs) rather than describing them as passed.
 - [ ] Signing/release checks use protected environments; no signing secrets are available to ordinary PR jobs.
+- [ ] Nightly workflows retain useful test/build evidence and have a deliberate platform matrix, schedule, timeout, and retention policy.
+- [ ] Release workflows test the exact version tag, record source commit/platform metadata, checksum artifacts, and require protected approval before signing or external distribution.
 - [ ] Real-device checks are recorded separately; a CI build is not evidence of device performance or UX.
 
 See `ai/github-workflows.md` for the recommended PR, main-branch, nightly, and release pipeline.

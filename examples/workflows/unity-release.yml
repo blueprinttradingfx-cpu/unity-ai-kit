@@ -1,0 +1,162 @@
+# Copy to .github/workflows/unity-release.yml in a Unity game repository.
+# Produces version-tagged build artifacts; store publishing is intentionally separate.
+name: Unity Release Build
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing version tag (for example v1.2.0)
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: unity-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate-tag:
+    name: Validate release ref
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.ref.outputs.tag }}
+      commit: ${{ steps.commit.outputs.sha }}
+    steps:
+      - id: ref
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_REF: ${{ github.ref }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$PUSH_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
+            echo "::error::Manual release dispatch must use the repository default branch ($DEFAULT_BRANCH)."
+            exit 1
+          fi
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            tag="$INPUT_TAG"
+            if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+              echo "::error::Tag must follow vMAJOR.MINOR.PATCH with an optional prerelease suffix."
+              exit 1
+            fi
+          else
+            tag="${PUSH_REF#refs/tags/}"
+          fi
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag must follow vMAJOR.MINOR.PATCH with an optional prerelease suffix."
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Checkout exact release tag
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ steps.ref.outputs.tag }}
+          fetch-depth: 0
+      - name: Record immutable release commit
+        id: commit
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  editmode:
+    name: Release EditMode tests
+    needs: validate-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.validate-tag.outputs.commit }}
+          lfs: true
+          fetch-depth: 0
+      - id: tests
+        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
+          unityVersion: auto
+          testMode: editmode
+          githubToken: ''
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-editmode-${{ needs.validate-tag.outputs.tag }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+          if-no-files-found: warn
+          retention-days: 30
+  playmode:
+    name: Release PlayMode tests
+    needs: validate-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.validate-tag.outputs.commit }}
+          lfs: true
+          fetch-depth: 0
+      - id: tests
+        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
+          unityVersion: auto
+          testMode: playmode
+          githubToken: ''
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-playmode-${{ needs.validate-tag.outputs.tag }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+          if-no-files-found: warn
+          retention-days: 30
+  build:
+    name: Build ${{ matrix.platform }}
+    needs: [validate-tag, editmode, playmode]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [StandaloneLinux64, Android]
+    runs-on: ubuntu-latest
+    environment: release # Configure required reviewers and platform signing secrets here.
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.validate-tag.outputs.commit }}
+          lfs: true
+          fetch-depth: 0
+      - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
+          unityVersion: auto
+          targetPlatform: ${{ matrix.platform }}
+      - name: Add release provenance and checksums
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ needs.validate-tag.outputs.tag }}
+          PLATFORM: ${{ matrix.platform }}
+          RELEASE_COMMIT: ${{ needs.validate-tag.outputs.commit }}
+        run: |
+          set -euo pipefail
+          printf 'tag=%s\ncommit=%s\nplatform=%s\n' "$RELEASE_TAG" "$RELEASE_COMMIT" "$PLATFORM" > build/RELEASE-METADATA.txt
+          find build -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > build/SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ needs.validate-tag.outputs.tag }}-${{ matrix.platform }}
+          path: build
+          if-no-files-found: error
+          retention-days: 90

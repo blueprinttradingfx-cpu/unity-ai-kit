@@ -84,6 +84,18 @@ Reusable CI should provide a stable place for each game to add domain checks. Ke
 
 Do not automatically execute every validate_*.py file discovered in a repository: some scripts may require arguments, modify data, or be unrelated. Explicit commands are safer and make required checks reviewable.
 
+### Nightly regression template
+
+Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.yml` in the game repository. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix (Linux Standalone and Android) only after both test jobs pass. Scheduled runs use the default branch; manual dispatch is also restricted to the default branch so modified workflow code on arbitrary branches cannot receive Unity license secrets. Reports are retained for 14 days and nightly builds for 7 days. Adjust the cron schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly; the template does not assume every project has those test assemblies or tools.
+
+### Release build template
+
+Copy `examples/workflows/unity-release.yml` to `.github/workflows/unity-release.yml`. It runs from a `vMAJOR.MINOR.PATCH` tag or an approved manual dispatch naming an existing tag, resolves that tag to an immutable commit SHA, checks EditMode and PlayMode against that SHA, then builds Linux Standalone and Android artifacts from the same SHA. Each artifact includes the source commit/tag/platform metadata and a SHA-256 checksum manifest, with 90-day retention.
+
+The build job uses the GitHub Environment named `release`. Configure that environment with required reviewers and only the platform-specific signing secrets needed by the project. Add the project's actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does **not** invent signing commands or store credentials. Artifacts are uploaded to the workflow run only: publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. For Apple platforms, add a macOS runner and the appropriate signing/build setup rather than reusing the Linux sample.
+
+The manual-dispatch path is restricted to runs launched from the repository's default branch, preventing a modified workflow on an arbitrary branch from receiving Unity license secrets. It validates the tag format and checks that the tag exists. Downstream test/build jobs use the resolved commit SHA rather than resolving the tag again, so a tag move after validation cannot silently change the source being tested or built. Add a GitHub tag ruleset for `v*` that restricts tag creation/update/deletion to release maintainers, and verify that the selected tag points to an approved commit. Configure the Unity Editor version and license secrets as for the standard Unity workflow.
+
 ## 3. Unity-specific checks to add as the project grows
 
 ### Code and compilation
