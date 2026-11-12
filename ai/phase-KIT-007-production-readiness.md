@@ -39,8 +39,8 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 |---|---|---|---|---|---|
 | KIT-007-WP1 | Correct historical coordination state and strengthen phase ownership/readiness | Gpt | Done | ai/session-state.md, ai/coordination-model.md, phase tracker | KIT-006 |
 | KIT-007-WP2 | Harden licensed CI dispatch and improve standalone .NET checks | Gpt | Done | examples/workflows, ai/github-workflows.md | KIT-001, KIT-005 |
-| KIT-007-WP3 | Add validator regression tests and consumer test instructions | Gpt | In Progress | tests/, ai/github-workflows.md | KIT-001 |
-| KIT-007-WP4 | Review Unity 6 reference and add governance/security templates | Gpt | In Progress | ai/unity6-reference.md, examples/github/, README.md | KIT-001 |
+| KIT-007-WP3 | Add validator regression tests and consumer test instructions | Gpt | Done | tests/, ai/github-workflows.md | KIT-001 |
+| KIT-007-WP4 | Review Unity 6 reference and add governance/security templates | Gpt | Done | ai/unity6-reference.md, examples/github/, README.md | KIT-001 |
 | KIT-007-WP5 | Integrate, verify full diff, and prepare Garden Alchemy handoff | Gpt | Planned | complete PR diff and evidence | WP1–WP4 |
 
 ### KIT-007-WP3 — Validator regression tests
@@ -61,8 +61,8 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - File/system boundary: `ai/unity6-reference.md`, `examples/github/`, README.
 - Acceptance checks:
   - [x] Add dated spot review and official references for checked Unity APIs.
-  - [ ] Clearly distinguish spot review from exhaustive 6.3/package audit.
-  - [ ] Add optional, non-operative CODEOWNERS example and security setup guidance.
+  - [x] Clearly distinguish spot review from exhaustive 6.3/package audit.
+  - [x] Add optional, non-operative CODEOWNERS example and security setup guidance.
 
 ## Concurrency and integration
 - Safe parallel work: separate documentation, validator test fixtures, and workflow template review can be delegated when file ownership is disjoint.
