@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 30
     env:
       DOTNET_PROJECT_PATHS: ${{ vars.DOTNET_PROJECT_PATHS }}
+      DOTNET_TEST_PROJECT_PATHS: ${{ vars.DOTNET_TEST_PROJECT_PATHS }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -68,14 +69,21 @@ jobs:
             echo "::group::Validate $project"
             dotnet restore "$project"
             dotnet build "$project" --configuration Release --no-restore
-            if [[ "$project" == *.sln || "$project" == *.slnx ]]; then
-              dotnet test "$project" --configuration Release --no-build
-            elif grep -q '<IsTestProject>true</IsTestProject>' "$project"; then
-              dotnet test "$project" --configuration Release --no-build
-            fi
             dotnet format whitespace "$project" --verify-no-changes --no-restore
             echo "::endgroup::"
           done <<< "$DOTNET_PROJECT_PATHS"
+
+          while IFS= read -r test_project; do
+            test_project="$(echo "$test_project" | xargs)"
+            [ -z "$test_project" ] && continue
+            if [ ! -f "$test_project" ]; then
+              echo "::error::Configured .NET test project does not exist: $test_project"
+              exit 1
+            fi
+            echo "::group::Test $test_project"
+            dotnet test "$test_project" --configuration Release
+            echo "::endgroup::"
+          done <<< "$DOTNET_TEST_PROJECT_PATHS"
 
       - name: Report Unity C# compile coverage
         run: |
