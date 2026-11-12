@@ -12,8 +12,17 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 5. Delete the pointer files for tools you do not use (see table). Optional: `examples/claude-settings.json` → `.claude/settings.json`.
 6. First commit: "Add AI guidance kit".
 
+## GitHub CI/CD setup
+The kit includes optional, inactive templates for Unity CI and repository checks:
+- Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml`, then configure the target platform and Unity license secrets.
+- Copy `examples/workflows/repository-quality.yml` and `examples/scripts/validate_unity_meta.py` to the project. This runs without Unity licensing secrets and checks metadata integrity.
+- Copy `examples/github/dependabot.yml` to `.github/dependabot.yml` and `examples/github/PULL_REQUEST_TEMPLATE.md` to `.github/PULL_REQUEST_TEMPLATE.md`.
+- Read `ai/github-workflows.md` before enabling workflows. It covers fork PR secret safety, branch protection, test/build stages, platform/release checks, and action pinning.
+
+Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The examples are not active in this master kit repository.
+
 ## How it works
-- `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, working style.
+- `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, and working style.
 - Each tool gets a 1–3 line pointer to it, so you maintain one file.
 - Detail is in `ai/rules/*.md`, read only when the work matches (saves context, works in any tool).
 - `ai/session-state.md` carries "where we stopped" between sessions and between **different AIs**.
