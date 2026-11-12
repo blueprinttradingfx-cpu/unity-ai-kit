@@ -1,0 +1,61 @@
+# Copy to .github/workflows/repository-quality.yml in a Unity game repository.
+# This workflow does not need Unity licensing secrets and can run on fork PRs.
+name: Repository Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Repository integrity and source syntax checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - name: Check diff whitespace
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git diff --check "$BASE_SHA...$HEAD_SHA"
+          elif git rev-parse HEAD^ >/dev/null 2>&1; then
+            git diff --check HEAD^ HEAD
+          else
+            git diff --check
+          fi
+
+      - name: Set up isolated syntax-check environment
+        run: |
+          python3 -m venv .venv-ci
+          .venv-ci/bin/python -m pip install --disable-pip-version-check --no-input PyYAML==6.0.2
+
+      - name: Validate tracked source and configuration syntax
+        run: .venv-ci/bin/python examples/scripts/validate_source_syntax.py
+
+      - name: Lint GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
+
+      - name: Validate Unity asset metadata
+        run: |
+          if [ -d Assets ]; then
+            python3 examples/scripts/validate_unity_meta.py
+          else
+            echo "No Assets/ directory found; metadata check is not applicable to this repository."
+          fi

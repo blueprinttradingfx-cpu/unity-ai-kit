@@ -13,25 +13,28 @@ When a task's status changes, move its row to the list for its new status. Keep 
 3. Never start a task whose Author is another name, or `owner`, unless the user tells you to take it over.
 4. When you finish or stop, update Status, Notes / next step, and the Handoff section, and move the row if its status changed. Leave your name in Author only while you still own the task.
 
-**Session username for the session that last wrote this file:** `git_copilot_blue` (a record, not your name, unless the user tells you it is).
+**Session username for the session that last wrote this file:** `gpt`
 
 ## Board
 
-Author = the agent that owns the task (a `session_username`), `owner` = the human owner.
+Author = the agent that owns the task, `owner` = the human owner. Every task uses a stable ID (for example `KIT-001`) prefixed in its Task text; preserve it when moving the task between lists.
 
 | Status | Task | Author | Notes / next step |
 |---|---|---|---|
-| — | No Ready or In Progress tasks. | — | Add a row when work is ready to start. |
+| In Progress | KIT-001 — Harden the reusable agent workflow and verification safeguards | `gpt` | Implemented task lifecycle, safe claim/handoff guidance, and evidence-based completion checks. Awaiting independent review. |
+| In Progress | KIT-002 — Add Unity GitHub Actions and repository quality standards | `gpt` | Implemented configurable GameCI test/build and repository-quality templates, metadata validator, EditorConfig, Dependabot and PR templates, plus CI/CD guidance. YAML parsed and metadata validator fixtures passed; actionlint and independent review remain pending. |
+| In Progress | KIT-003 — Add explicit Unity C# compile and standalone .NET checks | `gpt` | Added a dedicated Unity Editor import/C# compile + EditMode job, separate PlayMode job, and optional standalone .NET restore/build/test/format workflow. Full workflow validation and independent review pending. |
+| In Progress | KIT-004 — Consolidate reusable checks from the existing game repositories | `gpt` | Audited Garden Alchemy, Weapon Ball Unity, and Heartway. Added generic tracked-source syntax/conflict-marker validation and documented project-owned data/regression validators plus optional backend emulator tests. Full validation pending. |
 
 ## Project context
-- **Branch / build:**
-- **Last known good build:** <date, commit>
+- **Branch / build:** `gpt/harden-agent-workflow` / no Unity project in this reusable guidance repository.
+- **Last known good build:** Not applicable; documentation and workflow-template kit.
 
 ## Handoff
-- **In progress (exact stopping point):**
-- **Next concrete step:**
-- **Known broken:**
-- **Verified (ran it):**
-- **Not verified (human must check on device/editor):**
-- **Owner decisions waiting:** see `ai/blocked-tasks.md`.
-- **Bug / regression watch:**
+- **In progress (exact stopping point):** KIT-001 through KIT-004 changes are on `gpt/harden-agent-workflow`. Latest work adds `examples/workflows/dotnet-validation.yml`, `examples/scripts/validate_source_syntax.py`, splits `examples/workflows/unity-ci.yml` into an explicit Unity Editor import/C# compile + EditMode job and a PlayMode job, and updates `ai/github-workflows.md`, `README.md`, and `ai/definition-of-done.md`. It incorporates reusable audit findings from Garden Alchemy, Weapon Ball Unity, and Heartway.
+- **Next concrete step:** Validate all workflow YAML and shell snippets, verify every action reference is pinned to a full SHA, update PR #1 body, then inspect GitHub checks. Run actionlint in a network-enabled environment and request independent review before marking PR #1 ready.
+- **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
+- **Verified (ran it):** Previous metadata validator fixtures passed/fail as expected; prior workflow YAML parsed; previous action references used full SHAs. New workflow has not yet been validated in GitHub Actions.
+- **Not verified (human must check on device/editor):** No actual Unity project exists in this kit, so Unity compile/tests/build and standalone .NET build cannot run here. Garden Alchemy's retired-Arena symbol checks and Weapon Ball's catalog/save/SQLite rules remain project-owned; Heartway's Firestore emulator tests remain optional backend-specific checks. Consumer setup must supply the actual Unity Editor version, project path, platform, license secrets, and optional `DOTNET_PROJECT_PATHS` variable. Full actionlint execution remains pending.
+- **Owner decisions waiting:** Consumer projects must select their platform, license type, release policy, and any standalone .NET project paths; no choice is needed for this reusable kit change.
+- **Bug / regression watch:** Do not activate Unity workflows in this master kit; keep examples under `examples/`. Never expose Unity or signing secrets to fork PRs. Do not run generic `dotnet build` against Unity-generated `.sln/.csproj` files.

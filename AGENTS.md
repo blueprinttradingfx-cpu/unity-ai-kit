@@ -5,10 +5,10 @@ This file is read by any AI tool (Claude, Codex, Gemini, Cursor, Copilot, local 
 Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per project.
 
 ## Start every session
-1. Ask the user for your `session_username` (each session is a separate agent; do not reuse a name from the file). Then read `ai/session-state.md` (Ready and In Progress tasks only). Blocked, done and backlog tasks are in `ai/blocked-tasks.md`, `ai/done-tasks.md` and `ai/backlog-tasks.md`. Before you start a task on the board, set its Author to your `session_username` and Status to `In Progress`. Never take a task owned by another name.
-2. Read `ai/project-brief.md` (what the game is, constraints).
-3. Before touching a topic, read its rule file (table below).
-4. Before finishing, follow `ai/definition-of-done.md` and update `ai/session-state.md`.
+1. Ask the user for your `session_username`. Read `ai/task-lifecycle.md`, then `ai/session-state.md`. Do not reuse an agent name already recorded there.
+2. Find a Ready task matching the user's goal. Claim it by setting Author to your username and Status to `In Progress` before editing. Never take another agent's task. If the user gave a clear goal but no matching task exists, create a stable-ID task on the board and claim it; if the goal is unclear, ask before inventing work.
+3. Read `ai/project-brief.md` and the relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
+4. Work on a branch, keep the diff focused, and re-check the latest board before changing ownership or handoff. Follow `ai/definition-of-done.md` before finishing; move completed/blocked/backlog tasks to the matching list and update the handoff.
 
 ## Hard rules (never break without asking)
 1. **Never create, edit, move or delete `.meta` files by hand.** Asset moves/renames happen in the Unity Editor (or move the `.meta` with the asset).
@@ -33,6 +33,7 @@ Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per projec
 | Frame time, memory, battery, Android/mobile concerns, builds | `ai/rules/performance-mobile.md` |
 | Tests, bug fixes, "does it work?" | `ai/rules/testing.md` |
 | Git, deleting files, shell commands, dependencies | `ai/rules/safety-and-git.md` |
+| GitHub Actions, CI/CD, branch protection, release checks | `ai/github-workflows.md` |
 | Any Unity API, package, or setting | `ai/unity6-reference.md` |
 
 ## Project layout (edit to match)
