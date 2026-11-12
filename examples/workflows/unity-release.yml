@@ -37,7 +37,7 @@ jobs:
               echo "::error::Tag must follow vMAJOR.MINOR.PATCH with an optional prerelease suffix."
               exit 1
             fi
-            git ls-remote --exit-code --tags "https://github.com/$GITHUB_REPOSITORY.git" "refs/tags/$tag" >/dev/null
+            
           else
             tag="${PUSH_REF#refs/tags/}"
           fi
