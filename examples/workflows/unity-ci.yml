@@ -20,7 +20,8 @@ jobs:
     name: Unity import, C# compile and EditMode tests
     # Fork PRs do not receive repository secrets. Keep their static checks in
     # repository-quality.yml; never switch this job to pull_request_target.
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    # Manual runs are limited to the default branch because this job receives license secrets.
+    if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -48,7 +49,6 @@ jobs:
         with:
           projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
-          # Unity imports assemblies and compiles runtime/editor/test code before EditMode tests.
           testMode: editmode
           coverageEnabled: false
           githubToken: ''
@@ -64,7 +64,7 @@ jobs:
 
   playmode:
     name: PlayMode integration tests
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -99,7 +99,7 @@ jobs:
   build:
     name: Build Linux Standalone
     needs: [compile, playmode]
-    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
