@@ -90,11 +90,11 @@ Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.
 
 ### Release build template
 
-Copy `examples/workflows/unity-release.yml` to `.github/workflows/unity-release.yml`. It runs from a `vMAJOR.MINOR.PATCH` tag or an approved manual dispatch naming an existing tag, checks EditMode and PlayMode tests on that exact tag, then builds Linux Standalone and Android artifacts. Each artifact includes the source commit/tag/platform metadata and a SHA-256 checksum manifest, with 90-day retention.
+Copy `examples/workflows/unity-release.yml` to `.github/workflows/unity-release.yml`. It runs from a `vMAJOR.MINOR.PATCH` tag or an approved manual dispatch naming an existing tag, resolves that tag to an immutable commit SHA, checks EditMode and PlayMode against that SHA, then builds Linux Standalone and Android artifacts from the same SHA. Each artifact includes the source commit/tag/platform metadata and a SHA-256 checksum manifest, with 90-day retention.
 
 The build job uses the GitHub Environment named `release`. Configure that environment with required reviewers and only the platform-specific signing secrets needed by the project. Add the project's actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does **not** invent signing commands or store credentials. Artifacts are uploaded to the workflow run only: publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. For Apple platforms, add a macOS runner and the appropriate signing/build setup rather than reusing the Linux sample.
 
-The manual-dispatch path validates the tag format and checks that the tag exists, but teams should still protect release tags and verify that the tag points to an approved commit. Configure the Unity Editor version and license secrets as for the standard Unity workflow.
+The manual-dispatch path validates the tag format and checks that the tag exists. Downstream test/build jobs use the resolved commit SHA rather than resolving the tag again, so a tag move after validation cannot silently change the source being tested or built. Teams should still protect release tags and verify that the tag points to an approved commit. Configure the Unity Editor version and license secrets as for the standard Unity workflow.
 
 ## 3. Unity-specific checks to add as the project grows
 
