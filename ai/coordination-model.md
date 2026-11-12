@@ -16,16 +16,30 @@ Coordinate several AI agents without turning a shared session file into a high-f
 
 Do not duplicate detailed sub-item status in the global session summary. Do not create a separate tracker for a tiny task that can be handled directly in an existing phase file.
 
+## Phase readiness gate
+
+A phase may be marked **Ready** only when all of the following are true:
+1. Its outcome is observable and bounded; in-scope and out-of-scope work are explicit.
+2. Required predecessor phases/work packages are Done, or an approved parallel integration plan documents the dependency.
+3. Required human decisions, assets, access, APIs, and environments are available or explicitly listed as non-blocking.
+4. Acceptance criteria and verification approach are written before implementation.
+5. A phase owner and integration owner are named. They may be the same person for a small phase.
+6. Initial work-package boundaries identify allowed files/systems, excluded shared files, and dependencies.
+
+Do not start a dependent phase because it merely exists on the board. If a prerequisite is incomplete, keep the phase Planned or Blocked and name the exact dependency.
+
 ## Ownership model
 
 1. Each active phase has one accountable **phase owner**. That owner coordinates scope, integration, acceptance, and handoff.
-2. The phase owner may execute the whole phase or delegate substantial **work packages** with explicit owners.
-3. Sub-items normally remain grouped under their work package; they do not each require a separate owner or session-state row.
-4. A session username identifies the current agent session. It is not automatically the phase owner. Record phase/work-package ownership explicitly in the tracker.
-5. Claim ownership in the phase tracker before editing. Include agent, branch, scope/file boundary, and status.
-6. Do not take another agent's ownership without explicit human approval. On handoff, update ownership and the next step.
+2. Each phase has one named **integration owner**, responsible for integrating delegated work, resolving conflicts, reviewing cross-package compatibility, and ensuring acceptance evidence is consolidated. This may be the phase owner.
+3. The phase owner may execute the whole phase or delegate substantial **work packages** with explicit owners.
+4. Sub-items normally remain grouped under their work package; they do not each require a separate owner or session-state row.
+5. A session username identifies the current agent session. It is not automatically the phase owner. Record phase/work-package ownership explicitly in the tracker.
+6. Claim ownership in the phase tracker before editing. Include agent, branch, scope/file boundary, and status.
+7. Do not take another agent's ownership without explicit human approval. On handoff, update ownership and the next step.
+8. One agent owns each tracker file at a time. Delegated agents report checkpoint summaries to the tracker owner; they do not concurrently rewrite the shared tracker.
 
-## Work package sizing
+## Work package sizing and concurrency
 
 A useful work package produces a coherent, reviewable result and can be completed without frequent coordination-file edits. Group related sub-items when they:
 - contribute to the same acceptance outcome;
@@ -35,6 +49,8 @@ A useful work package produces a coherent, reviewable result and can be complete
 
 Split a phase only when it is too large for one owner or when independent work can proceed in parallel. Avoid splitting purely to make a long checklist look smaller.
 
+Default concurrency is **up to three active work-package owners per phase**, including the phase owner when they are implementing a package. A project may set a lower or higher limit in its project brief. The phase owner must queue excess packages rather than create more concurrent assignments. Concurrency is a ceiling, not a target: use fewer agents when integration cost or shared-file risk outweighs parallel speed.
+
 ## Parallel work and file boundaries
 
 Before parallel work begins, the phase owner records:
@@ -43,7 +59,7 @@ Before parallel work begins, the phase owner records:
 - dependencies and integration points;
 - the order for shared contracts, scenes, prefabs, assets, and composition roots.
 
-Prefer parallelism across isolated systems, tests, documentation, or independent modules. Serialize changes to shared Unity scenes, prefabs, ScriptableObjects, assembly definitions, central bootstrap/composition roots, shared interfaces, and project settings unless an explicit integration strategy exists. Never let two agents silently own overlapping files.
+Prefer parallelism across isolated systems, tests, documentation, or independent modules. Serialize changes to shared Unity scenes, prefabs, ScriptableObjects, assembly definitions, central bootstrap/composition roots, shared interfaces, project settings, and shared trackers unless an explicit integration strategy exists. Never let two agents silently own overlapping files.
 
 ## Checkpoints and shared-state updates
 
@@ -65,7 +81,9 @@ Do not update the global summary for every file edit, command, test case, or sub
 
 ## Completion and handoff
 
-A phase is complete only when its exit criteria and acceptance checks are met, all in-scope sub-items are Done, Deferred with explicit owner approval, or Blocked with a named dependency, and evidence is recorded. A phase owner integrates delegated work and reports any remaining risks.
+A phase is complete only when its exit criteria and acceptance checks are met, all in-scope sub-items are Done, Deferred with explicit owner approval, or Blocked with a named dependency, and evidence is recorded. Implementation complete is not the same as phase complete: compile, tests, integration, review, and human/device acceptance must be marked separately where applicable.
+
+The integration owner verifies that delegated branches are based on the intended integration point, checks their diffs, resolves conflicts, runs cross-package checks, and records the integrated commit/PR evidence. A work package is not integrated merely because its owner says it is finished.
 
 A handoff must identify the phase/work package, outgoing and incoming owner, branch/PR, exact stopping point, next action, file boundaries, verification performed/not performed, known risks, and decisions waiting. Release ownership when handing off.
 
