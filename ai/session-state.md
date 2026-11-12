@@ -10,26 +10,33 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-001–KIT-004 — Agent safeguards and CI quality foundation | In Progress | `gpt` | PR #1: `gpt/harden-agent-workflow` | Draft implementation; full workflow validation and independent review pending |
-| KIT-005 — Nightly regression and protected release templates | In Progress | `Gpt` | PR #2: `gpt-ci/nightly-release-workflows` | Draft implementation; actionlint/YAML validation and consumer run pending |
-| KIT-006 — Phase-based multi-agent coordination model | In Progress | `Gpt` | PR #3: `gpt/phase-based-coordination` | Add phase ownership rules, low-churn session summary, and reusable tracker template |
+| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-production-readiness` / `ai/phase-KIT-007-production-readiness.md` | Consolidate post-merge corrections, security hardening, regression tests, governance templates, and validation guidance |
+
+## Completed milestones
+
+| Task | Status | Evidence |
+|---|---|---|
+| KIT-001–KIT-004 — Agent safeguards and CI quality foundation | Done | PR #1 merged into `main`; merge commit `74fe2433a46bce6bb9b63696a03c92b2c74f0238` |
+| KIT-005 — Nightly regression and protected release templates | Done | PR #2 merged into `main`; merge commit `39e0f2205b110034645dd21fdbb7ffe3c966e4a5` |
+| KIT-006 — Phase-based multi-agent coordination model | Done | PR #3 merged into `main`; merge commit `447b7618cd0bb0051a3c3224d316e3a4a1c6c69f` |
 
 ## Coordination rules at a glance
 - Phase or substantial work package is the normal ownership unit; sub-items are grouped inside its tracker.
 - One accountable phase owner coordinates the phase. Split work-package ownership only when file boundaries and dependencies are genuinely independent.
 - Agents may complete several related sub-items before checkpointing; do not create a shared-board update for every small action.
 - Never allow overlapping ownership of the same scene, prefab, asset, API contract, or high-conflict file without an explicit integration plan.
-- Session identity is not phase ownership. A session username identifies the agent; the phase tracker records who owns the phase/work package.
+- Session identity is not phase ownership. A session username identifies the agent; the phase tracker records who owns the phase.
 
 ## Project context
 - **Repository:** reusable Unity AI guidance and inactive CI templates; no Unity game project is hosted here.
-- **Current base:** `gpt-ci/nightly-release-workflows`, stacked on PR #1 and PR #2; this change is a separate draft PR.
+- **Base:** `main`; KIT-001 through KIT-006 are merged.
+- **Consumer validation target:** Garden Alchemy, after KIT-007 is reviewed and merged.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-006 coordination model and template are being added on `gpt/phase-based-coordination`.
-- **Next step:** inspect the complete diff, run documentation/source checks available here, and request independent review. Then migrate Garden Alchemy's live coordination summary to phase-level ownership without deleting phase history.
-- **Verified:** Existing PR #1 and #2 remain open and unmerged. PR #2 head used as the base for this branch.
-- **Not verified:** Unity compile/tests are not applicable; workflow validation still belongs to PR #1/#2 and consumer repositories.
-- **Owner decisions waiting:** None for the coordination model; projects choose their own phase boundaries and concurrency limits.
-- **Known risks:** A tracker can become a second noisy board if agents log every micro-action. Keep sub-item updates inside the owning phase file and use checkpoints.
+- **Exact stopping point:** KIT-007 implementation on `gpt/kit-007-production-readiness`.
+- **Next step:** complete kit-level checks, inspect the full PR diff, request independent review, then merge only after review. After merge, configure and test the copied templates in Garden Alchemy.
+- **Verified:** PRs #1, #2, and #3 are merged into `main` (merge SHAs recorded above).
+- **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require the Garden Alchemy consumer project and its configuration.
+- **Owner decisions waiting:** Garden Alchemy's exact Unity Editor version, target platforms, license configuration, required checks, and release environment must be confirmed during consumer setup.
+- **Known risks:** Workflow templates remain opt-in examples. Passing kit-level static checks does not prove they execute successfully in a consuming Unity repository.
