@@ -1,0 +1,11 @@
+# Copy to .github/dependabot.yml in a Unity game repository.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions
+    open-pull-requests-limit: 5
