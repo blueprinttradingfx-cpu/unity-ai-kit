@@ -1,0 +1,8 @@
+# Copy to .github/CODEOWNERS and replace these comments with real GitHub users/teams.
+# Example patterns (uncomment only after choosing valid repository owners):
+# /.github/workflows/ @your-org/release-engineering
+# /examples/workflows/ @your-org/unity-platform
+# /ai/ @your-org/engineering-leads
+# /scripts/ @your-org/build-and-tools
+#
+# This file intentionally grants no ownership until configured.
