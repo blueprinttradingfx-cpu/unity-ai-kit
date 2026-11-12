@@ -49,7 +49,7 @@ GitHub does not provide repository secrets to workflows triggered from fork PRs.
 
 Copy `examples/workflows/repository-quality.yml` and `examples/scripts/validate_unity_meta.py` into the project.
 
-For standalone .NET tools, services, or test projects in the same repository, optionally copy `examples/workflows/dotnet-validation.yml` to `.github/workflows/dotnet-validation.yml`. Set the Actions repository variable `DOTNET_PROJECT_PATHS` to newline-separated paths to the intended `.sln`, `.slnx`, or SDK-style `.csproj` files. The workflow restores, builds Release, runs tests for solutions and test projects, and verifies whitespace formatting with `dotnet format`.
+For standalone .NET tools, services, or test projects in the same repository, optionally copy `examples/workflows/dotnet-validation.yml` to `.github/workflows/dotnet-validation.yml`. Set the Actions repository variable `DOTNET_PROJECT_PATHS` to newline-separated paths to the intended `.sln`, `.slnx`, or SDK-style `.csproj` files. Set `DOTNET_TEST_PROJECT_PATHS` to newline-separated test project paths (`.sln`, `.slnx`, or test `.csproj`) to run tests explicitly. The workflow restores, builds Release, runs configured tests, and verifies whitespace formatting with `dotnet format`.
 
 **Do not point this .NET workflow at Unity-generated solution/project files.** Unity projects must be compiled by the matching Unity Editor version via the GameCI workflow; generic `dotnet build` does not reproduce Unity's generated references, platform defines, packages, or editor compilation pipeline. Add a `global.json` and lock/restore policy when the standalone .NET codebase needs a pinned SDK; change the sample SDK version to match the project.
 
