@@ -6,7 +6,7 @@ This guide defines a practical CI/CD baseline for Unity game repositories. Files
 
 | When | Required checks | Why |
 |---|---|---|
-| Every pull request | Diff/whitespace check, Unity asset metadata integrity, workflow lint, secret/dependency scanning | Catch repository damage and unsafe changes before Unity starts |
+| Every pull request | Diff/whitespace check, Unity asset metadata integrity, workflow lint; secret/dependency scanning when enabled in repository settings | Catch repository damage and unsafe changes before Unity starts |
 | Every trusted pull request | Unity import/compile + EditMode tests; PlayMode tests where runner/time permits | Catch compile, data, logic, and scene integration regressions |
 | Merge to main | Full Unity tests + at least one representative target build | Prove the merged commit is buildable |
 | Nightly / scheduled | Full platform matrix, longer PlayMode/simulation/soak tests, coverage trend | Catch slower or platform-specific regressions |
@@ -51,6 +51,7 @@ Copy `examples/workflows/repository-quality.yml` and `examples/scripts/validate_
 The quality workflow checks:
 - Whitespace errors in the changed Git diff.
 - Missing Unity `.meta` sidecars for files/folders under `Assets/`.
+- Orphan `.meta` files with no matching asset/folder.
 - Duplicate or malformed GUIDs in Unity metadata.
 
 The validator is read-only. It does not generate, edit, move, or delete metadata. Fix findings through the Unity Editor or by restoring the correct asset and matching metadata from version control.
