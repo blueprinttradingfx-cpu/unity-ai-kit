@@ -33,6 +33,7 @@ Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per projec
 | Frame time, memory, battery, Android/mobile concerns, builds | `ai/rules/performance-mobile.md` |
 | Tests, bug fixes, "does it work?" | `ai/rules/testing.md` |
 | Git, deleting files, shell commands, dependencies | `ai/rules/safety-and-git.md` |
+| GitHub Actions, CI/CD, branch protection, release checks | `ai/github-workflows.md` |
 | Any Unity API, package, or setting | `ai/unity6-reference.md` |
 
 ## Project layout (edit to match)
