@@ -1,8 +1,8 @@
 # Unity 6 reference (for AI assistants whose training data may be older)
 
-Written for Unity 6.x (6000.x), with Unity 6.3 LTS as the kit's current default target.
+Written for Unity 6.x (6000.x), with Unity 6.3 LTS (6000.3) as the kit's current default target.
 **Spot-check reviewed: 2026-11-13.** This is not a complete API compatibility audit.
-The API examples below were checked against Unity 6.0 Scripting API / Manual pages linked at the end. Always verify against the exact Editor and package versions in `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`.
+Only the items explicitly linked in the final reference list were spot-checked. Several other rows are general migration reminders, not a claim that every API/package detail was verified against 6.3. Always verify against the exact Editor and package versions in `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`.
 
 Treat this as a checklist of common mistakes, not official API documentation. Confidence describes the stability of the general guidance, not compatibility with every package version.
 
@@ -45,10 +45,17 @@ Input System (`com.unity.inputsystem`), URP (`com.unity.render-pipelines.univers
 5. Update the review date only after a dated review; list the APIs/packages actually checked. A spot check is not a blanket certification.
 
 ## Official Unity references checked for this spot review
-- [Rigidbody.linearVelocity — Unity 6.0 Scripting API](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Rigidbody-linearVelocity.html)
-- [Rigidbody — Unity 6.0 Scripting API](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Rigidbody.html)
-- [Awaitable — Unity 6.0 Scripting API](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Awaitable.html)
-- [Enter Play Mode options — Unity 6.0 Scripting API](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/EnterPlayModeOptions.html)
-- [InitializeOnEnterPlayMode — Unity 6.0 Scripting API](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/InitializeOnEnterPlayModeAttribute.html)
 
-This list is intentionally limited to the claims spot-checked for this change. Verify other entries before relying on them for a version-sensitive migration.
+- [Rigidbody.linearVelocity — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/rigidbody/linearvelocity)
+- [Rigidbody.linearDamping — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/rigidbody/lineardamping)
+- [Rigidbody2D — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/rigidbody2d)
+- [EnterPlayModeOptions — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityeditor/enterplaymodeoptions)
+- [InitializeOnEnterPlayModeAttribute — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityeditor/initializeonenterplaymodeattribute)
+- [RuntimeInitializeOnLoadMethodAttribute — Unity 6.3 (6000.3) Scripting API](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/runtimeinitializeonloadmethodattribute)
+- [Domain reload behavior — Unity 6.3 (6000.3) Manual](https://docs.unity.com/en-us/engine/6000.3/manual/programming-environment/code-reload-serialization/code-reloading-editor/domain-reloading)
+- [Event function execution order — Unity 6.3 (6000.3) Manual](https://docs.unity.com/en-us/engine/6000.3/manual/scripting/managing-update-order/execution-order)
+- [Awaitable — Unity 6.0 (6000.0) Scripting API](https://docs.unity.com/en-us/engine/6000.0/script-reference/unityengine/awaitable)
+
+The Awaitable API link above is the 6000.0 reference, not a 6000.3-specific API page. Its pooled-instance behavior is a known important constraint, but this spot review does not certify every Awaitable API detail for 6.3. Verify against the installed Editor's documentation before relying on version-sensitive behavior.
+
+This list is intentionally limited to the claims spot-checked for this change. Other entries in the tables are prompts to verify against the project's exact Editor and package versions, not a blanket compatibility certification.

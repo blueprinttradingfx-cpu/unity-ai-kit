@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-production-readiness` / `ai/phase-KIT-007-production-readiness.md` | Consolidate post-merge corrections, security hardening, regression tests, governance templates, and validation guidance |
+| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Owner audit recorded; PR #5 ready for maintainer merge; then hand off to Garden Alchemy consumer validation |
 
 ## Completed milestones
 
@@ -34,9 +34,9 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-007 implementation on `gpt/kit-007-production-readiness`.
-- **Next step:** complete kit-level checks, inspect the full PR diff, request independent review, then merge only after review. After merge, configure and test the copied templates in Garden Alchemy.
-- **Verified:** PRs #1, #2, and #3 are merged into `main` (merge SHAs recorded above).
+- **Exact stopping point:** PR #5 is ready for maintainer merge consideration. It contains protected Unity environment gates, workflow/security regression coverage, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS default, and a consumer validation checklist. Owner audit comment `5883211309` is recorded; latest Kit Validation run `43320593384` passed 16 tests, source/config syntax checks, and actionlint.
+- **Next step:** merge PR #5 after maintainer authorization, then begin a separately scoped Garden Alchemy consumer-validation phase. Garden Alchemy remains deferred until the kit is merged.
+- **Verified:** PRs #1, #2, and #3 are merged into `main` (merge SHAs recorded above); PR #5 owner audit comment submitted and PR marked ready for review.
 - **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require the Garden Alchemy consumer project and its configuration.
 - **Owner decisions waiting:** Garden Alchemy's exact Unity Editor version, target platforms, license configuration, required checks, and release environment must be confirmed during consumer setup.
 - **Known risks:** Workflow templates remain opt-in examples. Passing kit-level static checks does not prove they execute successfully in a consuming Unity repository.

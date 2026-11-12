@@ -20,20 +20,24 @@ Do not run every expensive platform build on every PR by default. Start with one
 Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml` in the game repository.
 
 The template:
-- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on trusted PRs and pushes to main.
-- Runs PlayMode integration tests in a separate job on trusted PRs and pushes to main.
+- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on same-repository PRs only after approval of the protected `unity-pr-validation` environment, and on pushes to main through `unity-ci`.
+- Runs PlayMode integration tests in a separate job with the same protected-environment boundary.
 - Builds a sample Linux Standalone player after tests pass on main, or on a manual dispatch from the default branch only.
 - Caches only the Unity `Library/` import cache, keyed by OS, Unity version file, and Package Manager lockfile.
 - Uploads test results and build output as workflow artifacts.
 - Skips licensed Unity jobs for fork-originated PRs; the separate repository-quality workflow still runs on those PRs.
-- Restricts manual dispatch to the repository default branch because the workflow receives Unity license secrets. Do not remove this guard without a documented security review.
+- Restricts manual dispatch to the repository default branch. Licensed jobs consume environment-scoped secrets; same-repository PR jobs require explicit environment approval. Do not remove either guard without a documented security review.
 
 ### Configure it first
 
 1. If the Unity project is in a subfolder, define the repository variable `UNITY_PROJECT_PATH` (for example `game/`); leave it unset when the project is at the repository root.
 2. Change `targetPlatform` from the sample `StandaloneLinux64` to a platform the project actually ships.
 3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt`; GameCI's `auto` mode reads this file.
-4. Add only the Unity license secrets needed for the license type. Keep signing credentials separate and available only to a protected release job/environment.
+4. Configure GitHub Environments before adding Unity credentials. Store Unity license values only as environment secrets: remove any repository-level or organization-level secrets with the same names (`UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`, `UNITY_SERIAL`) so they cannot bypass environment approval.
+   - `unity-pr-validation`: add the required Unity license secrets and configure required reviewers; enable **prevent self-review** where available. Allow the PR deployment refs used by your repository. Every same-repository PR that reaches licensed Unity jobs must be explicitly approved before those secrets are released.
+   - `unity-ci`: add the Unity license secrets; restrict deployments to the default branch. Main-branch CI and the default-branch-only nightly workflow use this environment.
+   - `release`: add the Unity license secrets plus only the signing credentials required by the project. Configure required reviewers, enable prevent self-review where available, and allow only the intended version tags plus the default branch for manual dispatch. Release tests and builds wait for this protected environment.
+   - Fork PRs continue to skip licensed jobs and run repository-quality checks. Never switch to `pull_request_target` to expose secrets to fork code.
 5. Run the workflow manually from the default branch and inspect the test report/build artifact before making checks required.
 
 GameCI is community-maintained, not an official Unity service. Review action releases and permissions before adopting it. The examples pin actions to full commit SHAs; update pins deliberately and review upstream changes.
@@ -59,12 +63,14 @@ It uses temporary repositories/fixtures and does not modify the consumer project
 For separate SDK-style .NET tools, services, or test projects, optionally copy `examples/workflows/dotnet-validation.yml`. Configure:
 - `DOTNET_PROJECT_PATHS`: newline-separated `.sln`, `.slnx`, or SDK-style `.csproj` paths.
 - `DOTNET_TEST_PROJECT_PATHS`: optional newline-separated test project paths.
-- `DOTNET_SDK_VERSION`: optional SDK version (defaults to `8.0.x`).
+- `DOTNET_SDK_VERSION`: optional SDK version (defaults to `.NET 10 LTS` via `10.0.x`). .NET 8 and .NET 9 reached end of support on 10 November 2026; .NET 10 LTS is supported through November 2028. The kit deliberately defaults to LTS rather than the newly released .NET 11 STS. See the [official .NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core).
 - `DOTNET_RUN_VULNERABILITY_AUDIT`: optional `true`/`false` (defaults to `true`).
 
 The workflow restores, builds Release, runs configured tests, verifies whitespace and analyzer formatting, and optionally reports vulnerable NuGet packages. Review audit output and update dependencies deliberately; do not assume a warning is automatically safe to ignore.
 
 **Never point this workflow at Unity-generated solution/project files.** Unity projects must be compiled by the matching Unity Editor via GameCI; generic `dotnet build` does not reproduce Unity's generated references, platform defines, packages, or editor compilation pipeline. For standalone .NET projects, pin SDK and dependency policy to the needs of that codebase. Analyzer coverage depends on analyzers configured by the project.
+
+The optional `dotnet list package --vulnerable --include-transitive` step is a report, not a vulnerability-fail gate by itself. NuGet restore also performs auditing when enabled by the project/SDK. To make selected severities block CI, configure `WarningsAsErrors` in the project or `Directory.Build.props`; for example, append `NU1903;NU1904` to fail on high/critical advisories, or include `NU1901;NU1902` to fail on all severities. .NET 10 projects default NuGet audit mode to `all` (including transitive dependencies). See [NuGet package auditing](https://learn.microsoft.com/en-us/nuget/concepts/auditing-packages) for audit-source and severity policy details.
 
 ## 4. Project-owned validators
 
@@ -74,13 +80,13 @@ Do not automatically execute every `validate_*.py` file discovered in a reposito
 
 ## 5. Nightly regression
 
-Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix only after both test jobs pass. Adjust schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly.
+Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suites separately in the `unity-ci` environment, then builds the configured sample platform matrix only after both test jobs pass. Restrict `unity-ci` deployments to the default branch; scheduled runs execute from the default branch and manual dispatch is guarded likewise. Adjust schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly.
 
 ## 6. Release build
 
 Copy `examples/workflows/unity-release.yml`. It validates a version tag, resolves it to an immutable commit SHA, tests and builds that exact SHA, and produces artifacts with source metadata and SHA-256 checksums.
 
-The build job uses the GitHub Environment named `release`. Configure required reviewers and only the platform-specific signing secrets needed by the project. Add actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does not invent signing commands or store credentials. Artifacts are uploaded to the workflow run only; publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. Apple platforms need a macOS runner and platform-specific setup.
+The EditMode, PlayMode, and build jobs use the GitHub Environment named `release`. Configure required reviewers, allow only intended release tags and the default branch for manual dispatch, and store Unity license plus only the platform-specific signing secrets needed by the project in that environment. Add actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does not invent signing commands or store credentials. Artifacts are uploaded to the workflow run only; publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. Apple platforms need a macOS runner and platform-specific setup.
 
 Manual release dispatch must be restricted to the default branch, validate the tag, and build the resolved commit SHA rather than resolving the tag again downstream.
 
@@ -96,7 +102,20 @@ The kit includes optional starter material under `examples/github/`. Apply only 
 
 Branch protection/rulesets are repository settings and cannot be activated by copying files. Configure and verify them in GitHub Settings, then document which checks are required. Never make a required check name mandatory before its workflow is installed and has reported successfully.
 
-## 8. Reusable patterns from game repositories
+
+## 8. GitHub Actions runtime compatibility
+
+GitHub removed the Node 20 runtime from hosted Actions runners on 23 September 2026. The kit's pins were checked on 13 November 2026 and use Node 24-compatible releases:
+- `actions/checkout` v7.0.1
+- `actions/cache` v6.1.0
+- `actions/upload-artifact` v7.0.2
+- `actions/setup-dotnet` v6.1.0
+- `game-ci/unity-test-runner` v4.3.2
+- `game-ci/unity-builder` v6.0.0
+
+The GameCI actions were checked against their `action.yml` runtime declarations; all listed actions declare Node 24. All action references are pinned to full commit SHAs. Do not downgrade to older Node 20 pins. Self-hosted runners must meet the current minimum runner version required by each action. See the [GitHub Node 20 removal notice](https://github.blog/changelog/2026-09-23-node-20-is-no-longer-available-in-github-actions/).
+
+## 9. Reusable patterns from game repositories
 
 | Observed pattern | Kit treatment |
 |---|---|
