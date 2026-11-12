@@ -41,11 +41,13 @@ jobs:
             git diff --check
           fi
 
-      - name: Set up Python syntax-check dependency
-        run: python3 -m pip install --disable-pip-version-check --no-input PyYAML==6.0.2
+      - name: Set up isolated syntax-check environment
+        run: |
+          python3 -m venv .venv-ci
+          .venv-ci/bin/python -m pip install --disable-pip-version-check --no-input PyYAML==6.0.2
 
       - name: Validate tracked source and configuration syntax
-        run: python3 examples/scripts/validate_source_syntax.py
+        run: .venv-ci/bin/python examples/scripts/validate_source_syntax.py
 
       - name: Lint GitHub Actions workflows
         run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
