@@ -1,6 +1,6 @@
 # Unity AI Kit — provider-neutral starter for new Unity games
 
-Drop-in guidance and optional CI templates so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. The core guidance is plain Markdown; optional examples include GitHub Actions workflows and a read-only Unity metadata validator.
+Drop-in guidance and optional CI templates so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. The core guidance is plain Markdown; the kit itself has a lightweight validation workflow, while optional examples provide Unity consumer CI/CD templates and read-only validators.
 
 Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules, decision records, definition of done, session state), but without its Claude-only machinery (49 agents, 74 skills, bash hooks), and with the Unity reference rewritten and corrected.
 
@@ -34,7 +34,7 @@ The kit includes optional, inactive templates for Unity CI and repository checks
 - Optionally copy `examples/workflows/unity-release.yml` for version-tagged test/build artifacts with SHA-256 checksums. Configure the protected GitHub Environment named `release`, required reviewers, and project-specific signing steps before using it for real releases; the template does not publish to stores.
 - Read `ai/github-workflows.md` before enabling workflows. It covers fork PR secret safety, Unity Editor C# compilation, EditMode/PlayMode tests, standalone .NET checks, source/config syntax and conflict-marker checks, Unity metadata integrity, project-specific data-validator patterns, nightly regression, protected release artifacts, branch protection, and action pinning.
 
-Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The examples are not active in this master kit repository. Run `python -m unittest discover -s tests -v` to regression-test the kit's read-only validators. Validate licensed Unity workflows in a real consumer project before requiring their checks.
+Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The consumer examples are not active in this master kit repository. The active `.github/workflows/kit-validation.yml` checks source syntax, lints the active and example workflows, and runs validator regression tests. Run `python -m unittest discover -s tests -v` locally as well. Validate licensed Unity workflows in a real consumer project before requiring their checks. Validate licensed Unity workflows in a real consumer project before requiring their checks.
 
 ## How it works
 - `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, and working style.
