@@ -4,12 +4,12 @@
 Make the merged Unity AI Kit internally consistent, safer to adopt, and easier to validate. Prepare the kit for a real consumer-project validation pass in Garden Alchemy.
 
 ## Status and ownership
-- Status: In Progress
+- Status: Done
 - Phase owner: Gpt
 - Integration owner: Gpt
 - Branch / PR: `gpt/kit-007-ci-secret-isolation` (follow-up to merged PR #4)
 - Last checkpoint: PR #4 merged to main; kit validation passed; post-merge audit identified licensed CI secrets exposed to same-repository PR jobs
-- Next milestone: merge the owner-reviewed kit hardening PR, then hand off to consumer-project validation
+- Next milestone: begin the separately scoped Garden Alchemy consumer-validation phase
 
 ## Scope
 ### In scope
@@ -45,7 +45,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 | KIT-007-WP2 | Harden licensed CI dispatch and improve standalone .NET checks | Gpt | Done | examples/workflows, ai/github-workflows.md | KIT-001, KIT-005 |
 | KIT-007-WP3 | Add validator regression tests and consumer test instructions | Gpt | Done | tests/, ai/github-workflows.md | KIT-001 |
 | KIT-007-WP4 | Review Unity 6 reference and add governance/security templates | Gpt | Done | ai/unity6-reference.md, examples/github/, README.md | KIT-001 |
-| KIT-007-WP5 | Reconcile merged implementation, review evidence, and prepare consumer handoff | Gpt | In Progress | complete PR #4 diff, phase tracker, consumer handoff docs | WP1–WP4 |
+| KIT-007-WP5 | Reconcile merged implementation, review evidence, and prepare consumer handoff | Gpt | Done | complete PR #4 diff, phase tracker, consumer handoff docs | WP1–WP4 |
 | KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | Done | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
 | KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | Done | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
 | KIT-007-WP8 | Upgrade GitHub Actions pins to Node 24-compatible releases | Gpt | Done | all active/example workflows, action pin tests, workflow docs | WP2, WP6 |
@@ -139,12 +139,13 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 
 ## Checkpoint log
 - 2026-11-13 — PR #4 merged to main as `6e2e4f039562514101373d6b5478fcdad8e5335a`; Kit Validation run `43292788501` passed. PR #4 has no submitted reviews. Post-merge workflow audit identified a same-repository PR secret-exposure gap; follow-up WP5/WP6 opened on `gpt/kit-007-ci-secret-isolation`.
-- 2026-11-13 — PR #5 follow-up now includes protected environment secret gates, explicit default-branch guards, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS defaults, and a consumer checklist. Kit Validation run `43320593384` on `1c9b7b38` passed 16 tests, source/config syntax checks, and actionlint. Owner audit comment `5883211309` was submitted; PR #5 was marked ready for review. The maintainer chose owner review as sufficient for this kit.
+- 2026-11-13 — PR #5 follow-up includes protected environment secret gates, explicit default-branch guards, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS defaults, and a consumer checklist. Kit Validation run `43320593384` on `1c9b7b38` passed 16 tests, source/config syntax checks, and actionlint. Owner audit comment `5883211309` was submitted; the maintainer chose owner review as sufficient for this kit.
+- 2026-11-13 — PR #5 merged into `main` as `f814ac41560964ef5abb14ab31f724674cb754bc`; KIT-007 closed. Consumer-project Unity validation remains unverified and is the next phase.
 
 ## Handoff
-- Current owner/status: Gpt / In Progress
-- Exact stopping point: PR #5 is ready for maintainer merge consideration on `gpt/kit-007-ci-secret-isolation`; owner audit comment is recorded.
-- Next action: merge PR #5 after maintainer authorization, then hand off to the separately scoped Garden Alchemy consumer-validation phase.
-- Verified: 16 kit regression tests, source/config syntax validation, actionlint, full PR diff inspection, and owner audit comment.
+- Current owner/status: Gpt / Done
+- Exact stopping point: PR #5 merged into `main` as `f814ac41560964ef5abb14ab31f724674cb754bc`; KIT-007 is closed.
+- Next action: start the separately scoped Garden Alchemy consumer-validation phase after reading that repository's current agent instructions, coordination state, active phase tracker, and ownership.
+- Verified: 16 kit regression tests, source/config syntax validation, actionlint, full PR diff inspection, owner audit comment, and PR #5 merge.
 - Not verified: real consumer GitHub Environment protection settings, licensed GameCI execution, Unity Editor import/compile, EditMode/PlayMode tests, target builds, or device behavior.
 - Risks / decisions waiting: confirm Garden Alchemy project settings and secrets during consumer validation.
