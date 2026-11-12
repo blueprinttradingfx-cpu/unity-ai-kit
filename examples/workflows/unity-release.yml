@@ -41,6 +41,10 @@ jobs:
           else
             tag="${PUSH_REF#refs/tags/}"
           fi
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag must follow vMAJOR.MINOR.PATCH with an optional prerelease suffix."
+            exit 1
+          fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
       - name: Checkout exact release tag
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
