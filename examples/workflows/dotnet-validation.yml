@@ -1,6 +1,6 @@
 # Copy to .github/workflows/dotnet-validation.yml.
 # Configure DOTNET_PROJECT_PATHS and optional DOTNET_TEST_PROJECT_PATHS as newline-separated repository variables.
-# DOTNET_SDK_VERSION defaults to 8.0.x; set it to the SDK required by your standalone .NET projects.
+# DOTNET_SDK_VERSION defaults to 10.0.x; set it to the SDK required by your standalone .NET projects.
 # Keep Unity-generated .sln/.csproj files out of these lists: Unity code compiles in the Editor workflow.
 name: .NET Validation
 
@@ -25,7 +25,7 @@ jobs:
     env:
       DOTNET_PROJECT_PATHS: ${{ vars.DOTNET_PROJECT_PATHS }}
       DOTNET_TEST_PROJECT_PATHS: ${{ vars.DOTNET_TEST_PROJECT_PATHS }}
-      DOTNET_SDK_VERSION: ${{ vars.DOTNET_SDK_VERSION || '8.0.x' }}
+      DOTNET_SDK_VERSION: ${{ vars.DOTNET_SDK_VERSION || '10.0.x' }}
       DOTNET_RUN_VULNERABILITY_AUDIT: ${{ vars.DOTNET_RUN_VULNERABILITY_AUDIT || 'true' }}
     steps:
       - name: Checkout

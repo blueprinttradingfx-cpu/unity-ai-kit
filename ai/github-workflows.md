@@ -63,7 +63,7 @@ It uses temporary repositories/fixtures and does not modify the consumer project
 For separate SDK-style .NET tools, services, or test projects, optionally copy `examples/workflows/dotnet-validation.yml`. Configure:
 - `DOTNET_PROJECT_PATHS`: newline-separated `.sln`, `.slnx`, or SDK-style `.csproj` paths.
 - `DOTNET_TEST_PROJECT_PATHS`: optional newline-separated test project paths.
-- `DOTNET_SDK_VERSION`: optional SDK version (defaults to `8.0.x`).
+- `DOTNET_SDK_VERSION`: optional SDK version (defaults to `.NET 10 LTS` via `10.0.x`). .NET 8 and .NET 9 reached end of support on 10 November 2026; .NET 10 LTS is supported through November 2028. The kit deliberately defaults to LTS rather than the newly released .NET 11 STS. See the [official .NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core).
 - `DOTNET_RUN_VULNERABILITY_AUDIT`: optional `true`/`false` (defaults to `true`).
 
 The workflow restores, builds Release, runs configured tests, verifies whitespace and analyzer formatting, and optionally reports vulnerable NuGet packages. Review audit output and update dependencies deliberately; do not assume a warning is automatically safe to ignore.

@@ -91,6 +91,16 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
                         found.add(name)
         self.assertEqual(found, set(expected))
 
+    def test_dotnet_template_defaults_to_supported_lts_sdk(self) -> None:
+        workflow = yaml.load((WORKFLOWS / "dotnet-validation.yml").read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+        sdk = workflow["jobs"]["dotnet"]["env"]["DOTNET_SDK_VERSION"]
+        self.assertIn("10.0.x", sdk)
+        self.assertNotIn("8.0.x", sdk)
+        guide = (ROOT / "ai" / "github-workflows.md").read_text(encoding="utf-8")
+        self.assertIn(".NET 10 LTS", guide)
+        self.assertIn("November 2028", guide)
+        self.assertIn("official .NET support policy", guide)
+
     def test_setup_guide_documents_environment_secret_boundaries(self) -> None:
         guide = (ROOT / "ai" / "github-workflows.md").read_text(encoding="utf-8")
         for environment in ("unity-pr-validation", "unity-ci", "release"):
