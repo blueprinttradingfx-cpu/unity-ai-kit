@@ -1,64 +1,68 @@
 # Definition of done
 
-A task is done only when every applicable line is true. The AI states which lines it checked and links the evidence in its PR or handoff.
+A task or phase is done only when every applicable line is true. State which lines were checked and link evidence in the PR or handoff.
 
 ## All changes
 - [ ] Does exactly what was asked; no unrequested extras.
-- [ ] The relevant validation ran successfully, or is explicitly marked **not run** with the reason and exact human check required.
-- [ ] No new console errors/warnings introduced (state what was checked; do not imply a console check if no Editor was run).
+- [ ] Relevant validation ran successfully, or is explicitly marked **not run** with the reason and exact human check required.
+- [ ] No new console errors/warnings introduced (do not imply a console check if no Editor was run).
 - [ ] No hard rule in `AGENTS.md` broken; no `.meta`/scene/prefab hazards.
 - [ ] Tuning numbers are in data, not code.
-- [ ] Logic changes have a test (or a stated reason there is none); project-specific catalog/save/config validators run where relevant.
-- [ ] Diff is small and explained in two sentences.
-- [ ] Task ID, owner, status, next step, and verification evidence are consistent across the board and handoff.
+- [ ] Logic changes have a test (or a stated reason there is none); project-specific validators run where relevant.
+- [ ] Diff is focused and explained.
+- [ ] Task/phase owner, status, next step, and verification evidence are consistent in the owning tracker.
 
-## Verification evidence (record what applies)
-For each command/test/build, record:
-- Exact command or Unity UI action.
-- Unity Editor version and relevant package version(s), when applicable.
-- Result and exit code / pass-fail counts.
-- Log or artifact path, plus any relevant commit or screenshot link.
+## Phase completion
+- [ ] Every in-scope sub-item is Done, explicitly Deferred with owner approval, or moved to Blocked with a concrete dependency.
+- [ ] Phase exit criteria and acceptance checks pass; evidence is linked from the phase tracker.
+- [ ] Dependencies and integration points are resolved; no hidden work is represented as complete.
+- [ ] Shared session summary reflects the phase status/ownership transition.
+- [ ] Independent review is complete for architecture, save data, security, build/release, and agent-workflow changes, or clearly marked pending.
 
-Do not invent a successful result from a command that was not run. For documentation-only changes, state the checks performed (for example: links and referenced paths checked, headings/code fences reviewed, and diff inspected); Unity compilation is not applicable.
+## Verification evidence
+For each command/test/build, record the exact command or Editor action, Unity/package version when applicable, result and exit code/pass-fail counts, and log/artifact/screenshot path. Never infer a successful result from a command that was not run.
+
+For documentation-only changes, check links, referenced paths, headings/code fences, and the complete diff; Unity compilation is not applicable.
 
 ## Unity and CI checks
-- [ ] Unity Editor version matches `ProjectSettings/ProjectVersion.txt`; report the exact version.
-- [ ] Unity Editor import/compile succeeds using the exact project Editor version; EditMode tests run for changed logic/data; PlayMode tests run for affected scene/gameplay integration where applicable.
-- [ ] Standalone SDK-style .NET projects (if present/configured) restore and build; test projects run; configured formatting/analyzer checks pass. Do not use generic `dotnet build` as a substitute for Unity Editor compilation.
-- [ ] The relevant target build succeeds, or is explicitly marked not run with the reason and a precise human check.
-- [ ] Repository-quality checks pass: diff whitespace, actionlint, tracked JSON/asmdef/asmref/YAML/Python/JavaScript syntax, conflict-marker scan, and Unity metadata sidecar/GUID validation where configured. Unity scene/prefab YAML is not generically parsed.
+- [ ] Unity Editor version matches `ProjectSettings/ProjectVersion.txt`; report exact version.
+- [ ] Unity Editor import/compile succeeds; EditMode tests cover changed logic/data; PlayMode tests cover affected integration where applicable.
+- [ ] Standalone SDK-style .NET projects (if configured) restore/build; test projects run; configured formatting/analyzer checks pass. Generic `dotnet build` is not a substitute for Unity Editor compilation.
+- [ ] Relevant target build succeeds, or is marked not run with reason and precise human check.
+- [ ] Repository-quality checks pass: diff whitespace, actionlint, tracked JSON/asmdef/asmref/YAML/Python/JavaScript syntax, conflict-marker scan, and Unity metadata validation where configured. Unity scene/prefab YAML is not generically parsed.
 - [ ] Package manifest and lockfile changes are reviewed together; no unrequested package upgrades.
-- [ ] CI artifacts/logs are linked; state skipped jobs (including fork-PR Unity jobs) rather than describing them as passed.
+- [ ] CI artifacts/logs are linked; skipped jobs are stated rather than described as passed.
 - [ ] Signing/release checks use protected environments; no signing secrets are available to ordinary PR jobs.
-- [ ] Nightly workflows retain useful test/build evidence and have a deliberate platform matrix, schedule, timeout, and retention policy.
-- [ ] Release workflows test the exact version tag, record source commit/platform metadata, checksum artifacts, and require protected approval before signing or external distribution.
+- [ ] Nightly workflows have deliberate platform matrix, schedule, timeout, and retention.
+- [ ] Release workflows test the exact version tag, record source commit/platform metadata, checksum artifacts, and require protected approval before signing/distribution.
 - [ ] Real-device checks are recorded separately; a CI build is not evidence of device performance or UX.
 
-See `ai/github-workflows.md` for the recommended PR, main-branch, nightly, and release pipeline.
+See `ai/github-workflows.md` for recommended PR, main, nightly, and release pipelines.
 
 ## Review
-- [ ] Review the complete diff, not only the edited snippets.
-- [ ] For changes to architecture, save data, security, build/release, or agent safety/workflow rules, request an independent review when another reviewer is available. If unavailable, mark the review as pending; do not call a self-review independent.
-- [ ] Resolve or explicitly record every review finding; do not silently ignore a blocker.
+- [ ] Review the complete diff, not only snippets.
+- [ ] Request independent review for architecture, save data, security, release/build, and agent workflow/safety changes. If unavailable, mark pending.
+- [ ] Resolve or explicitly record every review finding.
 
 ## Anything visible (UI, VFX, animation, layout)
 - [ ] Human told exactly which screen/state to open and what "correct" looks like.
-- [ ] **Screenshot or short video from a real device** exists for the change (human provides). No visual change is "done" on description alone.
-- [ ] Checked: safe area, longest text, smallest and tallest screen, Back button, pressed/disabled states.
+- [ ] Screenshot/video from a real device exists for the change (human provides).
+- [ ] Check safe area, longest text, smallest/tallest screen, Back button, pressed/disabled states.
 
 ## Performance-sensitive
 - [ ] No per-frame allocation added (profiler evidence or code reasoning stated).
-- [ ] Baseline vs new measurement on the lowest-end device, if the task was about performance.
+- [ ] Baseline vs new measurement on the lowest-end device, if performance was the task.
 
 ## Data / saves
 - [ ] Save version bumped and migration written if the format changed.
 - [ ] Validation tool/test passes (IDs unique, ranges valid).
 
-## Wrap-up
-- [ ] `ai/session-state.md` updated with exact stopping point, next step, known issues, verified vs not verified, and owner decisions waiting.
-- [ ] Completed tasks moved to `ai/done-tasks.md`; blocked tasks moved to `ai/blocked-tasks.md`; work not yet ready moved to `ai/backlog-tasks.md`. Preserve the task ID when moving it.
+## Wrap-up and coordination
+- [ ] Update the owning phase tracker with completed sub-items, checkpoint evidence, blockers, and next step.
+- [ ] Update `ai/session-state.md` only if phase ownership/status, blockers, priority, milestone, or handoff changed; do not log each sub-item there.
+- [ ] Move completed/blocked/backlog tasks to their matching lists, preserving stable IDs.
 - [ ] New decision → ADR added. Old decision contradicted → flagged to the human.
-- [ ] Commit/PR message says why and names the task ID.
+- [ ] Commit/PR message says why and names the task/phase ID.
 
 ## Milestone gate smoke test (10 minutes, on device)
 1. Fresh install launches to menu without errors.
