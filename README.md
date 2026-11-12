@@ -1,6 +1,6 @@
 # Unity AI Kit — provider-neutral starter for new Unity games
 
-Drop-in guidance files so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. Plain Markdown, no scripts, no hooks, nothing to install.
+Drop-in guidance and optional CI templates so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. The core guidance is plain Markdown; optional examples include GitHub Actions workflows and a read-only Unity metadata validator.
 
 Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules, decision records, definition of done, session state), but without its Claude-only machinery (49 agents, 74 skills, bash hooks), and with the Unity reference rewritten and corrected.
 
