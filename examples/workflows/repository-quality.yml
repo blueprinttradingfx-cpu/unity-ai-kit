@@ -49,6 +49,14 @@ jobs:
       - name: Validate tracked source and configuration syntax
         run: .venv-ci/bin/python examples/scripts/validate_source_syntax.py
 
+      - name: Run validator regression tests when included
+        run: |
+          if [ -f tests/test_validators.py ]; then
+            .venv-ci/bin/python -m unittest discover -s tests -v
+          else
+            echo "Validator regression tests are not included in this consumer repository; kit maintainers run them in the master kit."
+          fi
+
       - name: Lint GitHub Actions workflows
         run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
 
