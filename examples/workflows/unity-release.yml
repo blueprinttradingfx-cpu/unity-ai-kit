@@ -29,8 +29,13 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           PUSH_REF: ${{ github.ref }}
           INPUT_TAG: ${{ inputs.release_tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$PUSH_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
+            echo "::error::Manual release dispatch must use the repository default branch ($DEFAULT_BRANCH)."
+            exit 1
+          fi
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             tag="$INPUT_TAG"
             if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
