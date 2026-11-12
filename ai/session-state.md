@@ -29,7 +29,7 @@ Author = the agent that owns the task, `owner` = the human owner. Every task use
 
 ## Handoff
 - **In progress (exact stopping point):** Documentation changes are implemented on `gpt/harden-agent-workflow`. Files changed: `AGENTS.md`, `README.md`, `ai/session-state.md`, `ai/definition-of-done.md`, and new `ai/task-lifecycle.md`.
-- **Next concrete step:** Obtain an independent review of the full diff, resolve findings, then open a PR for owner review.
+- **Next concrete step:** Obtain an independent review of PR #1's full diff, resolve findings, then mark the PR ready for owner review.
 - **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
 - **Verified (ran it):** Confirmed the branch is based on current main with no behind commits; inspected the full five-file compare; checked the task workflow references and status-list paths; confirmed the changes are documentation-only. No Unity compilation is applicable.
 - **Not verified (human must check on device/editor):** Independent second-provider review is pending. No Unity Editor/device checks apply to this kit-only change.
