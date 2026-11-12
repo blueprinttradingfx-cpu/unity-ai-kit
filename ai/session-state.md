@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-007 — Production readiness and validation | Done | `Gpt` | `main` / `ai/phase-KIT-007-production-readiness.md` | PR #5 merged as `f814ac4`; kit phase closed; Garden Alchemy consumer validation is next |
+| KIT-007 — Production readiness and validation | Done | `Gpt` | `main` / `ai/phase-KIT-007-production-readiness.md` | PR #5 merged as `f814ac4`; Garden Alchemy PR #41 merged; consumer CI run `43328874159` is in progress |
 
 ## Completed milestones
 
@@ -31,13 +31,13 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 ## Project context
 - **Repository:** reusable Unity AI guidance and inactive CI templates; no Unity game project is hosted here.
 - **Base:** `main`; KIT-001 through KIT-006 are merged.
-- **Consumer validation target:** Garden Alchemy, after KIT-007 is reviewed and merged.
+- **Consumer validation target:** Garden Alchemy; PR #41 is merged and hosted Unity compile/EditMode verification is running.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** PR #5 is merged into `main` as `f814ac41560964ef5abb14ab31f724674cb754bc`. KIT-007 is closed. The kit includes protected Unity environment gates, workflow/security regression coverage, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS default, and a consumer validation checklist. Owner audit comment `5883211309` is recorded; Kit Validation run `43320593384` passed 16 tests, source/config syntax checks, and actionlint.
-- **Next step:** begin a separately scoped Garden Alchemy consumer-validation phase. Confirm the consumer repo's current instructions, phase ownership, Unity version, target platforms, and GitHub Environment/secret configuration before changing it.
-- **Verified:** PRs #1–#3 and #5 are merged into `main`; PR #5 merge SHA is recorded above.
-- **Not verified:** Unity Editor import/compile, EditMode/PlayMode tests, target builds, licensed GameCI jobs, and real-device behavior; these require validation in Garden Alchemy.
-- **Owner decisions waiting:** Garden Alchemy's exact Unity Editor version, target platforms, license configuration, required checks, and release environment must be confirmed during consumer setup.
+- **Exact stopping point:** PR #5 is merged into `main` as `f814ac41560964ef5abb14ab31f724674cb754bc`; KIT-007 is closed. The kit includes protected Unity environment gates, workflow/security regression coverage, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS default, and a consumer validation checklist. Owner audit comment `5883211309` is recorded; Kit Validation run `43320593384` passed 16 tests, source/config syntax checks, and actionlint. Garden Alchemy PR #41 merged as `d9811988cf4283b9a57d96dc549100f74f9e28ec`; the owner confirms environment/license setup, and hosted Unity compile/EditMode run `43328874159` is in progress.
+- **Next step:** inspect run `43328874159`, capture the exact Unity compile/EditMode outcome and artifact, then hand back to Garden Alchemy Phase 10 runtime acceptance.
+- **Verified:** PRs #1–#3 and #5 are merged into `main`; PR #5 merge SHA is recorded above. Garden Alchemy's CI-hardening PR is merged; .NET balance smoke passed.
+- **Not verified:** successful hosted Unity Editor import/compile and EditMode tests (run in progress), PlayMode tests, target builds, and real-device behavior.
+- **Owner decisions waiting:** Phase 10 runtime flow and Android/device acceptance remain with Garden Alchemy owner.
 - **Known risks:** Workflow templates remain opt-in examples. Passing kit-level static checks does not prove they execute successfully in a consuming Unity repository.
