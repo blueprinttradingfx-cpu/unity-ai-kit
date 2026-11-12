@@ -86,7 +86,7 @@ Do not automatically execute every validate_*.py file discovered in a repository
 
 ### Nightly regression template
 
-Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.yml` in the game repository. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix (Linux Standalone and Android) only after both test jobs pass. Reports are retained for 14 days and nightly builds for 7 days. Adjust the cron schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly; the template does not assume every project has those test assemblies or tools.
+Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.yml` in the game repository. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix (Linux Standalone and Android) only after both test jobs pass. Scheduled runs use the default branch; manual dispatch is also restricted to the default branch so modified workflow code on arbitrary branches cannot receive Unity license secrets. Reports are retained for 14 days and nightly builds for 7 days. Adjust the cron schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly; the template does not assume every project has those test assemblies or tools.
 
 ### Release build template
 
