@@ -21,17 +21,18 @@ Author = the agent that owns the task, `owner` = the human owner. Every task use
 
 | Status | Task | Author | Notes / next step |
 |---|---|---|---|
-| In Progress | KIT-001 — Harden the reusable agent workflow and verification safeguards | `gpt` | Implemented task lifecycle, safe claim/handoff guidance, and evidence-based completion checks. Acceptance: board workflow is explicit; task IDs persist across lists; verification and independent review are reported honestly. Awaiting independent review. |
+| In Progress | KIT-001 — Harden the reusable agent workflow and verification safeguards | `gpt` | Implemented task lifecycle, safe claim/handoff guidance, and evidence-based completion checks. Awaiting independent review. |
+| In Progress | KIT-002 — Add Unity GitHub Actions and repository quality standards | `gpt` | Add configurable GameCI test/build templates, license/fork safety guidance, repository hygiene checks, meta integrity validation, and recommended branch/security/release checks. Keep templates inactive in the kit repository. |
 
 ## Project context
 - **Branch / build:** `gpt/harden-agent-workflow` / no Unity project in this reusable guidance repository.
-- **Last known good build:** Not applicable; documentation-only kit.
+- **Last known good build:** Not applicable; documentation and workflow-template kit.
 
 ## Handoff
-- **In progress (exact stopping point):** Documentation changes are implemented on `gpt/harden-agent-workflow`. Files changed: `AGENTS.md`, `README.md`, `ai/session-state.md`, `ai/definition-of-done.md`, and new `ai/task-lifecycle.md`.
-- **Next concrete step:** Obtain an independent review of PR #1's full diff, resolve findings, then mark the PR ready for owner review.
+- **In progress (exact stopping point):** KIT-001 is implemented on `gpt/harden-agent-workflow` and included in draft PR #1. KIT-002 has just been claimed; no CI template files have been written yet.
+- **Next concrete step:** Add reusable, inactive Unity CI and repository-quality workflow examples plus setup/security guidance; inspect the complete PR diff and validate YAML/script syntax.
 - **Known broken:** `ai/unity6-reference.md` still has an unfilled review-date placeholder; it is explicitly described as unverified in README and should be reviewed against official docs before being treated as current API guidance.
-- **Verified (ran it):** Confirmed the branch is based on current main with no behind commits; inspected the full five-file compare; checked the task workflow references and status-list paths; confirmed the changes are documentation-only. No Unity compilation is applicable.
-- **Not verified (human must check on device/editor):** Independent second-provider review is pending. No Unity Editor/device checks apply to this kit-only change.
-- **Owner decisions waiting:** None for the current scope; owner review/approval of the eventual PR is required.
-- **Bug / regression watch:** Keep the master kit project-neutral; do not change game-project repositories.
+- **Verified (ran it):** Read current repository instructions/testing/Git rules and existing example Git attributes/ignore files. Checked current GameCI v4 action inputs and retrieved full commit SHAs for the pinned actions.
+- **Not verified (human must check on device/editor):** No actual Unity project exists in this kit repository, so CI templates cannot execute Unity here. They require project-specific Unity version/path/build target and GitHub license secrets. Independent review of PR #1 remains pending.
+- **Owner decisions waiting:** None for the template/documentation scope; consumers must select their platform, license type, and release policy when adopting the templates.
+- **Bug / regression watch:** Do not activate Unity workflows in this master kit; keep examples under `examples/` so they only run after a game project copies/configures them. Never expose Unity or signing secrets to fork PRs.
