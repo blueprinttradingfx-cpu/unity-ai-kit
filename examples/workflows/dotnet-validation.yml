@@ -32,7 +32,121 @@ jobs:
         id: projects
         shell: bash
         run: |
-          if [ -z "${DOTNET_PROJECT_PATHS//[$'\\t\\r\\n ']/}" ]; then
+          if [ -z "${DOTNET_PROJECT_PATHS//[
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "No standalone .NET project paths configured; Unity C# compilation is checked by Unity CI."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up .NET SDK
+        if: steps.projects.outputs.configured == 'true'
+        uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore, build, test and verify formatting
+        if: steps.projects.outputs.configured == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r project; do
+            project="$(echo "$project" | xargs)"
+            [ -z "$project" ] && continue
+            if [ ! -f "$project" ]; then
+              echo "::error::Configured .NET project does not exist: $project"
+              exit 1
+            fi
+
+            case "$project" in
+              *.sln|*.slnx|*.csproj) ;;
+              *)
+                echo "::error::Expected a .sln, .slnx, or .csproj path: $project"
+                exit 1
+                ;;
+            esac
+
+            echo "::group::Validate $project"
+            dotnet restore "$project"
+            dotnet build "$project" --configuration Release --no-restore
+            dotnet format whitespace "$project" --verify-no-changes --no-restore
+            echo "::endgroup::"
+          done <<< "$DOTNET_PROJECT_PATHS"
+
+          while IFS= read -r test_project; do
+            test_project="$(echo "$test_project" | xargs)"
+            [ -z "$test_project" ] && continue
+            if [ ! -f "$test_project" ]; then
+              echo "::error::Configured .NET test project does not exist: $test_project"
+              exit 1
+            fi
+            echo "::group::Test $test_project"
+            dotnet test "$test_project" --configuration Release
+            echo "::endgroup::"
+          done <<< "$DOTNET_TEST_PROJECT_PATHS"
+
+      - name: Report Unity C# compile coverage
+        run: |
+          echo "Unity C# compilation is validated by the Unity Editor import/compile and EditMode test job in unity-ci.yml."
+          echo "This workflow validates only explicitly configured standalone .NET projects.";
+\\t\\r\\n ']/}" ] && [ -z "${DOTNET_TEST_PROJECT_PATHS//[
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "No standalone .NET project paths configured; Unity C# compilation is checked by Unity CI."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up .NET SDK
+        if: steps.projects.outputs.configured == 'true'
+        uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore, build, test and verify formatting
+        if: steps.projects.outputs.configured == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r project; do
+            project="$(echo "$project" | xargs)"
+            [ -z "$project" ] && continue
+            if [ ! -f "$project" ]; then
+              echo "::error::Configured .NET project does not exist: $project"
+              exit 1
+            fi
+
+            case "$project" in
+              *.sln|*.slnx|*.csproj) ;;
+              *)
+                echo "::error::Expected a .sln, .slnx, or .csproj path: $project"
+                exit 1
+                ;;
+            esac
+
+            echo "::group::Validate $project"
+            dotnet restore "$project"
+            dotnet build "$project" --configuration Release --no-restore
+            dotnet format whitespace "$project" --verify-no-changes --no-restore
+            echo "::endgroup::"
+          done <<< "$DOTNET_PROJECT_PATHS"
+
+          while IFS= read -r test_project; do
+            test_project="$(echo "$test_project" | xargs)"
+            [ -z "$test_project" ] && continue
+            if [ ! -f "$test_project" ]; then
+              echo "::error::Configured .NET test project does not exist: $test_project"
+              exit 1
+            fi
+            echo "::group::Test $test_project"
+            dotnet test "$test_project" --configuration Release
+            echo "::endgroup::"
+          done <<< "$DOTNET_TEST_PROJECT_PATHS"
+
+      - name: Report Unity C# compile coverage
+        run: |
+          echo "Unity C# compilation is validated by the Unity Editor import/compile and EditMode test job in unity-ci.yml."
+          echo "This workflow validates only explicitly configured standalone .NET projects.";
+\\t\\r\\n ']/}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
             echo "No standalone .NET project paths configured; Unity C# compilation is checked by Unity CI."
           else
