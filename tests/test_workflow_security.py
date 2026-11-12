@@ -48,6 +48,23 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
             self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in jobs[job_name]["steps"]))
         self.assertIn("workflow_dispatch", self.workflows["unity-release.yml"]["on"])
 
+    def test_manual_licensed_runs_are_default_branch_guarded(self) -> None:
+        ci = self.workflows["unity-ci.yml"]["jobs"]
+        default_branch_guard = "github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
+        for job_name in ("compile", "playmode"):
+            self.assertIn(default_branch_guard, ci[job_name]["if"])
+        self.assertIn("github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", ci["build"]["if"])
+
+        nightly = self.workflows["unity-nightly.yml"]["jobs"]
+        for job_name in ("editmode", "playmode"):
+            self.assertIn(default_branch_guard, nightly[job_name]["if"])
+        self.assertEqual(nightly["platform-builds"]["needs"], ["editmode", "playmode"])
+
+        release = self.workflows["unity-release.yml"]["jobs"]
+        validation_steps = release["validate-tag"]["steps"]
+        self.assertTrue(any("PUSH_REF" in step.get("run", "") and "DEFAULT_BRANCH" in step.get("run", "") for step in validation_steps))
+        self.assertNotIn("environment", release["validate-tag"])
+
     def test_first_party_and_gameci_actions_are_sha_pinned_to_node24_releases(self) -> None:
         expected = {
             "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
