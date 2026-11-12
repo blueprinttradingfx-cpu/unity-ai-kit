@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Licensed workflow secret gates, consumer checklist, Unity 6.3 reference corrections, and Node 24 action upgrades implemented; obtain independent review and close KIT-007 |
+| KIT-007 — Production readiness and validation | In Progress | `Gpt` | `gpt/kit-007-ci-secret-isolation` / `ai/phase-KIT-007-production-readiness.md` | Licensed workflow secret gates, consumer checklist, Unity 6.3 reference corrections, Node 24 action upgrades, and .NET 10 LTS default implemented; verify final CI, obtain independent review, and close KIT-007 |
 
 ## Completed milestones
 
