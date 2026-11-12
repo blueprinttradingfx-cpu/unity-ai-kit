@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 ASSETS = Path("Assets")
-GUID_PATTERN = re.compile(r"^guid:\\s*([0-9a-fA-F]{32})\\s*$", re.MULTILINE)
+GUID_PATTERN = re.compile(r"^guid:\s*([0-9a-fA-F]{32})\s*$", re.MULTILINE)
 
 
 def main() -> int:
@@ -29,6 +29,10 @@ def main() -> int:
             errors.append(f"Missing metadata sidecar: {sidecar.as_posix()}")
 
     for meta_file in sorted(ASSETS.rglob("*.meta")):
+        asset_path = Path(str(meta_file)[:-5])
+        if not asset_path.exists():
+            errors.append(f"Orphan metadata file with no matching asset/folder: {meta_file.as_posix()}")
+
         try:
             content = meta_file.read_text(encoding="utf-8")
         except (OSError, UnicodeError) as exc:
