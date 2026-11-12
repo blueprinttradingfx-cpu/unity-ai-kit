@@ -61,7 +61,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Test suite uses temporary repositories and does not mutate a consumer project.
 - Sub-items:
   - [x] Add unittest harness.
-  - [x] Execute suite in Kit Validation run `43320350107`: 16 tests passed, including workflow secret-gate, default-branch dispatch, action pin, and .NET LTS checks.
+  - [x] Execute suite in Kit Validation run `43320593384`: 16 tests passed, including workflow secret-gate, default-branch dispatch, action pin, and .NET LTS checks.
 
 ### KIT-007-WP5 — Post-merge reconciliation and consumer handoff
 - Owner: Gpt
@@ -81,7 +81,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Fork PRs skip licensed jobs and continue to receive repository-quality checks.
   - [x] Push, scheduled, manual, and release-tag triggers have explicit, documented trust boundaries.
   - [x] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
-  - [x] All example workflows pass actionlint and kit validation in run `43320350107` (16 tests, source/config syntax validation, actionlint).
+  - [x] All example workflows pass actionlint and kit validation in run `43320593384` (16 tests, source/config syntax validation, actionlint).
 
 ### KIT-007-WP7 — Unity 6.3 reference alignment
 - Owner: Gpt
@@ -131,7 +131,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - [x] No stale references to PR #1–#3 being open or KIT-001–KIT-006 being in progress.
 - [x] Manual licensed Unity workflow dispatch is default-branch-only (workflow conditions and regression test).
 - [x] Licensed CI secrets are isolated from unreviewed same-repository pull-request code through reviewer-gated environments; consumer configuration is documented.
-- [x] Validator and workflow security tests pass in a clean Python environment; latest run `43320350107` passed 16 tests.
+- [x] Validator and workflow security tests pass in a clean Python environment; run `43320593384` passed 16 tests.
 - [x] Optional governance/security behavior is documented as repository settings or project configuration.
 - [x] Unity reference states exactly what was checked and what remains unverified; 6.3-specific links are verified.
 - [x] Full PR #5 diff reviewed; owner-authored audit comment submitted on commit `1c9b7b38a6a8565dab25b9b6ea1fb7cbc3c3b534` (review ID `5883211309`). The review is a COMMENTED owner review, not an independent approval.
@@ -139,7 +139,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 
 ## Checkpoint log
 - 2026-11-13 — PR #4 merged to main as `6e2e4f039562514101373d6b5478fcdad8e5335a`; Kit Validation run `43292788501` passed. PR #4 has no submitted reviews. Post-merge workflow audit identified a same-repository PR secret-exposure gap; follow-up WP5/WP6 opened on `gpt/kit-007-ci-secret-isolation`.
-- 2026-11-13 — PR #5 follow-up now includes protected environment secret gates, explicit default-branch guards, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS defaults, and a consumer checklist. Latest Kit Validation run `43320350107` on `3736e2bb` passed 16 tests, syntax checks, and actionlint. Independent review remains outstanding; PR #5 remains draft.
+- 2026-11-13 — PR #5 follow-up now includes protected environment secret gates, explicit default-branch guards, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS defaults, and a consumer checklist. Kit Validation run `43320593384` on `1c9b7b38` passed 16 tests, source/config syntax checks, and actionlint. Owner audit comment `5883211309` was submitted; PR #5 was marked ready for review. The maintainer chose owner review as sufficient for this kit.
 
 ## Handoff
 - Current owner/status: Gpt / In Progress
