@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Diff and Unity metadata checks
+    name: Repository integrity and source syntax checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
