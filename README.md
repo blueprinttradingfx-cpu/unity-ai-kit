@@ -12,6 +12,8 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 5. Delete the pointer files for tools you do not use (see table). Optional: `examples/claude-settings.json` → `.claude/settings.json`.
 6. First commit: "Add AI guidance kit".
 
+Before enabling required checks or integrating the templates into a real game, follow [`ai/consumer-validation-checklist.md`](ai/consumer-validation-checklist.md) to configure protected environments and record actual Unity consumer evidence.
+
 ## Multi-agent coordination model
 
 The default ownership unit is a **phase or substantial work package**, not an individual micro-task. See `ai/coordination-model.md` and copy `examples/phase-tracker-template.md` when a project needs a phase tracker.
