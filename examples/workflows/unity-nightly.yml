@@ -12,6 +12,7 @@ concurrency:
 jobs:
   editmode:
     name: Nightly EditMode regression
+    environment: unity-ci
     if: ${{ github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -40,6 +41,7 @@ jobs:
           retention-days: 14
   playmode:
     name: Nightly PlayMode regression
+    environment: unity-ci
     if: ${{ github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -68,6 +70,7 @@ jobs:
           retention-days: 14
   platform-builds:
     name: Nightly ${{ matrix.platform }} build
+    environment: unity-ci
     needs: [editmode, playmode]
     strategy:
       fail-fast: false
