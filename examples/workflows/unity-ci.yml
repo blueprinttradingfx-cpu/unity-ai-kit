@@ -85,7 +85,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: .
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
           targetPlatform: StandaloneLinux64
 
