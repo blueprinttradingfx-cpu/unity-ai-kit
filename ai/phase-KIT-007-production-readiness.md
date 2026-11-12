@@ -46,8 +46,8 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 | KIT-007-WP4 | Review Unity 6 reference and add governance/security templates | Gpt | Done | ai/unity6-reference.md, examples/github/, README.md | KIT-001 |
 | KIT-007-WP5 | Reconcile merged implementation, review evidence, and prepare consumer handoff | Gpt | In Progress | complete PR #4 diff, phase tracker, consumer handoff docs | WP1–WP4 |
 | KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | Done | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
-| KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | In Progress | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
-| KIT-007-WP8 | Upgrade GitHub Actions pins to Node 24-compatible releases | Gpt | In Progress | all active/example workflows, action pin tests, workflow docs | WP2, WP6 |
+| KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | Done | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
+| KIT-007-WP8 | Upgrade GitHub Actions pins to Node 24-compatible releases | Gpt | Done | all active/example workflows, action pin tests, workflow docs | WP2, WP6 |
 
 ### KIT-007-WP3 — Validator regression tests
 - Owner: Gpt
@@ -59,7 +59,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Test suite uses temporary repositories and does not mutate a consumer project.
 - Sub-items:
   - [x] Add unittest harness.
-  - [x] Execute suite in Kit Validation run `43318886327`: 13 tests passed (9 validator tests + 4 licensed-workflow policy tests).
+  - [x] Execute suite in Kit Validation run `43319820626`: 14 tests passed (9 validator tests + 5 workflow security/action-pin tests).
 
 ### KIT-007-WP5 — Post-merge reconciliation and consumer handoff
 - Owner: Gpt
@@ -75,11 +75,11 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - Branch: `gpt/kit-007-ci-secret-isolation`
 - File/system boundary: `examples/workflows/*.yml`, `ai/github-workflows.md`, focused workflow tests/documentation.
 - Acceptance checks:
-  - [ ] Same-repository PR code cannot access Unity license secrets without an explicit protected-environment approval.
-  - [ ] Fork PRs remain unable to access licensed secrets and continue to receive repository-quality checks.
-  - [ ] Push, scheduled, manual, and release-tag triggers have explicit, documented trust boundaries.
-  - [ ] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
-  - [x] All example workflows pass actionlint and kit validation in run `43318886327` (13 tests, syntax validation, actionlint). Re-run after the final checklist/README commit.
+  - [x] Same-repository PR jobs use the reviewer-gated `unity-pr-validation` environment; consumer configuration is documented.
+  - [x] Fork PRs skip licensed jobs and continue to receive repository-quality checks.
+  - [x] Push, scheduled, manual, and release-tag triggers have explicit, documented trust boundaries.
+  - [x] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
+  - [x] All example workflows pass actionlint and kit validation in run `43319820626` (14 tests, syntax validation, actionlint).
 
 ### KIT-007-WP7 — Unity 6.3 reference alignment
 - Owner: Gpt
@@ -89,7 +89,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Replace 6.0 references with official 6.3 (6000.3) links where directly checked.
   - [x] Explicitly distinguish directly checked 6.3 API claims from general migration reminders.
   - [x] Keep the Awaitable 6.0 reference clearly labeled and its 6.3-specific details unverified.
-  - [ ] Validate all referenced URLs and rerun kit checks.
+  - [x] Validate all referenced official documentation URLs through Unity's 6000.3 docs index; kit validation passed in run `43319820626`.
 
 ### KIT-007-WP8 — GitHub Actions runtime upgrade
 - Owner: Gpt
@@ -100,7 +100,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Upgrade GameCI test-runner and builder pins to Node 24 releases; verify their `action.yml` declarations.
   - [x] Keep all action references pinned to full commit SHAs verified from upstream tags.
   - [x] Document GitHub's Node 20 removal and current reviewed action versions.
-  - [ ] Run actionlint and the action-pin regression test on the final PR commit.
+  - [x] Run actionlint and the action-pin regression test on final PR commit `c30ef1be`; run `43319820626` passed 14 tests and workflow lint.
 
 ### KIT-007-WP4 — Unity reference and governance
 - Owner: Gpt
