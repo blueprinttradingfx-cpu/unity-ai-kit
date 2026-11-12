@@ -15,6 +15,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 ### In scope
 - Correct merged task/session records for KIT-001 through KIT-006.
 - Protect Unity license credentials from unreviewed same-repository PR code and document required environment setup.
+- Align version-sensitive Unity API references with the kit's Unity 6.3 LTS default and state exactly which claims were spot-checked.
 - Add phase readiness, integration ownership, bounded concurrency, and tracker ownership rules.
 - Restrict manual licensed Unity CI dispatch to the default branch.
 - Improve standalone .NET SDK configurability, analyzer formatting, and optional NuGet vulnerability audit.
@@ -43,7 +44,8 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 | KIT-007-WP3 | Add validator regression tests and consumer test instructions | Gpt | Done | tests/, ai/github-workflows.md | KIT-001 |
 | KIT-007-WP4 | Review Unity 6 reference and add governance/security templates | Gpt | Done | ai/unity6-reference.md, examples/github/, README.md | KIT-001 |
 | KIT-007-WP5 | Reconcile merged implementation, review evidence, and prepare consumer handoff | Gpt | In Progress | complete PR #4 diff, phase tracker, consumer handoff docs | WP1–WP4 |
-| KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | In Progress | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
+| KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | Done | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
+| KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | In Progress | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
 
 ### KIT-007-WP3 — Validator regression tests
 - Owner: Gpt
@@ -77,6 +79,16 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [ ] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
   - [x] All example workflows pass actionlint and kit validation in run `43318886327` (13 tests, syntax validation, actionlint). Re-run after the final checklist/README commit.
 
+### KIT-007-WP7 — Unity 6.3 reference alignment
+- Owner: Gpt
+- Branch: `gpt/kit-007-ci-secret-isolation`
+- File/system boundary: `ai/unity6-reference.md`; official Unity documentation only.
+- Acceptance checks:
+  - [x] Replace 6.0 references with official 6.3 (6000.3) links where directly checked.
+  - [x] Explicitly distinguish directly checked 6.3 API claims from general migration reminders.
+  - [x] Keep the Awaitable 6.0 reference clearly labeled and its 6.3-specific details unverified.
+  - [ ] Validate all referenced URLs and rerun kit checks.
+
 ### KIT-007-WP4 — Unity reference and governance
 - Owner: Gpt
 - Branch: `gpt/kit-007-production-readiness`
@@ -97,7 +109,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - [ ] Licensed CI secrets are isolated from unreviewed same-repository pull-request code through protected environments or an equivalent explicit trust gate.
 - [ ] Validator tests pass in a clean Python environment with pinned CI dependencies.
 - [ ] All optional governance/security behavior is clearly documented as repository settings or project configuration.
-- [ ] Unity reference states exactly what was checked and what remains unverified.
+- [ ] Unity reference states exactly what was checked and what remains unverified; 6.3-specific links are verified.
 - [ ] Full diff reviewed; independent review findings resolved or explicitly recorded.
 - [ ] Garden Alchemy consumer-validation checklist handed off; no consumer-project pass is claimed yet.
 
