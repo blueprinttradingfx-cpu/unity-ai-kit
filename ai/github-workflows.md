@@ -20,157 +20,89 @@ Do not run every expensive platform build on every PR by default. Start with one
 Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml` in the game repository.
 
 The template:
-- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on trusted PRs and pushes to main. The Unity Editor compile/import stage is the authoritative compile check for Unity scripts.
+- Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on trusted PRs and pushes to main.
 - Runs PlayMode integration tests in a separate job on trusted PRs and pushes to main.
-- Builds a sample Linux Standalone player after tests pass on main, or on manual dispatch.
+- Builds a sample Linux Standalone player after tests pass on main, or on a manual dispatch from the default branch only.
 - Caches only the Unity `Library/` import cache, keyed by OS, Unity version file, and Package Manager lockfile.
 - Uploads test results and build output as workflow artifacts.
-- Skips the licensed Unity job for fork-originated PRs. The separate repository-quality workflow still runs on those PRs.
+- Skips licensed Unity jobs for fork-originated PRs; the separate repository-quality workflow still runs on those PRs.
+- Restricts manual dispatch to the repository default branch because the workflow receives Unity license secrets. Do not remove this guard without a documented security review.
 
 ### Configure it first
 
-1. If the Unity project is in a subfolder, define the repository variable `UNITY_PROJECT_PATH` (for example `game/`); leave it unset when the project is at the repository root. The template uses this variable for the test, build, and Library cache paths.
+1. If the Unity project is in a subfolder, define the repository variable `UNITY_PROJECT_PATH` (for example `game/`); leave it unset when the project is at the repository root.
 2. Change `targetPlatform` from the sample `StandaloneLinux64` to a platform the project actually ships.
-3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt` inside the Unity project; GameCI's `auto` mode reads this file.
-4. In repository **Settings → Secrets and variables → Actions**, add the license secrets for the license type you use:
-   - Unity Personal: `UNITY_LICENSE` (contents of the activated `.ulf` file).
-   - Unity Pro/Plus: `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL`.
-   - A floating license server can instead be configured with GameCI's `unityLicensingServer` input; protect its URL/configuration as appropriate.
-5. Keep signing credentials separate from Unity activation. Add Android keystore or Apple signing secrets only to a protected release job/environment, never to general PR jobs.
-6. Run the workflow manually once and inspect the test report and build artifact before making its check required.
+3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt`; GameCI's `auto` mode reads this file.
+4. Add only the Unity license secrets needed for the license type. Keep signing credentials separate and available only to a protected release job/environment.
+5. Run the workflow manually from the default branch and inspect the test report/build artifact before making checks required.
 
-GameCI is a community-maintained action suite, not an official Unity service. Review its release and action permissions before adopting it. The examples pin actions to full commit SHAs; update those pins deliberately and review the upstream changes.
+GameCI is community-maintained, not an official Unity service. Review action releases and permissions before adopting it. The examples pin actions to full commit SHAs; update pins deliberately and review upstream changes.
 
 ### Fork pull requests and secrets
 
-GitHub does not provide repository secrets to workflows triggered from fork PRs. The Unity job therefore skips those PRs; do not "fix" this by switching to `pull_request_target` and checking out/running untrusted PR code with secrets. Keep static checks available to fork PRs. If fork PRs need Unity tests, use a carefully isolated self-hosted runner with no access to production credentials, or require a maintainer to run a trusted workflow after review.
+GitHub does not provide repository secrets to workflows triggered from fork PRs. The Unity job skips those PRs; do not switch to `pull_request_target` and check out/run untrusted PR code with secrets. Keep static checks available to fork PRs. If fork PRs need Unity tests, use a carefully isolated self-hosted runner with no access to production credentials, or require a maintainer to run a trusted workflow after review.
 
 ## 2. Repository-quality checks
 
-Copy `examples/workflows/repository-quality.yml` and `examples/scripts/validate_unity_meta.py` into the project.
+Copy `examples/workflows/repository-quality.yml` and the validators under `examples/scripts/` into the project. The checks are read-only and do not generate, edit, move, or delete Unity metadata. Fix findings through the Unity Editor or by restoring the correct asset and matching metadata from version control.
 
-For standalone .NET tools, services, or test projects in the same repository, optionally copy `examples/workflows/dotnet-validation.yml` to `.github/workflows/dotnet-validation.yml`. Set the Actions repository variable `DOTNET_PROJECT_PATHS` to newline-separated paths to the intended `.sln`, `.slnx`, or SDK-style `.csproj` files. Set `DOTNET_TEST_PROJECT_PATHS` to newline-separated test project paths (`.sln`, `.slnx`, or test `.csproj`) to run tests explicitly. The workflow restores, builds Release, runs configured tests, and verifies whitespace formatting with `dotnet format`.
+The syntax validator checks tracked JSON, Unity .asmdef/.asmref, YAML, Python, and JavaScript syntax and scans selected text files for conflict markers. Unity scene/prefab/asset YAML is deliberately not parsed as generic YAML. The workflow also runs actionlint and checks missing/orphan Unity .meta sidecars and duplicate/malformed GUIDs.
 
-**Do not point this .NET workflow at Unity-generated solution/project files.** Unity projects must be compiled by the matching Unity Editor version via the GameCI workflow; generic `dotnet build` does not reproduce Unity's generated references, platform defines, packages, or editor compilation pipeline. Add a `global.json` and lock/restore policy when the standalone .NET codebase needs a pinned SDK; change the sample SDK version to match the project.
+Run the validator regression suite from the kit with:
+```sh
+python -m unittest discover -s tests -v
+```
+It uses temporary repositories/fixtures and does not modify the consumer project's assets.
 
-The quality workflow checks:
-- Whitespace errors in the changed Git diff.
-- Syntax of tracked JSON, Unity .asmdef/.asmref, YAML, Python, and JavaScript files. It also scans common source/config and Unity serialized text files for merge-conflict markers. Unity scene/prefab/asset YAML is deliberately not passed through a generic YAML parser.
-- GitHub Actions workflow semantics through actionlint.
-- Missing Unity `.meta` sidecars for files/folders under `Assets/`.
-- Orphan `.meta` files with no matching asset/folder.
-- Duplicate or malformed GUIDs in Unity metadata.
+## 3. Standalone .NET checks
 
-The validator is read-only. It does not generate, edit, move, or delete metadata. Fix findings through the Unity Editor or by restoring the correct asset and matching metadata from version control.
+For separate SDK-style .NET tools, services, or test projects, optionally copy `examples/workflows/dotnet-validation.yml`. Configure:
+- `DOTNET_PROJECT_PATHS`: newline-separated `.sln`, `.slnx`, or SDK-style `.csproj` paths.
+- `DOTNET_TEST_PROJECT_PATHS`: optional newline-separated test project paths.
+- `DOTNET_SDK_VERSION`: optional SDK version (defaults to `8.0.x`).
+- `DOTNET_RUN_VULNERABILITY_AUDIT`: optional `true`/`false` (defaults to `true`).
 
-The syntax validator is examples/scripts/validate_source_syntax.py; the workflow installs a pinned PyYAML version before running it. C# compile remains the Unity Editor job, while standalone .NET solutions use the separate .NET workflow. Consider Markdown linting if the repository has a broader documentation standard.
+The workflow restores, builds Release, runs configured tests, verifies whitespace and analyzer formatting, and optionally reports vulnerable NuGet packages. Review audit output and update dependencies deliberately; do not assume a warning is automatically safe to ignore.
 
+**Never point this workflow at Unity-generated solution/project files.** Unity projects must be compiled by the matching Unity Editor via GameCI; generic `dotnet build` does not reproduce Unity's generated references, platform defines, packages, or editor compilation pipeline. For standalone .NET projects, pin SDK and dependency policy to the needs of that codebase. Analyzer coverage depends on analyzers configured by the project.
 
+## 4. Project-owned validators
 
-## Reusable patterns observed in the user's game repositories
+Reusable CI should provide a stable place for each game to add domain checks. Keep validators in the game repository (for example `tools/validate_catalog.py`, `tools/validate_save_defaults.py`, or `scripts/check-pr-static.py`) and invoke them explicitly from that game's workflow. They should be offline/read-only where possible, return a non-zero exit code on contract violations, explain intentional exceptions, and clearly state what they do not prove.
 
-The following patterns were compared from the current default-branch workflows in Garden Alchemy, Weapon Ball Unity, and Heartway. The kit adopts reusable parts without importing game-specific assertions.
+Do not automatically execute every `validate_*.py` file discovered in a repository: scripts may require arguments, modify data, or be unrelated. Explicit commands are safer and make required checks reviewable. Never treat JSON/schema validation as proof that Unity scenes, prefabs, or runtime behavior work.
+
+## 5. Nightly regression
+
+Copy `examples/workflows/unity-nightly.yml`. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix only after both test jobs pass. Adjust schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly.
+
+## 6. Release build
+
+Copy `examples/workflows/unity-release.yml`. It validates a version tag, resolves it to an immutable commit SHA, tests and builds that exact SHA, and produces artifacts with source metadata and SHA-256 checksums.
+
+The build job uses the GitHub Environment named `release`. Configure required reviewers and only the platform-specific signing secrets needed by the project. Add actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does not invent signing commands or store credentials. Artifacts are uploaded to the workflow run only; publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. Apple platforms need a macOS runner and platform-specific setup.
+
+Manual release dispatch must be restricted to the default branch, validate the tag, and build the resolved commit SHA rather than resolving the tag again downstream.
+
+## 7. Repository governance and security
+
+The kit includes optional starter material under `examples/github/`. Apply only after choosing real maintainers/teams:
+- Add a `CODEOWNERS` file with actual GitHub usernames or teams for high-risk paths such as `.github/workflows/`, `ai/`, build scripts, and release configuration. The example contains comments only and intentionally grants no ownership.
+- Protect the default branch with a ruleset or branch protection: require PRs, required status checks from the actual workflow names, up-to-date branches where appropriate, and at least one independent review. Consider CODEOWNERS approval for workflow/security paths.
+- Enable GitHub secret scanning and push protection where available; enable Dependabot alerts and security updates. Review alerts rather than blindly auto-merging.
+- Use CodeQL or an equivalent security scanner for supported languages when the repository has meaningful code to analyze. Keep game-specific static analysis and supply-chain controls proportionate.
+- Keep workflow permissions least-privilege, pin third-party actions to reviewed full commit SHAs, and periodically review pins and dependencies.
+- For standalone .NET repositories, configure NuGet vulnerability review and SDK pinning. Do not run generic .NET builds against Unity-generated projects.
+
+Branch protection/rulesets are repository settings and cannot be activated by copying files. Configure and verify them in GitHub Settings, then document which checks are required. Never make a required check name mandatory before its workflow is installed and has reported successfully.
+
+## 8. Reusable patterns from game repositories
 
 | Observed pattern | Kit treatment |
 |---|---|
-| Garden Alchemy: PR diff checks, full history, added/deleted Unity asset and .meta pairing, retired API/symbol regression checks | General .meta sidecar/GUID validation is included. Keep retired-symbol assertions in a project-owned validator because the symbols and retirement policy are game-specific. |
-| Weapon Ball Unity: offline catalog schema, unique IDs, bounds, JSON/SQLite parity, behavior manifest, save defaults, Python unit tests | Documented as project-owned data-contract validation. Call the project's explicit validator/test commands in its CI; do not put Weapon Ball data rules in the reusable kit. |
-| Heartway: YAML/JSON/JavaScript/Python syntax and merge-conflict checks | Added generic tracked-source syntax and conflict-marker validation to repository-quality CI. |
-| Heartway: Firestore rules tests using a local emulator and demo project | Keep as an optional backend-specific workflow. Unity projects using Firebase should run emulator/security-rule tests only when backend rules/config change; no Firebase setup is imposed on every Unity project. |
+| Garden Alchemy: PR diff checks, full history, Unity asset/.meta pairing, retired API/symbol regression checks | General metadata validation is included; retired-symbol assertions remain project-owned. |
+| Weapon Ball Unity: offline catalog schema, unique IDs, bounds, JSON/SQLite parity, behavior manifest, save defaults, Python tests | Documented as project-owned data-contract validation. |
+| Heartway: YAML/JSON/JavaScript/Python syntax and conflict checks | Generic source/config syntax and conflict checks are included. |
+| Heartway: Firestore rules tests using a local emulator | Keep backend-specific emulator tests optional and run when backend rules/config change. |
 
-### Project-specific validator convention
-
-Reusable CI should provide a stable place for each game to add domain checks. Keep validators in the game repository (for example tools/validate_catalog.py, tools/validate_save_defaults.py, or scripts/check-pr-static.py) and invoke them explicitly from that game's workflow. They should be offline/read-only where possible, return a non-zero exit code on contract violations, explain intentional exceptions, and clearly state what they do not prove. Never treat JSON/schema validation as proof that Unity scenes, prefabs, or runtime behavior work.
-
-Do not automatically execute every validate_*.py file discovered in a repository: some scripts may require arguments, modify data, or be unrelated. Explicit commands are safer and make required checks reviewable.
-
-### Nightly regression template
-
-Copy `examples/workflows/unity-nightly.yml` to `.github/workflows/unity-nightly.yml` in the game repository. It runs EditMode and PlayMode suites separately, then builds the configured sample platform matrix (Linux Standalone and Android) only after both test jobs pass. Scheduled runs use the default branch; manual dispatch is also restricted to the default branch so modified workflow code on arbitrary branches cannot receive Unity license secrets. Reports are retained for 14 days and nightly builds for 7 days. Adjust the cron schedule, platform matrix, timeout, and retention to match the project. Long deterministic simulations, soak tests, coverage collection, and project-owned validators should be added explicitly; the template does not assume every project has those test assemblies or tools.
-
-### Release build template
-
-Copy `examples/workflows/unity-release.yml` to `.github/workflows/unity-release.yml`. It runs from a `vMAJOR.MINOR.PATCH` tag or an approved manual dispatch naming an existing tag, resolves that tag to an immutable commit SHA, checks EditMode and PlayMode against that SHA, then builds Linux Standalone and Android artifacts from the same SHA. Each artifact includes the source commit/tag/platform metadata and a SHA-256 checksum manifest, with 90-day retention.
-
-The build job uses the GitHub Environment named `release`. Configure that environment with required reviewers and only the platform-specific signing secrets needed by the project. Add the project's actual keystore/provisioning/signing steps inside that protected job; this generic template intentionally does **not** invent signing commands or store credentials. Artifacts are uploaded to the workflow run only: publishing to GitHub Releases, app stores, or external distribution remains a separately reviewed/manual step. For Apple platforms, add a macOS runner and the appropriate signing/build setup rather than reusing the Linux sample.
-
-The manual-dispatch path is restricted to runs launched from the repository's default branch, preventing a modified workflow on an arbitrary branch from receiving Unity license secrets. It validates the tag format and checks that the tag exists. Downstream test/build jobs use the resolved commit SHA rather than resolving the tag again, so a tag move after validation cannot silently change the source being tested or built. Add a GitHub tag ruleset for `v*` that restricts tag creation/update/deletion to release maintainers, and verify that the selected tag points to an approved commit. Configure the Unity Editor version and license secrets as for the standard Unity workflow.
-
-## 3. Unity-specific checks to add as the project grows
-
-### Code and compilation
-- Compile/import the project using the exact Editor version committed in `ProjectVersion.txt`.
-- Treat compiler errors as blockers; review new warnings rather than suppressing them globally.
-- Add Roslyn analyzers or Unity-compatible analyzers only after verifying compatibility with the project's Unity/C# language version.
-- Keep formatting rules in `.editorconfig`; do not use `dotnet format` against generated Unity solution files as a substitute for an Editor compile.
-
-### Tests
-- **EditMode:** pure domain logic, formulas, deterministic random systems, data validation, serialization, save migration.
-- **PlayMode:** scene composition, prefab wiring, lifecycle, spawning, input-to-gameplay flows, UI integration.
-- **Build smoke:** build at least one target after merge; launch it in a controlled smoke environment where practical.
-- **Simulation/soak:** deterministic seeded runs for economy, wave progression, state machines, and invariants.
-- **Device matrix:** low/mid/high target devices, safe areas, frame pacing, memory, thermal behaviour, suspend/resume, offline mode, and install/update flows.
-- **Coverage:** collect coverage as a trend and use thresholds only after the baseline is stable. Do not make coverage percentage a substitute for meaningful assertions.
-
-### Asset and project integrity
-- Commit every relevant `.meta` file. Never regenerate metadata to silence a duplicate-GUID or missing-file check.
-- Commit `Packages/manifest.json` and `Packages/packages-lock.json` together. Review package changes and pin Git dependencies to immutable revisions.
-- Use Git LFS for large binary assets and verify LFS objects are available before release.
-- Keep `Library/`, `Temp/`, `Logs/`, `obj/`, local IDE files, builds, and signing keys out of Git.
-- Keep scenes/prefabs serialized as text and use UnityYAMLMerge where appropriate; avoid concurrent edits to the same scene or prefab.
-- For asset moves/renames, use the Unity Editor or move the asset and its matching `.meta` together.
-
-### Security and dependency checks
-- Enable GitHub secret scanning and push protection where available.
-- Enable Dependabot for GitHub Actions; review action updates rather than auto-merging them blindly.
-- Unity Package Manager dependencies are primarily defined by `Packages/manifest.json` and `packages-lock.json`; verify each proposed version and package source. Dependabot does not automatically manage every Unity Registry/Git package pattern.
-- Use CodeQL for C# where the repository's plan and project setup support it; triage findings rather than suppressing whole query categories.
-- Never put credentials, keystores, service account files, tokens, or production endpoints in the repository or logs.
-
-## 4. GitHub Actions security baseline
-
-Apply these to every workflow:
-- Set workflow-level `permissions: contents: read`; grant additional permissions only to the job that needs them.
-- Pin third-party actions to full 40-character commit SHAs and leave a version comment. Keep a process for reviewing and updating pins.
-- Use `concurrency` with cancellation for superseded PR runs.
-- Set reasonable `timeout-minutes`; avoid unbounded jobs.
-- Do not print secrets or dump the full environment into logs.
-- Do not interpolate untrusted PR titles, branch names, commit messages, or issue text directly into shell scripts. Pass values through environment variables and quote them.
-- Do not use `pull_request_target` to run code from an untrusted PR with secrets or write permissions.
-- Keep deployment/signing jobs separate, restricted to protected branches/tags and GitHub Environments with required reviewers.
-- Keep artifacts short-lived unless release retention is required; label artifacts with commit SHA, Unity version, and target platform.
-
-## 5. Branch protection and pull-request policy
-
-Recommended `main` protection:
-- Require pull requests; block direct pushes for normal contributors/agents.
-- Require the repository-quality check and Unity test check. Make the Unity check required only after the license-backed workflow is configured and the fork-PR skip policy is understood.
-- Require at least one human review for gameplay, architecture, save-data, build/release, and security changes.
-- Dismiss stale approvals when new commits materially change the diff.
-- Require conversation resolution and prevent force pushes/deletion of `main`.
-- Use CODEOWNERS for sensitive areas (build pipelines, signing/release configuration, save migrations) if the team has maintainers for them.
-- Consider a merge queue when several PRs land concurrently.
-
-A skipped Unity job on a fork PR may not provide a required success check. Choose a repository policy deliberately: use static checks as required for all PRs and require a maintainer-triggered trusted Unity run before merge, or use a secure isolated runner design. Do not weaken secret handling just to make a status green.
-
-## 6. Release pipeline
-
-A release workflow should be separate from PR CI:
-1. Trigger from a protected version tag or approved manual dispatch.
-2. Verify the tag points to the intended commit and that required tests pass.
-3. Build each shipping platform with a recorded Unity version and build settings.
-4. Sign only inside a protected GitHub Environment; never expose signing secrets to PR jobs.
-5. Upload immutable build artifacts with checksums and commit metadata.
-6. Require human approval before publishing to stores or distributing externally.
-7. Preserve release notes, build logs, test reports, and the exact source commit.
-
-Do not auto-publish store builds from a normal pull request or every push to main.
-
-## References
-
-- [GameCI getting started](https://game.ci/docs/github/getting-started/)
-- [GameCI activation](https://game.ci/docs/github/activation/)
-- [GameCI test runner](https://game.ci/docs/github/test-runner/)
-- [GameCI builder](https://game.ci/docs/github/builder/)
-- [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use)
-- [GitHub workflow permissions and security hardening](https://docs.github.com/en/code-security/tutorials/secure-your-organization/protect-against-threats)
+The templates are not active workflows in this kit repository. Validate them in a real consumer Unity project before making them required.
