@@ -21,6 +21,7 @@ The default ownership unit is a **phase or substantial work package**, not an in
 - Agents can complete several related sub-items before updating shared coordination state. Update the global summary only when ownership, status, blockers, priority, milestone, or handoff changes.
 - Parallel work is allowed only with explicit file/system boundaries and resolved dependencies. Do not assign two agents the same scene, prefab, asset, or high-conflict contract simultaneously.
 - Session username identifies the current agent; phase ownership is recorded separately in the tracker.
+- A phase must pass its readiness gate before work starts; the phase owner coordinates integration, and concurrency defaults to three active work-package owners unless the project sets another limit.
 
 ## GitHub CI/CD setup
 The kit includes optional, inactive templates for Unity CI and repository checks:
@@ -28,11 +29,12 @@ The kit includes optional, inactive templates for Unity CI and repository checks
 - Copy `examples/workflows/repository-quality.yml` to `.github/workflows/repository-quality.yml` and both `examples/scripts/validate_unity_meta.py` and `examples/scripts/validate_source_syntax.py` to `examples/scripts/` in the project. This runs without Unity licensing secrets and checks source/config syntax, conflict markers, diff whitespace, workflow lint, and metadata integrity.
 - For separate SDK-style .NET tools/services/tests, optionally copy `examples/workflows/dotnet-validation.yml` and configure the newline-separated `DOTNET_PROJECT_PATHS` and optional `DOTNET_TEST_PROJECT_PATHS` repository variables. It runs restore, Release build, configured tests, and `dotnet format` verification.
 - Copy `examples/github/dependabot.yml` to `.github/dependabot.yml` and `examples/github/PULL_REQUEST_TEMPLATE.md` to `.github/PULL_REQUEST_TEMPLATE.md`.
+- Review `examples/github/SECURITY-SETUP.md` for optional branch protection, CODEOWNERS, secret scanning, Dependabot, and security-analysis setup. Copy `examples/github/CODEOWNERS.example` only after replacing the commented placeholders with real maintainers.
 - Optionally copy `examples/workflows/unity-nightly.yml` for scheduled EditMode/PlayMode regression and a platform build matrix.
 - Optionally copy `examples/workflows/unity-release.yml` for version-tagged test/build artifacts with SHA-256 checksums. Configure the protected GitHub Environment named `release`, required reviewers, and project-specific signing steps before using it for real releases; the template does not publish to stores.
 - Read `ai/github-workflows.md` before enabling workflows. It covers fork PR secret safety, Unity Editor C# compilation, EditMode/PlayMode tests, standalone .NET checks, source/config syntax and conflict-marker checks, Unity metadata integrity, project-specific data-validator patterns, nightly regression, protected release artifacts, branch protection, and action pinning.
 
-Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The examples are not active in this master kit repository.
+Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The examples are not active in this master kit repository. Run `python -m unittest discover -s tests -v` to regression-test the kit's read-only validators. Validate licensed Unity workflows in a real consumer project before requiring their checks.
 
 ## How it works
 - `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, and working style.
