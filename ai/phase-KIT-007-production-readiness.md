@@ -17,6 +17,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - Protect Unity license credentials from unreviewed same-repository PR code and document required environment setup.
 - Align version-sensitive Unity API references with the kit's Unity 6.3 LTS default and state exactly which claims were spot-checked.
 - Upgrade every JavaScript-based workflow action to a verified Node 24-compatible release and keep all action references pinned to full SHAs.
+- Default standalone .NET validation to a supported LTS SDK and record the current support-policy basis.
 - Add phase readiness, integration ownership, bounded concurrency, and tracker ownership rules.
 - Restrict manual licensed Unity CI dispatch to the default branch.
 - Improve standalone .NET SDK configurability, analyzer formatting, and optional NuGet vulnerability audit.
@@ -48,6 +49,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 | KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | Done | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
 | KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | Done | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
 | KIT-007-WP8 | Upgrade GitHub Actions pins to Node 24-compatible releases | Gpt | Done | all active/example workflows, action pin tests, workflow docs | WP2, WP6 |
+| KIT-007-WP9 | Align standalone .NET SDK default with current LTS support | Gpt | In Progress | examples/workflows/dotnet-validation.yml, tests, ai/github-workflows.md | WP2, WP8 |
 
 ### KIT-007-WP3 — Validator regression tests
 - Owner: Gpt
@@ -101,6 +103,15 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Keep all action references pinned to full commit SHAs verified from upstream tags.
   - [x] Document GitHub's Node 20 removal and current reviewed action versions.
   - [x] Run actionlint and the action-pin regression test on final PR commit `c30ef1be`; run `43319820626` passed 14 tests and workflow lint.
+
+### KIT-007-WP9 — Supported .NET LTS default
+- Owner: Gpt
+- Branch: `gpt/kit-007-ci-secret-isolation`
+- File/system boundary: standalone .NET workflow, SDK support guidance, focused regression test.
+- Acceptance checks:
+  - [x] Default the standalone .NET workflow to .NET 10 LTS (`10.0.x`).
+  - [x] Document why .NET 8/9 are no longer appropriate defaults and link Microsoft's current support policy.
+  - [ ] Validate the workflow and SDK-default regression test in kit CI.
 
 ### KIT-007-WP4 — Unity reference and governance
 - Owner: Gpt
