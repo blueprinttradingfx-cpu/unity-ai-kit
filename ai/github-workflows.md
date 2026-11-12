@@ -28,9 +28,9 @@ The template:
 
 ### Configure it first
 
-1. Change `projectPath` if the Unity project is in a subfolder.
+1. If the Unity project is in a subfolder, define the repository variable `UNITY_PROJECT_PATH` (for example `game/`); leave it unset when the project is at the repository root. The template uses this variable for the test, build, and Library cache paths.
 2. Change `targetPlatform` from the sample `StandaloneLinux64` to a platform the project actually ships.
-3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt`; GameCI's `auto` mode reads this file.
+3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt` inside the Unity project; GameCI's `auto` mode reads this file.
 4. In repository **Settings → Secrets and variables → Actions**, add the license secrets for the license type you use:
    - Unity Personal: `UNITY_LICENSE` (contents of the activated `.ulf` file).
    - Unity Pro/Plus: `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL`.
