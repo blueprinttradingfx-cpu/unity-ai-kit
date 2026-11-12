@@ -49,7 +49,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 | KIT-007-WP6 | Harden licensed workflow secret boundaries and verify workflow triggers | Gpt | Done | examples/workflows/*.yml, ai/github-workflows.md, tests/ and workflow validation | WP2, WP3 |
 | KIT-007-WP7 | Align Unity API reference spot-checks with Unity 6.3 LTS | Gpt | Done | ai/unity6-reference.md and official Unity 6000.3 docs | WP4 |
 | KIT-007-WP8 | Upgrade GitHub Actions pins to Node 24-compatible releases | Gpt | Done | all active/example workflows, action pin tests, workflow docs | WP2, WP6 |
-| KIT-007-WP9 | Align standalone .NET SDK default with current LTS support | Gpt | In Progress | examples/workflows/dotnet-validation.yml, tests, ai/github-workflows.md | WP2, WP8 |
+| KIT-007-WP9 | Align standalone .NET SDK default with current LTS support | Gpt | Done | examples/workflows/dotnet-validation.yml, tests, ai/github-workflows.md | WP2, WP8 |
 
 ### KIT-007-WP3 — Validator regression tests
 - Owner: Gpt
@@ -61,7 +61,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Test suite uses temporary repositories and does not mutate a consumer project.
 - Sub-items:
   - [x] Add unittest harness.
-  - [x] Execute suite in Kit Validation run `43319820626`: 14 tests passed (9 validator tests + 5 workflow security/action-pin tests).
+  - [x] Execute suite in Kit Validation run `43320350107`: 16 tests passed, including workflow secret-gate, default-branch dispatch, action pin, and .NET LTS checks.
 
 ### KIT-007-WP5 — Post-merge reconciliation and consumer handoff
 - Owner: Gpt
@@ -69,7 +69,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - File/system boundary: KIT-007 tracker, session-state, README and consumer setup guidance.
 - Acceptance checks:
   - [x] Reconcile the tracker with PR #4 merge SHA `6e2e4f0` and Kit Validation run `43292788501`.
-  - [ ] Record that PR #4 had no independent review; obtain a separate review of PR #5 before phase completion.
+  - [ ] Record that PR #4 had no independent review; PR #5 remains without an independent review request/approval; request and resolve independent review before phase completion.
   - [x] Provide `ai/consumer-validation-checklist.md` without claiming Unity runtime validation.
 
 ### KIT-007-WP6 — Licensed workflow secret isolation
@@ -81,7 +81,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
   - [x] Fork PRs skip licensed jobs and continue to receive repository-quality checks.
   - [x] Push, scheduled, manual, and release-tag triggers have explicit, documented trust boundaries.
   - [x] Unity CI templates retain compile/EditMode, PlayMode, and configured build coverage.
-  - [x] All example workflows pass actionlint and kit validation in run `43319820626` (14 tests, syntax validation, actionlint).
+  - [x] All example workflows pass actionlint and kit validation in run `43320350107` (16 tests, source/config syntax validation, actionlint).
 
 ### KIT-007-WP7 — Unity 6.3 reference alignment
 - Owner: Gpt
@@ -111,7 +111,7 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 - Acceptance checks:
   - [x] Default the standalone .NET workflow to .NET 10 LTS (`10.0.x`).
   - [x] Document why .NET 8/9 are no longer appropriate defaults and link Microsoft's current support policy.
-  - [ ] Validate the workflow and SDK-default regression test in kit CI.
+  - [ ] Validated in Kit Validation run `43320350107` (16 tests, including .NET SDK default regression test).
 
 ### KIT-007-WP4 — Unity reference and governance
 - Owner: Gpt
@@ -129,16 +129,17 @@ Make the merged Unity AI Kit internally consistent, safer to adopt, and easier t
 
 ## Phase exit criteria
 - [ ] No stale references to PR #1–#3 being open or KIT-001–KIT-006 being in progress.
-- [ ] Manual licensed Unity workflow dispatch is default-branch-only.
-- [ ] Licensed CI secrets are isolated from unreviewed same-repository pull-request code through protected environments or an equivalent explicit trust gate.
-- [ ] Validator tests pass in a clean Python environment with pinned CI dependencies.
-- [ ] All optional governance/security behavior is clearly documented as repository settings or project configuration.
-- [ ] Unity reference states exactly what was checked and what remains unverified; 6.3-specific links are verified.
+- [x] Manual licensed Unity workflow dispatch is default-branch-only (workflow conditions and regression test).
+- [x] Licensed CI secrets are isolated from unreviewed same-repository pull-request code through reviewer-gated environments; consumer configuration is documented.
+- [x] Validator and workflow security tests pass in a clean Python environment; latest run `43320350107` passed 16 tests.
+- [x] Optional governance/security behavior is documented as repository settings or project configuration.
+- [x] Unity reference states exactly what was checked and what remains unverified; 6.3-specific links are verified.
 - [ ] Full diff reviewed; independent review findings resolved or explicitly recorded.
-- [ ] Garden Alchemy consumer-validation checklist handed off; no consumer-project pass is claimed yet.
+- [x] Garden Alchemy consumer-validation checklist handed off; no consumer-project pass is claimed yet.
 
 ## Checkpoint log
-- 2026-11-13 — PR #4 merged to main as `6e2e4f039562514101373d6b5478fcdad8e5335a`; Kit Validation run passed. PR #4 has no submitted reviews. Post-merge workflow audit identified a same-repository PR secret-exposure gap; follow-up WP5/WP6 opened on `gpt/kit-007-ci-secret-isolation`.
+- 2026-11-13 — PR #4 merged to main as `6e2e4f039562514101373d6b5478fcdad8e5335a`; Kit Validation run `43292788501` passed. PR #4 has no submitted reviews. Post-merge workflow audit identified a same-repository PR secret-exposure gap; follow-up WP5/WP6 opened on `gpt/kit-007-ci-secret-isolation`.
+- 2026-11-13 — PR #5 follow-up now includes protected environment secret gates, explicit default-branch guards, Node 24 action pins, Unity 6.3 reference corrections, .NET 10 LTS defaults, and a consumer checklist. Latest Kit Validation run `43320350107` on `3736e2bb` passed 16 tests, syntax checks, and actionlint. Independent review remains outstanding; PR #5 remains draft.
 
 ## Handoff
 - Current owner/status: Gpt / In Progress
