@@ -23,7 +23,8 @@ Do not invent a successful result from a command that was not run. For documenta
 
 ## Unity and CI checks
 - [ ] Unity Editor version matches `ProjectSettings/ProjectVersion.txt`; report the exact version.
-- [ ] EditMode tests run for changed logic/data; PlayMode tests run for affected scene/gameplay integration where applicable.
+- [ ] Unity Editor import/compile succeeds using the exact project Editor version; EditMode tests run for changed logic/data; PlayMode tests run for affected scene/gameplay integration where applicable.
+- [ ] Standalone SDK-style .NET projects (if present/configured) restore and build; test projects run; configured formatting/analyzer checks pass. Do not use generic `dotnet build` as a substitute for Unity Editor compilation.
 - [ ] The relevant target build succeeds, or is explicitly marked not run with the reason and a precise human check.
 - [ ] Repository-quality checks pass: diff whitespace, workflow lint, and Unity metadata sidecar/GUID validation where configured.
 - [ ] Package manifest and lockfile changes are reviewed together; no unrequested package upgrades.
