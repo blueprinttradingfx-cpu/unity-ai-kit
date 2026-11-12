@@ -12,6 +12,16 @@ Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules
 5. Delete the pointer files for tools you do not use (see table). Optional: `examples/claude-settings.json` → `.claude/settings.json`.
 6. First commit: "Add AI guidance kit".
 
+## Multi-agent coordination model
+
+The default ownership unit is a **phase or substantial work package**, not an individual micro-task. See `ai/coordination-model.md` and copy `examples/phase-tracker-template.md` when a project needs a phase tracker.
+
+- `ai/session-state.md` is a concise global coordination summary: active phases, owners, blockers, next milestones, and handoffs.
+- The phase tracker is the source of truth for scope, work packages, sub-items, dependencies, acceptance criteria, and checkpoint evidence.
+- Agents can complete several related sub-items before updating shared coordination state. Update the global summary only when ownership, status, blockers, priority, milestone, or handoff changes.
+- Parallel work is allowed only with explicit file/system boundaries and resolved dependencies. Do not assign two agents the same scene, prefab, asset, or high-conflict contract simultaneously.
+- Session username identifies the current agent; phase ownership is recorded separately in the tracker.
+
 ## GitHub CI/CD setup
 The kit includes optional, inactive templates for Unity CI and repository checks:
 - Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml`, then configure the target platform and Unity license secrets.

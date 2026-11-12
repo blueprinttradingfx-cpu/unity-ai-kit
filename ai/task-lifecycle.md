@@ -1,62 +1,46 @@
 # Task lifecycle and agent handoffs
 
-This file defines the workflow used by every AI provider. `AGENTS.md` is the short entry point; this file is the detailed procedure.
+This file defines stable task identity and status transitions. For multi-agent ownership and phase checkpointing, follow `ai/coordination-model.md`.
 
 ## Task record
+Every task gets a stable, never-reused ID (for example `GAME-001` or `KIT-001`). Keep the ID when moving the task between status lists.
 
-Every task gets a stable ID that is never reused (for example, `GAME-001` or `KIT-001`). Keep the ID in the task text as a prefix when moving it between the board and status lists, such as `KIT-001 — Harden the agent workflow`.
-
-A task must state:
-- **Outcome:** one observable result, not a vague activity.
-- **Acceptance checks:** what must be true before it can be marked Done.
-- **Scope:** likely files/systems and explicit exclusions when useful.
-- **Verification:** tests, commands, editor steps, or review evidence expected.
-- **Dependencies:** decisions, assets, owner input, or other tasks it waits on.
-
-Keep the session board compact. Put longer investigation notes in a task-specific tracker only when the work genuinely needs one; link it from the task row. Do not create a tracker just to duplicate the board.
+A task must state its observable outcome, acceptance checks, likely scope, verification evidence, and dependencies. Keep the global session summary compact; longer sub-item detail belongs in the owning phase tracker.
 
 ## Status flow
-
 `Backlog → Ready → In Progress → Done`
 
-Any active task can move to `Blocked` when a concrete dependency prevents progress. Use the matching file:
-- `ai/session-state.md`: Ready and In Progress only.
-- `ai/backlog-tasks.md`: identified but not ready or not yet prioritized.
-- `ai/blocked-tasks.md`: cannot proceed until the stated blocker clears.
+Any active work can become `Blocked` when a concrete dependency prevents progress:
+- `ai/session-state.md`: concise global summary of active phases/work packages and owners.
+- `ai/backlog-tasks.md`: identified but not ready or not prioritized.
+- `ai/blocked-tasks.md`: blocked work with its dependency.
 - `ai/done-tasks.md`: accepted/completed work.
 
-When moving a task, preserve its ID, outcome, author/owner, and the useful next-step context. Remove the old row after adding the new one; do not leave duplicate active copies.
+For phase-based projects, sub-item status changes stay in the phase tracker. Do not move every sub-item through the global board.
 
 ## Claiming work
+1. Read the latest global summary and the relevant phase tracker from the branch you are working on.
+2. Claim the phase or substantial work package by recording your exact `session_username`, branch, and ownership boundary in the tracker before editing.
+3. If the user explicitly asks for a goal with no matching phase/work package, create a stable-ID entry and claim it. Do not invent unrelated work.
+4. Never take work owned by another agent or `owner` without explicit user approval. A stale-looking assignment is not permission to take over.
+5. Before changing shared ownership/status, re-fetch the latest tracker. Reconcile concurrent changes rather than overwriting them.
 
-1. Read the latest board from the branch you are working on. Check both status and Author.
-2. Claim only a Ready task by setting Author to your exact `session_username` and Status to `In Progress`. Record the branch and a short next step.
-3. If the user explicitly asks for a goal that has no matching task, create a task with a new ID directly as In Progress and assign it to yourself. This is the only normal case where an agent creates and claims work in one step.
-4. If the user has not supplied a goal and no Ready task exists, ask what they want prioritized. Do not manufacture work to fill an empty board.
-5. Never take a task assigned to another agent or `owner` without explicit user authorization. A stale-looking task is not permission to take it over; ask the user.
-6. Before updating a shared board, re-fetch the latest version. If its content changed since your read, reconcile the other agent's updates instead of overwriting them. Use the current file SHA so concurrent edits fail safely.
+## Checkpoint cadence
+- Agents may complete several related sub-items before checkpointing.
+- Update the phase tracker at a meaningful checkpoint: a coherent work package is complete, a dependency/blocker changes, a design/API decision is made, verification evidence is available, ownership changes, or the agent is handing off.
+- Do not record every command, file edit, or tiny subtask in the global session summary.
+- Update `ai/session-state.md` only when active phase/work-package ownership, phase status, blocker, priority, milestone, or cross-agent handoff changes.
+- Keep chronological detail in the owning tracker only when it helps future execution; avoid diary-style logs.
 
-## Branch and change hygiene
-
-- Start from the current default branch unless the user or repository rules specify another base.
-- Use a descriptive branch name tied to the agent/task; do not commit risky work directly to the default branch.
-- Keep changes focused. Ask before a change that crosses more than about five files, changes public APIs, or expands beyond the task's acceptance checks.
-- Do not force-push, rewrite shared history, or discard another agent's work.
-- Do not include secrets, generated Unity folders, or unrequested project-specific changes.
+## Branch and concurrency hygiene
+- Work on a descriptive branch; do not commit risky work directly to the default branch.
+- A phase should have one accountable owner. Split ownership by work package only when boundaries are explicit and dependencies/file ownership are independent.
+- Define file/system ownership before parallel implementation. Unity scenes, prefabs, ScriptableObjects, shared interfaces, assembly definitions, and central composition roots are high-conflict assets; assign one owner or serialize changes.
+- Parallel agents must not edit the same file or overlapping Unity asset set. Coordinate integration through the phase owner.
+- Never force-push, rewrite shared history, or discard another agent's work.
 
 ## Handoff
-
-Before stopping, write a handoff that another agent can act on without reconstructing the conversation:
-- Task ID and current status/owner.
-- Branch and latest commit (if known).
-- Exact stopping point and next concrete step.
-- Files/systems changed.
-- Checks run, results, and evidence/log paths.
-- Checks not run and why; list precise human/editor/device steps.
-- Known defects, risks, unresolved review findings, and owner decisions waiting.
-
-Release ownership when you move a task out of In Progress. Keep the Author only while the same agent still actively owns the task; do not leave an inactive agent holding work indefinitely.
+Before stopping, the tracker and handoff must state: stable ID, owner/status, branch, exact stopping point, next step, changed systems, checks/evidence, checks not run, known risks, and decisions waiting. Release ownership when work is handed off or no longer actively owned.
 
 ## Independent review
-
-Use a different AI/provider for meaningful code changes and changes to architecture, save data, security, release/build configuration, or agent safety/workflow rules. Give the reviewer the full diff and ask for severity-ranked findings with file/line, failure mode, reproduction, and fix. The author must resolve findings or record why a finding is not applicable. If a second reviewer is unavailable, label the review as pending rather than claiming it passed.
+Use a different AI/provider for meaningful code changes and changes to architecture, save data, security, release/build, or agent safety/workflow rules. Give the reviewer the complete diff and ask for severity-ranked findings. If unavailable, mark review pending; do not call self-review independent.

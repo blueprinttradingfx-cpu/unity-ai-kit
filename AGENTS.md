@@ -5,10 +5,10 @@ This file is read by any AI tool (Claude, Codex, Gemini, Cursor, Copilot, local 
 Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per project.
 
 ## Start every session
-1. Ask the user for your `session_username`. Read `ai/task-lifecycle.md`, then `ai/session-state.md`. Do not reuse an agent name already recorded there.
-2. Find a Ready task matching the user's goal. Claim it by setting Author to your username and Status to `In Progress` before editing. Never take another agent's task. If the user gave a clear goal but no matching task exists, create a stable-ID task on the board and claim it; if the goal is unclear, ask before inventing work.
-3. Read `ai/project-brief.md` and the relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
-4. Work on a branch, keep the diff focused, and re-check the latest board before changing ownership or handoff. Follow `ai/definition-of-done.md` before finishing; move completed/blocked/backlog tasks to the matching list and update the handoff.
+1. Ask the user for your `session_username`. Read `ai/coordination-model.md`, then `ai/session-state.md`. Do not reuse an agent name already recorded there.
+2. Identify the phase or work package matching the user's goal. Read its phase tracker and claim ownership there before editing. If no matching phase/task exists, create a stable-ID entry and claim it. Never take another agent's owned work without explicit user approval.
+3. Read `ai/project-brief.md` and relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
+4. Update the phase tracker at meaningful checkpoints. Update `ai/session-state.md` only when phase ownership/status, blockers, priority, milestone, or handoff changes. Follow `ai/definition-of-done.md` before finishing.
 
 ## Hard rules (never break without asking)
 1. **Never create, edit, move or delete `.meta` files by hand.** Asset moves/renames happen in the Unity Editor (or move the `.meta` with the asset).
@@ -18,7 +18,7 @@ Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per projec
 5. **No allocations in hot paths** (`Update`, `FixedUpdate`, `LateUpdate`, per-frame UI, physics callbacks).
 6. **Gameplay numbers live in data** (ScriptableObject / JSON), never as magic numbers in code.
 7. **UI displays state; it never owns or mutates it.** UI sends commands/events.
-8. **Do not guess Unity APIs from memory.** Unity 6 changed many. Check `ai/unity6-reference.md`; if still unsure, say "unverified" and name how to check.
+8. **Do not guess Unity APIs from memory.** Check `ai/unity6-reference.md`; if still unsure, say "unverified" and name how to check.
 9. **Never claim code compiles, passes tests or works unless you ran it.** Say exactly what was and was not verified.
 10. **No secrets** (keys, keystores, passwords, service-account files) in the repo, prompts or logs.
 11. **Small diffs.** One concern per change. Ask before a refactor touching more than ~5 files or any public API.
