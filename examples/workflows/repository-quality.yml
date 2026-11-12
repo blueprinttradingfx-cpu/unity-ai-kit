@@ -41,6 +41,9 @@ jobs:
             git diff --check
           fi
 
+      - name: Lint GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
+
       - name: Validate Unity asset metadata
         run: |
           if [ -d Assets ]; then
