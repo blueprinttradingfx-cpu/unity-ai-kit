@@ -13,21 +13,21 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: unity-release-${{ github.ref }
+  group: unity-release-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   validate-tag:
     name: Validate release ref
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.ref.outputs.tag }
+      tag: ${{ steps.ref.outputs.tag }}
     steps:
       - id: ref
         shell: bash
         env:
-          EVENT_NAME: ${{ github.event_name }
-          PUSH_REF: ${{ github.ref }
-          INPUT_TAG: ${{ inputs.release_tag }
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_REF: ${{ github.ref }}
+          INPUT_TAG: ${{ inputs.release_tag }}
         run: |
           set -euo pipefail
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
@@ -38,7 +38,7 @@ jobs:
             fi
             git ls-remote --exit-code --tags "https://github.com/$GITHUB_REPOSITORY.git" "refs/tags/$tag" >/dev/null
           else
-            tag="\${PUSH_REF#refs/tags/}"
+            tag="${PUSH_REF#refs/tags/}"
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
   editmode:
@@ -49,26 +49,26 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }
+          ref: ${{ needs.validate-tag.outputs.tag }}
           lfs: true
           fetch-depth: 0
       - id: tests
         uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
           testMode: editmode
           githubToken: ''
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-editmode-${{ needs.validate-tag.outputs.tag }
-          path: ${{ steps.tests.outputs.artifactsPath }
+          name: release-editmode-${{ needs.validate-tag.outputs.tag }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
           if-no-files-found: warn
           retention-days: 30
   playmode:
@@ -79,65 +79,66 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }
+          ref: ${{ needs.validate-tag.outputs.tag }}
           lfs: true
           fetch-depth: 0
       - id: tests
         uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
           testMode: playmode
           githubToken: ''
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-playmode-${{ needs.validate-tag.outputs.tag }
-          path: ${{ steps.tests.outputs.artifactsPath }
+          name: release-playmode-${{ needs.validate-tag.outputs.tag }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
           if-no-files-found: warn
           retention-days: 30
   build:
-    name: Build ${{ matrix.platform }
+    name: Build ${{ matrix.platform }}
     needs: [validate-tag, editmode, playmode]
     strategy:
       fail-fast: false
       matrix:
         platform: [StandaloneLinux64, Android]
     runs-on: ubuntu-latest
+    environment: release # Configure required reviewers and platform signing secrets here.
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ needs.validate-tag.outputs.tag }
+          ref: ${{ needs.validate-tag.outputs.tag }}
           lfs: true
           fetch-depth: 0
       - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
-          targetPlatform: ${{ matrix.platform }
+          targetPlatform: ${{ matrix.platform }}
       - name: Add release provenance and checksums
         shell: bash
         env:
-          RELEASE_TAG: ${{ needs.validate-tag.outputs.tag }
-          PLATFORM: ${{ matrix.platform }
+          RELEASE_TAG: ${{ needs.validate-tag.outputs.tag }}
+          PLATFORM: ${{ matrix.platform }}
         run: |
           set -euo pipefail
           printf 'tag=%s\ncommit=%s\nplatform=%s\n' "$RELEASE_TAG" "$GITHUB_SHA" "$PLATFORM" > build/RELEASE-METADATA.txt
           find build -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > build/SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-${{ needs.validate-tag.outputs.tag }-${{ matrix.platform }
+          name: release-${{ needs.validate-tag.outputs.tag }}-${{ matrix.platform }}
           path: build
           if-no-files-found: error
           retention-days: 90
