@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: unity-nightly-${{ github.workflow }-${{ github.ref }
+  group: unity-nightly-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   editmode:
@@ -21,20 +21,20 @@ jobs:
       - id: tests
         uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
           testMode: editmode
           githubToken: ''
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: nightly-editmode-${{ github.sha }
-          path: ${{ steps.tests.outputs.artifactsPath }
+          name: nightly-editmode-${{ github.sha }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
           if-no-files-found: warn
           retention-days: 14
   playmode:
@@ -48,24 +48,24 @@ jobs:
       - id: tests
         uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
           testMode: playmode
           githubToken: ''
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: nightly-playmode-${{ github.sha }
-          path: ${{ steps.tests.outputs.artifactsPath }
+          name: nightly-playmode-${{ github.sha }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
           if-no-files-found: warn
           retention-days: 14
   platform-builds:
-    name: Nightly ${{ matrix.platform } build
+    name: Nightly ${{ matrix.platform }} build
     needs: [editmode, playmode]
     strategy:
       fail-fast: false
@@ -79,17 +79,17 @@ jobs:
           lfs: true
       - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }
+          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
-          targetPlatform: ${{ matrix.platform }
+          targetPlatform: ${{ matrix.platform }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: nightly-${{ matrix.platform }-${{ github.sha }
+          name: nightly-${{ matrix.platform }}-${{ github.sha }}
           path: build
           if-no-files-found: error
           retention-days: 7
