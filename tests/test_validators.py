@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -37,7 +38,7 @@ class ValidatorTestCase(unittest.TestCase):
 
     def run_script(self, relative: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            ["python3", str(self.repo / relative)],
+            [sys.executable, str(self.repo / relative)],
             cwd=self.repo,
             text=True,
             capture_output=True,
