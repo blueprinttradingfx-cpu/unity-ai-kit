@@ -16,8 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: EditMode and PlayMode tests
+  compile:
+    name: Unity import, C# compile and EditMode tests
     # Fork PRs do not receive repository secrets. Keep their static checks in
     # repository-quality.yml; never switch this job to pull_request_target.
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
@@ -50,7 +50,7 @@ jobs:
         with:
           projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}
           unityVersion: auto
-          testMode: all
+          # Importing the project and running EditMode tests compiles runtime and test assemblies.\n          testMode: editmode
           # Enable coverage after confirming it is stable for this Editor version.
           coverageEnabled: false
           # Avoid creating a separate Check Run that needs checks:write.
@@ -65,9 +65,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-  build:
-    name: Build Linux Standalone
-    needs: test
+  playmode:
+    name: PlayMode integration tests\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 60\n    steps:\n      - name: Checkout\n        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\n        with:\n          lfs: true\n      - name: Run PlayMode tests\n        id: tests\n        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4\n        env:\n          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}\n          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}\n          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}\n          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}\n        with:\n          projectPath: ${{ vars.UNITY_PROJECT_PATH || '.' }}\n          unityVersion: auto\n          testMode: playmode\n          githubToken: ''\n      - name: Upload PlayMode results\n        if: always()\n        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4\n        with:\n          name: unity-playmode-results-${{ github.sha }}\n          path: ${{ steps.tests.outputs.artifactsPath }}\n          if-no-files-found: warn\n          retention-days: 14\n\n  build:\n    name: Build Linux Standalone\n    needs: [compile, playmode]
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
