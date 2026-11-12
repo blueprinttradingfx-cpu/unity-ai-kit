@@ -19,8 +19,8 @@ def main() -> int:
     errors: list[str] = []
     seen_guids: dict[str, Path] = {}
 
-    # Unity assigns metadata to folders as well as files. Check every filesystem
-    # entry except .meta files themselves; this script never modifies the project.
+    # Unity assigns metadata to folders as well as files. Check every entry
+    # beneath Assets; the root Assets.meta is optional but validated if present.
     for entry in sorted(ASSETS.rglob("*")):
         if entry.name.endswith(".meta"):
             continue
@@ -28,7 +28,12 @@ def main() -> int:
         if not sidecar.is_file():
             errors.append(f"Missing metadata sidecar: {sidecar.as_posix()}")
 
-    for meta_file in sorted(ASSETS.rglob("*.meta")):
+    meta_files = list(ASSETS.rglob("*.meta"))
+    root_meta = ASSETS.with_name(ASSETS.name + ".meta")
+    if root_meta.is_file():
+        meta_files.append(root_meta)
+
+    for meta_file in sorted(meta_files):
         asset_path = Path(str(meta_file)[:-5])
         if not asset_path.exists():
             errors.append(f"Orphan metadata file with no matching asset/folder: {meta_file.as_posix()}")
