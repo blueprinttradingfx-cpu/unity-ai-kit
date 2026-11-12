@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.ref.outputs.tag }}
+      commit: ${{ steps.commit.outputs.sha }}
     steps:
       - id: ref
         shell: bash
@@ -41,6 +42,14 @@ jobs:
             tag="${PUSH_REF#refs/tags/}"
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Checkout exact release tag
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: \${{ steps.ref.outputs.tag }}
+          fetch-depth: 0
+      - name: Record immutable release commit
+        id: commit
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
   editmode:
     name: Release EditMode tests
     needs: validate-tag
@@ -134,7 +143,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
         run: |
           set -euo pipefail
-          printf 'tag=%s\ncommit=%s\nplatform=%s\n' "$RELEASE_TAG" "$GITHUB_SHA" "$PLATFORM" > build/RELEASE-METADATA.txt
+          printf 'tag=%s\ncommit=%s\nplatform=%s\n' "$RELEASE_TAG" "${{ needs.validate-tag.outputs.commit }}" "$PLATFORM" > build/RELEASE-METADATA.txt
           find build -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > build/SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
