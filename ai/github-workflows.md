@@ -55,13 +55,34 @@ For standalone .NET tools, services, or test projects in the same repository, op
 
 The quality workflow checks:
 - Whitespace errors in the changed Git diff.
+- Syntax of tracked JSON, Unity .asmdef/.asmref, YAML, Python, and JavaScript files. It also scans common source/config and Unity serialized text files for merge-conflict markers. Unity scene/prefab/asset YAML is deliberately not passed through a generic YAML parser.
+- GitHub Actions workflow semantics through actionlint.
 - Missing Unity `.meta` sidecars for files/folders under `Assets/`.
 - Orphan `.meta` files with no matching asset/folder.
 - Duplicate or malformed GUIDs in Unity metadata.
 
 The validator is read-only. It does not generate, edit, move, or delete metadata. Fix findings through the Unity Editor or by restoring the correct asset and matching metadata from version control.
 
-Also run `actionlint` against workflow YAML before merging workflow changes. Consider `yamllint` and Markdown linting if the repository has a broader documentation standard.
+The syntax validator is examples/scripts/validate_source_syntax.py; the workflow installs a pinned PyYAML version before running it. C# compile remains the Unity Editor job, while standalone .NET solutions use the separate .NET workflow. Consider Markdown linting if the repository has a broader documentation standard.
+
+
+
+## Reusable patterns observed in the user's game repositories
+
+The following patterns were compared from the current default-branch workflows in Garden Alchemy, Weapon Ball Unity, and Heartway. The kit adopts reusable parts without importing game-specific assertions.
+
+| Observed pattern | Kit treatment |
+|---|---|
+| Garden Alchemy: PR diff checks, full history, added/deleted Unity asset and .meta pairing, retired API/symbol regression checks | General .meta sidecar/GUID validation is included. Keep retired-symbol assertions in a project-owned validator because the symbols and retirement policy are game-specific. |
+| Weapon Ball Unity: offline catalog schema, unique IDs, bounds, JSON/SQLite parity, behavior manifest, save defaults, Python unit tests | Documented as project-owned data-contract validation. Call the project's explicit validator/test commands in its CI; do not put Weapon Ball data rules in the reusable kit. |
+| Heartway: YAML/JSON/JavaScript/Python syntax and merge-conflict checks | Added generic tracked-source syntax and conflict-marker validation to repository-quality CI. |
+| Heartway: Firestore rules tests using a local emulator and demo project | Keep as an optional backend-specific workflow. Unity projects using Firebase should run emulator/security-rule tests only when backend rules/config change; no Firebase setup is imposed on every Unity project. |
+
+### Project-specific validator convention
+
+Reusable CI should provide a stable place for each game to add domain checks. Keep validators in the game repository (for example tools/validate_catalog.py, tools/validate_save_defaults.py, or scripts/check-pr-static.py) and invoke them explicitly from that game's workflow. They should be offline/read-only where possible, return a non-zero exit code on contract violations, explain intentional exceptions, and clearly state what they do not prove. Never treat JSON/schema validation as proof that Unity scenes, prefabs, or runtime behavior work.
+
+Do not automatically execute every validate_*.py file discovered in a repository: some scripts may require arguments, modify data, or be unrelated. Explicit commands are safer and make required checks reviewable.
 
 ## 3. Unity-specific checks to add as the project grows
 
