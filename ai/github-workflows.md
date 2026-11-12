@@ -36,7 +36,7 @@ The template:
 4. Configure GitHub Environments before adding Unity credentials. Store Unity license values only as environment secrets: remove any repository-level or organization-level secrets with the same names (`UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`, `UNITY_SERIAL`) so they cannot bypass environment approval.
    - `unity-pr-validation`: add the required Unity license secrets and configure required reviewers; enable **prevent self-review** where available. Allow the PR deployment refs used by your repository. Every same-repository PR that reaches licensed Unity jobs must be explicitly approved before those secrets are released.
    - `unity-ci`: add the Unity license secrets; restrict deployments to the default branch. Main-branch CI and the default-branch-only nightly workflow use this environment.
-   - `release`: add the Unity license secrets plus only the signing credentials required by the project. Configure required reviewers and enable prevent self-review where available and allow the intended version tags plus the default branch for manual dispatch. Release tests and builds wait for this protected environment.
+   - `release`: add the Unity license secrets plus only the signing credentials required by the project. Configure required reviewers, enable prevent self-review where available, and allow only the intended version tags plus the default branch for manual dispatch. Release tests and builds wait for this protected environment.
    - Fork PRs continue to skip licensed jobs and run repository-quality checks. Never switch to `pull_request_target` to expose secrets to fork code.
 5. Run the workflow manually from the default branch and inspect the test report/build artifact before making checks required.
 
