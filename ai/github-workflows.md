@@ -70,6 +70,8 @@ The workflow restores, builds Release, runs configured tests, verifies whitespac
 
 **Never point this workflow at Unity-generated solution/project files.** Unity projects must be compiled by the matching Unity Editor via GameCI; generic `dotnet build` does not reproduce Unity's generated references, platform defines, packages, or editor compilation pipeline. For standalone .NET projects, pin SDK and dependency policy to the needs of that codebase. Analyzer coverage depends on analyzers configured by the project.
 
+The optional `dotnet list package --vulnerable --include-transitive` step is a report, not a vulnerability-fail gate by itself. NuGet restore also performs auditing when enabled by the project/SDK. To make selected severities block CI, configure `WarningsAsErrors` in the project or `Directory.Build.props`; for example, append `NU1903;NU1904` to fail on high/critical advisories, or include `NU1901;NU1902` to fail on all severities. .NET 10 projects default NuGet audit mode to `all` (including transitive dependencies). See [NuGet package auditing](https://learn.microsoft.com/en-us/nuget/concepts/auditing-packages) for audit-source and severity policy details.
+
 ## 4. Project-owned validators
 
 Reusable CI should provide a stable place for each game to add domain checks. Keep validators in the game repository (for example `tools/validate_catalog.py`, `tools/validate_save_defaults.py`, or `scripts/check-pr-static.py`) and invoke them explicitly from that game's workflow. They should be offline/read-only where possible, return a non-zero exit code on contract violations, explain intentional exceptions, and clearly state what they do not prove.
