@@ -2,6 +2,8 @@
 
 Applies to: `Assets/**/UI/**`, HUD, menus, dialogs, anything the player taps or reads.
 
+**How to use this guide:** UI Toolkit, uGUI, navigation, localization, layout, and accessibility patterns below are recommendations or prompts for project decisions—not a mandate to rebuild an existing UI stack. Choose based on the target platforms, team experience, project architecture, accessibility needs, and measured performance. Record consequential technology choices in the consumer's ADRs.
+
 ## Technology choice (decide once per project, record as an ADR)
 - Default for new projects: **UI Toolkit** for menus/screens and tools; **uGUI (Canvas)** is fine for world-space UI, heavy animation, or when the team already has it. Both are supported in Unity 6.
 - **Do not use IMGUI (`OnGUI`) for runtime player UI in a new project.** It is intended for editor tooling and allocates per frame. If an existing project uses it, measure first (see "Spike" below) before building more screens on it.
