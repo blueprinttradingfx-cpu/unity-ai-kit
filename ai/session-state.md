@@ -2,44 +2,43 @@
 
 This is the low-churn coordination summary, not a task diary. Detailed scope and sub-item progress belong in the relevant phase tracker. Update this file only for ownership, phase status, blockers, priority, milestone, or handoff changes.
 
-Read `ai/coordination-model.md` before coordinating parallel work. Backlog, blocked, and completed work remain in `ai/backlog-tasks.md`, `ai/blocked-tasks.md`, and `ai/done-tasks.md`.
+Read `ai/coordination-model.md` before coordinating parallel work. Backlog, blocked, and completed work remain in their task lists when those lists are used by the project.
 
 **Session username for the session that last updated this file:** `Gpt`
 
 ## Active work
-
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-011 — Agent workflow adaptability audit | Ready for owner review | `Gpt` | `gpt/kit-agent-workflow-adaptability` / `ai/phase-KIT-011-agent-workflow-adaptability.md` | PR #10 open; Kit Validation run `43345609486` passed; awaiting owner review |
+| KIT-012 — Prompt template adaptability audit | Awaiting owner review | `Gpt` | `gpt/kit-prompt-template-adaptability` / `ai/phase-KIT-012-prompt-template-adaptability.md` | PR #11 is open, mergeable, and all Kit Validation jobs passed; owner review is next |
 
 ## Completed milestones
-
 | Task | Status | Evidence |
 |---|---|---|
-| KIT-001–KIT-004 — Agent safeguards and CI quality foundation | Done | PR #1 merged into `main`; merge commit `74fe2433a46bce6bb9b63696a03c92b2c74f0238` |
-| KIT-005 — Nightly regression and protected release templates | Done | PR #2 merged into `main`; merge commit `39e0f2205b110034645dd21fdbb7ffe3c966e4a5` |
-| KIT-006 — Phase-based multi-agent coordination model | Done | PR #3 merged into `main`; merge commit `447b7618cd0bb0051a3c3224d316e3a4a1c6c69f` |
-| KIT-007 — Production readiness and validation | Done | PR #5 merged into `main`; merge commit `f814ac41560964ef5abb14ab31f724674cb754bc`; Kit Validation run `43320593384` passed 16 tests, syntax checks, and actionlint |
-| KIT-008 — Garden Alchemy consumer feedback and CI template adaptation | Done | PR #7 merged into `main`; merge commit `c0b84e768cdd5a66cf089c4e7c30e85739c08b45`; Kit Validation run `43340306384` passed 18 tests, source/config syntax checks, and actionlint |
-| KIT-009 — Flexible kit guidance principles | Done | PR #8 merged into `main`; merge commit `b71a570f7630faa48a62268bb3474e180d682068`; Kit Validation run `43343527260` passed |
-| KIT-010 — Guidance consistency audit | Done | PR #9 merged into `main`; merge commit `e74588f3ee6e647de6d65098c0a885f928fdbb89`; latest Kit Validation run `43344606497` passed |
+| KIT-001–KIT-004 — Agent safeguards and CI quality foundation | Done | PR #1 merged; `74fe2433a46bce6bb9b63696a03c92b2c74f0238` |
+| KIT-005 — Nightly regression and protected release templates | Done | PR #2 merged; `39e0f2205b110034645dd21fdbb7ffe3c966e4a5` |
+| KIT-006 — Phase-based multi-agent coordination model | Done | PR #3 merged; `447b7618cd0bb0051a3c3224d316e3a4a1c6c69f` |
+| KIT-007 — Production readiness and validation | Done | PR #5 merged; `f814ac41560964ef5abb14ab31f724674cb754bc`; run `43320593384` passed |
+| KIT-008 — Garden Alchemy consumer feedback and CI template adaptation | Done | PR #7 merged; `c0b84e768cdd5a66cf089c4e7c30e85739c08b45`; run `43340306384` passed |
+| KIT-009 — Flexible kit guidance principles | Done | PR #8 merged; `b71a570f7630faa48a62268bb3474e180d682068`; run `43343527260` passed |
+| KIT-010 — Guidance consistency audit | Done | PR #9 merged; `e74588f3ee6e647de6d65098c0a885f928fdbb89`; run `43344606497` passed |
+| KIT-011 — Agent workflow adaptability audit | Done | PR #10 merged; `0a033205f7b76ea0e58dd6c833f6424db38e2e34`; run `43345762282` passed |
 
 ## Coordination rules at a glance
-- Phase or substantial work package is the normal ownership unit for larger or multi-agent work; solo/small projects may use a lighter task flow.
-- One accountable phase owner coordinates a phase. Split work-package ownership only when file boundaries and dependencies are genuinely independent.
-- Agents may complete several related sub-items before checkpointing; do not create a shared-board update for every small action.
-- Never allow overlapping ownership of the same scene, prefab, asset, API contract, or high-conflict file without an explicit integration plan.
-- Session identity is not phase ownership. A session username identifies the agent; the phase tracker records who owns the phase.
+- Phase/work-package ownership is for substantial or shared work; small solo tasks may proceed directly.
+- One accountable phase owner coordinates a phase. Split ownership only across genuinely independent boundaries.
+- Group related sub-items and checkpoint at meaningful milestones; do not update shared state after every small action.
+- Never overlap ownership of shared scenes, prefabs, assets, API contracts, or high-conflict files without an integration plan.
+- Session identity is not phase ownership.
 
 ## Project context
 - **Repository:** reusable Unity AI guidance and optional CI templates; no Unity game project is hosted here.
-- **Base:** `main`; KIT-001 through KIT-010 are merged. KIT-011 is awaiting owner review.
-- **Consumer validation target:** Garden Alchemy was the first consumer; PR #41 is merged. Consumer-specific Unity validation remains owned by Garden Alchemy and is not a universal kit completion gate.
+- **Base:** `main`; KIT-001 through KIT-011 are merged. KIT-012 is awaiting owner review.
+- **Consumer validation target:** Garden Alchemy was the first consumer; PR #41 is merged. Consumer-specific Unity validation remains separate.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-011 workflow and task lifecycle guidance updated; PR #10 is open for owner review.
-- **Next step:** owner review PR #10. Do not merge without explicit approval.
-- **Verified:** Kit Validation run `43345609486` passed all jobs including regression tests, actionlint, and metadata applicability checks.
-- **Not applicable:** Unity Editor execution; this is a reusable guidance/template repository.
-- **Known risks:** consumers should adapt optional coordination artifacts to team size and their existing issue-tracking source of truth.
+- **Exact stopping point:** KIT-012 prompt templates and regression coverage are committed on `gpt/kit-prompt-template-adaptability`; PR #11 is open.
+- **Next step:** owner reviews PR #11; merge only after explicit approval.
+- **Verified:** PR #10 merged; KIT-011 run `43345762282` passed. KIT-012 run `43346247889` passed all jobs, including syntax validation, regression tests, actionlint, and the Unity metadata applicability check.
+- **Not verified:** consumer-specific Unity compilation/runtime validation; that belongs in the consumer project.
+- **Known risks:** keep prompts provider-neutral and consumer-adaptable; do not reintroduce mandatory tracking for trivial tasks.

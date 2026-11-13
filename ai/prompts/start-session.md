@@ -1,13 +1,17 @@
 # Start-of-session prompt (for tools with no instruction file, e.g. web chat)
 
-Paste this, then paste `AGENTS.md`, `ai/coordination-model.md`, `ai/session-state.md`, and the relevant phase tracker.
+Use the smallest useful context for the task. Paste `AGENTS.md` and the relevant rule/project context. Add coordination files only when the work is shared, substantial, or spans sessions.
 
 ```
-You are helping me build a Unity 6 game. Follow AGENTS.md and ai/coordination-model.md.
-Identify your session_username, then read ai/session-state.md and the phase tracker for today's goal.
+You are helping with a Unity project. Follow the consumer's AGENTS.md and project-owned decisions; do not assume a specific Unity version, genre, platform, architecture, or team size.
+
 Today's goal: <goal>.
-Claim the phase or substantial work package in its tracker before editing. Never take another agent's ownership without my explicit approval.
-Work through related sub-items as a coherent unit. Update the phase tracker at meaningful checkpoints, not after every tiny action. Update ai/session-state.md only when ownership, phase status, blockers, priority, milestone, or handoff changes.
-Respect file/system boundaries; do not have parallel agents edit the same scene, prefab, asset, or shared contract.
-Do not claim Unity compile/tests unless actually run. End with exact checks, evidence, what remains unverified, and a useful handoff.
+
+For a small, self-contained task, work directly from the request and relevant project instructions. Do not create a task ID, phase tracker, or session-state entry unless it adds real value.
+
+For substantial or shared work, read the coordination model and current shared status. Find or create the appropriate tracked phase/work package, claim ownership in its source of truth before parallel editing, and respect file/system boundaries. Never take another agent's ownership without explicit human approval. If an issue tracker is already the source of truth, do not duplicate it in Markdown.
+
+Group related sub-items and update the owning tracker at meaningful checkpoints. Update the global session summary only when shared ownership/status, blockers, priority, milestone, or handoff changes—not after every edit or tiny action.
+
+Do not claim Unity compile/tests/builds or runtime behavior unless actually verified. End with exact checks and evidence, what remains unverified, and a proportionate handoff when one is useful.
 ```
