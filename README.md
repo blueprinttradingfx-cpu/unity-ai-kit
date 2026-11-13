@@ -1,8 +1,18 @@
-# Unity AI Kit — provider-neutral starter for new Unity games
+# Unity AI Kit — provider-neutral development framework for Unity projects
 
 Drop-in guidance and optional CI templates so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. The core guidance is plain Markdown; the kit itself has a lightweight validation workflow, while optional examples provide Unity consumer CI/CD templates and read-only validators.
 
 Inspired by the ideas in `donchitos/claude-code-game-studios` (path-scoped rules, decision records, definition of done, session state), but without its Claude-only machinery (49 agents, 74 skills, bash hooks), and with the Unity reference rewritten and corrected.
+
+## Kit philosophy
+
+The kit is a reusable development framework, not a game-specific starter pack. It provides **strong defaults, flexible implementation, and project-owned decisions**.
+
+- **Safety and integrity guardrails** protect credentials, untrusted CI execution, Unity asset integrity, destructive operations, and truthful verification claims.
+- **Recommended engineering defaults** offer useful starting points for architecture, coding, testing, performance, coordination, and CI/CD. They are adaptable, not universal laws.
+- **Consumer-owned decisions** include Unity version, packages, render pipeline, platforms, game architecture, folder layout, test strategy, CI trust model, and team workflow.
+
+Before applying a rule, classify it. Keep the guardrails strong; adapt or replace recommendations when the consumer's architecture and constraints call for it. See [`ai/kit-principles.md`](ai/kit-principles.md).
 
 ## Set up a new project (10 minutes)
 1. Copy everything except `README.md` into the **root of your Unity project repo** (next to `Assets/`).
@@ -39,12 +49,12 @@ The kit includes optional, inactive templates for Unity CI and repository checks
 Do not copy the templates blindly: set the project's actual Editor version, project path, build target, license type, and protected release process. The consumer examples are not active in this master kit repository. The active `.github/workflows/kit-validation.yml` checks source syntax, lints the active and example workflows, and runs validator regression tests. Run `python -m unittest discover -s tests -v` locally as well. Validate licensed Unity workflows in a real consumer project before requiring their checks.
 
 ## How it works
-- `AGENTS.md` is the single source of truth. It stays short: hard rules, a routing table, commands, and working style.
+- `AGENTS.md` is the single source of truth for the consumer's adapted instructions. It stays short: guardrails, a routing table, commands, and working style.
 - Each tool gets a 1–3 line pointer to it, so you maintain one file.
 - Detail is in `ai/rules/*.md`, read only when the work matches (saves context, works in any tool).
 - `ai/session-state.md` carries "where we stopped" between sessions and between **different AIs**.
 - `ai/task-lifecycle.md` defines how tasks are created, claimed, handed off, and closed; task IDs stay with a task as it moves between status lists.
-- `ai/decisions/` holds one-page decisions so a new AI doesn't re-open or contradict them.
+- `ai/decisions/` holds one-page decisions so a new AI doesn't re-open or contradict an earlier project decision.
 - `ai/definition-of-done.md` requires evidence, not an unsupported "done" claim.
 
 | Tool | Reads | Kit file |

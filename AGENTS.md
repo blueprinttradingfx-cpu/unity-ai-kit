@@ -4,25 +4,28 @@ Unity 6.3 LTS · C# · Target: Android first (IL2CPP, ARM64) · <add/remove>
 This file is read by any AI tool (Claude, Codex, Gemini, Cursor, Copilot, local models).
 Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per project.
 
+**Apply guidance by category.** Read `ai/kit-principles.md`: safety/integrity guardrails are distinct from recommended engineering defaults and consumer-owned decisions. This file is a starting template, not a universal architecture contract. Adapt conventions to the actual project and record consequential decisions.
+
 ## Start every session
 1. Ask the user for your `session_username`. Read `ai/coordination-model.md`, then `ai/session-state.md`. Do not reuse an agent name already recorded there.
 2. Identify the phase or work package matching the user's goal. Read its phase tracker and claim ownership there before editing. If no matching phase/task exists, create a stable-ID entry and claim it. Never take another agent's owned work without explicit user approval.
 3. Read `ai/project-brief.md` and relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
 4. Update the phase tracker at meaningful checkpoints. Update `ai/session-state.md` only when phase ownership/status, blockers, priority, milestone, or handoff changes. Follow `ai/definition-of-done.md` before finishing.
 
-## Hard rules (never break without asking)
-1. **Never create, edit, move or delete `.meta` files by hand.** Asset moves/renames happen in the Unity Editor (or move the `.meta` with the asset).
-2. **Do not hand-edit scene, prefab or `.asset` YAML** unless asked. Prefer an editor script, or give numbered Editor steps for the human.
-3. **Do not touch** `Library/`, `Temp/`, `Logs/`, `obj/`, `UserSettings/`, `Builds/`.
-4. **No Unity version, render pipeline, or package changes** unless asked. Say so if a task needs one.
-5. **No allocations in hot paths** (`Update`, `FixedUpdate`, `LateUpdate`, per-frame UI, physics callbacks).
-6. **Gameplay numbers live in data** (ScriptableObject / JSON), never as magic numbers in code.
-7. **UI displays state; it never owns or mutates it.** UI sends commands/events.
-8. **Do not guess Unity APIs from memory.** Check `ai/unity6-reference.md`; if still unsure, say "unverified" and name how to check.
-9. **Never claim code compiles, passes tests or works unless you ran it.** Say exactly what was and was not verified.
-10. **No secrets** (keys, keystores, passwords, service-account files) in the repo, prompts or logs.
-11. **Small diffs.** One concern per change. Ask before a refactor touching more than ~5 files or any public API.
-12. **Record decisions** in `ai/decisions/` (see template). Do not silently reverse an earlier decision; flag the conflict.
+## Starter rules — classify and adapt
+The following mix safety guardrails with engineering defaults. Do not treat every style or architecture preference as a universal hard rule; apply `ai/kit-principles.md` and consumer decisions.
+1. **Preserve Unity asset integrity.** Do not create, edit, move or delete `.meta` files by hand. Asset moves/renames happen in the Unity Editor (or move the `.meta` with the asset).
+2. **Preserve serialized Unity data.** Do not hand-edit scene, prefab or `.asset` YAML unless asked. Prefer an editor script, or give numbered Editor steps for the human.
+3. **Avoid generated data.** Do not touch `Library/`, `Temp/`, `Logs/`, `obj/`, `UserSettings/`, `Builds/`.
+4. **Respect consumer configuration.** Do not change Unity version, render pipeline, or packages unless asked. Say so if a task needs one.
+5. **Performance default:** avoid allocations in hot paths (`Update`, `FixedUpdate`, `LateUpdate`, per-frame UI, physics callbacks), unless profiling and project constraints support another choice.
+6. **Data ownership default:** keep gameplay numbers in project-owned data where practical; follow the consumer's established model.
+7. **Architecture default:** UI commonly displays state and sends commands/events; adapt to the project's actual UI/state architecture.
+8. **Verify Unity APIs.** Check `ai/unity6-reference.md`; if still unsure, say "unverified" and name how to check.
+9. **Evidence guardrail:** never claim code compiles, passes tests or works unless you ran it. Say exactly what was and was not verified.
+10. **Secret guardrail:** no keys, keystores, passwords, or service-account files in the repo, prompts or logs.
+11. **Keep diffs reviewable.** Prefer one concern per change. Ask before a broad refactor or public API change when scope/authorization is unclear.
+12. **Record consequential decisions** in `ai/decisions/` (see template). Do not silently reverse an earlier decision; flag the conflict.
 
 ## Rule files — read the one that matches the work
 | When you touch… | Read |
