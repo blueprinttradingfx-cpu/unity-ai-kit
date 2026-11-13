@@ -50,19 +50,20 @@ Fold reusable lessons from the first real Unity AI Kit consumer, Garden Alchemy,
 - [x] Path filters are documented as consumer-specific and must include workflow files and all project inputs.
 - [x] Disk cleanup is documented as an opt-in response to observed runner disk pressure, not a default requirement.
 - [x] Regression tests cover both trust models and checkout credential settings.
-- [ ] Kit Validation passes source/config syntax checks, regression tests, and actionlint on the final PR commit.
-- [ ] Full diff is reviewed and PR is opened for owner review.
+- [x] Kit Validation passed source/config syntax checks, 18 regression tests, and actionlint in run `43340306384` on commit `54979a2e1dc2225ba46d7f13ad31187e3fe2fa18`.
+- [x] Full diff reviewed; PR #7 opened for owner review.
 
 ## Checkpoint log
 
 - 2026-11-13 — Audited Garden Alchemy's merged CI hardening and subsequent PRs. Reusable lessons: mainline-only licensed execution is safer and more operable than self-approval when no independent approver exists; retain unlicensed PR checks; disable persisted checkout credentials; use narrow path filters only when mapped to the actual Unity project layout; treat disk cleanup as an observed-runner mitigation.
 - 2026-11-13 — Added the alternate mainline-only Unity CI template, updated the reviewer-gated template and all Unity checkout steps, added security regression tests, and updated README/workflow/consumer guidance.
+- 2026-11-13 — First validation exposed an incorrect assertion in the new mainline-only dispatch test; corrected the test to match the intended push/manual-dispatch expression. Final Kit Validation run `43340306384` passed all 18 tests, source/config syntax validation, actionlint, and the no-Assets metadata skip.
 
 ## Handoff
 
-- Current owner/status: Gpt / In Progress.
-- Exact stopping point: template and documentation changes are on `gpt/garden-alchemy-consumer-feedback`; validation is pending.
-- Next action: run Kit Validation on the branch, inspect all failures and final diff, then open a PR.
-- Verified: consumer changes were reviewed; template changes and tests are committed to the branch.
-- Not verified: Kit Validation for this branch; no consumer Unity execution is claimed.
+- Current owner/status: Gpt / Ready for owner review.
+- Exact stopping point: PR #7 is open; final Kit Validation run `43340306384` passed on commit `54979a2e1dc2225ba46d7f13ad31187e3fe2fa18`.
+- Next action: owner reviews the trust-model choice and alternate workflow before merge.
+- Verified: consumer changes reviewed; 18 regression tests, source/config syntax validation, actionlint, and the kit workflow completed successfully.
+- Not verified: no Unity Editor execution is claimed by this kit PR; consumer-side Unity validation remains in Garden Alchemy.
 - Risks: the new mainline-only template assumes the default branch is named `main` for push triggers; consumers with another default branch must change the push branch filter while retaining the dynamic manual-dispatch guard.
