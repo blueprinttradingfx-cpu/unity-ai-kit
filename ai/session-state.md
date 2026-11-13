@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-011 — Agent workflow adaptability audit | In Progress | `Gpt` | `gpt/kit-agent-workflow-adaptability` / `ai/phase-KIT-011-agent-workflow-adaptability.md` | Audit coordination and task lifecycle guidance; next align boards/onboarding for solo and multi-agent use |
+| KIT-011 — Agent workflow adaptability audit | In Progress | `Gpt` | `gpt/kit-agent-workflow-adaptability` / `ai/phase-KIT-011-agent-workflow-adaptability.md` | Guidance and templates updated; regression coverage added; next validate the PR and review the complete diff |
 
 ## Completed milestones
 
@@ -38,8 +38,8 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-010 PR #9 merged; coordination/task lifecycle audit started on `gpt/kit-agent-workflow-adaptability`.
-- **Next step:** complete KIT-011 WP1 audit, then align task boards and onboarding in WP2.
-- **Verified:** latest KIT-010 Kit Validation run `43344606497` passed; PR #9 merged.
-- **Not verified:** KIT-011 changes and validation are pending. No Unity Editor execution is applicable to this kit repository.
+- **Exact stopping point:** KIT-011 WP1/WP2 guidance and onboarding changes committed; focused workflow regression tests added on `gpt/kit-agent-workflow-adaptability`.
+- **Next step:** validate the branch, inspect the full diff, and prepare owner review.
+- **Verified:** KIT-010 latest Kit Validation run `43344606497` passed; KIT-011 source changes and test file are committed.
+- **Not verified:** KIT-011 tests, syntax checks, actionlint, and full PR review are pending. No Unity Editor execution is applicable to this kit repository.
 - **Known risks:** simplify optional workflow ceremony without weakening explicit ownership, safe handoffs, security, or truthful verification.
