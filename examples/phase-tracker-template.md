@@ -6,7 +6,8 @@
 ## Status and ownership
 - Status: Planned | Ready | In Progress | Blocked | Done
 - Phase owner: <session/agent>
-- Branch / PR: <branch and link>
+- Integration owner: <session/agent; same as phase owner for a small phase>
+- Branch / PR: <branch and link, if applicable>
 - Last checkpoint: <date + short outcome>
 - Next milestone: <one concrete result>
 
@@ -22,11 +23,11 @@
 - Decisions required: <...>
 
 ## Work packages
+Use this section when work is substantial or parallelized. A small solo phase may use one owner and a short checklist instead of multiple packages.
 
 | ID | Outcome | Owner | Status | Allowed files/systems | Depends on |
 |---|---|---|---|---|---|
 | <PHASE-WP1> | <coherent deliverable> | <owner> | Ready | <bounded paths/modules> | <...> |
-| <PHASE-WP2> | <coherent deliverable> | <owner> | Planned | <bounded paths/modules> | <...> |
 
 ### <Work package ID> — <Outcome>
 - Owner: <agent>
@@ -41,6 +42,7 @@
 - Checkpoint evidence: <PR, test output, log, screenshot, or not yet available>
 
 ## Concurrency and integration
+Use only when work is delegated or parallelized.
 - Safe parallel work: <independent work packages and why>
 - Serialized work: <shared scenes/prefabs/contracts/assets and integration owner>
 - Integration sequence: <who merges what, and when>
