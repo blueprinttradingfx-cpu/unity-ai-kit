@@ -7,10 +7,11 @@ Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per projec
 **Apply guidance by category.** Read `ai/kit-principles.md`: safety/integrity guardrails are distinct from recommended engineering defaults and consumer-owned decisions. This file is a starting template, not a universal architecture contract. Adapt conventions to the actual project and record consequential decisions.
 
 ## Start every session
-1. Ask the user for your `session_username`. Read `ai/coordination-model.md`, then `ai/session-state.md`. Do not reuse an agent name already recorded there.
-2. Identify the phase or work package matching the user's goal. Read its phase tracker and claim ownership there before editing. If no matching phase/task exists, create a stable-ID entry and claim it. Never take another agent's owned work without explicit user approval.
-3. Read `ai/project-brief.md` and relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
-4. Update the phase tracker at meaningful checkpoints. Update `ai/session-state.md` only when phase ownership/status, blockers, priority, milestone, or handoff changes. Follow `ai/definition-of-done.md` before finishing.
+1. Identify your session username when shared work or handoffs need to distinguish agents. In a solo workflow, a stable local label is sufficient; do not interrupt a simple task just to create an identity record.
+2. Read the relevant project instructions and current task context. For shared or multi-agent work, read `ai/coordination-model.md` and `ai/session-state.md`; do not assume the session username is the phase owner.
+3. For substantial tracked work, identify the matching phase/work package, read its tracker, and claim ownership there before parallel editing. For a small self-contained request, proceed directly without creating a task ID or phase tracker. Never take another agent's owned work without explicit user approval.
+4. Read `ai/project-brief.md` and relevant ADRs in `ai/decisions/`. Before touching a topic, read its rule file (table below).
+5. Update the phase tracker at meaningful checkpoints. Update `ai/session-state.md` only when shared ownership/status, blockers, priority, milestone, or handoff changes. Follow `ai/definition-of-done.md` before finishing.
 
 ## Starter rules — classify and adapt
 The following mix safety guardrails with engineering defaults. Do not treat every style or architecture preference as a universal hard rule; apply `ai/kit-principles.md` and consumer decisions.
@@ -54,7 +55,7 @@ Tests/                EditMode + PlayMode
 - EditMode tests: `Unity.exe -batchmode -nographics -projectPath . -runTests -testPlatform EditMode -testResults ai/out/editmode.xml`
 - PlayMode tests: same with `-testPlatform PlayMode`
 - Compile check: `Unity.exe -batchmode -nographics -quit -projectPath . -logFile ai/out/compile.log`
-- Build (Android): `<Unity.exe ... -executeMethod Build.Android>` (define once, then reuse)
+- Build target: `<Unity.exe ... -executeMethod Build.<Target>>` (define once, then reuse)
 
 If the AI cannot run Unity (cloud chat, no editor), it must say "not compiled/tested" and list what the human should check.
 
