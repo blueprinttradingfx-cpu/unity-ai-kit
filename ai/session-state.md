@@ -9,7 +9,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 ## Active work
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-012 — Prompt template adaptability audit | In Progress | `Gpt` | `gpt/kit-prompt-template-adaptability` / `ai/phase-KIT-012-prompt-template-adaptability.md` | Prompt templates updated; regression tests and Kit Validation next |
+| KIT-012 — Prompt template adaptability audit | Awaiting owner review | `Gpt` | `gpt/kit-prompt-template-adaptability` / `ai/phase-KIT-012-prompt-template-adaptability.md` | PR #11 is open, mergeable, and all Kit Validation jobs passed; owner review is next |
 
 ## Completed milestones
 | Task | Status | Evidence |
@@ -32,13 +32,13 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 ## Project context
 - **Repository:** reusable Unity AI guidance and optional CI templates; no Unity game project is hosted here.
-- **Base:** `main`; KIT-001 through KIT-011 are merged. KIT-012 is active.
+- **Base:** `main`; KIT-001 through KIT-011 are merged. KIT-012 is awaiting owner review.
 - **Consumer validation target:** Garden Alchemy was the first consumer; PR #41 is merged. Consumer-specific Unity validation remains separate.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-012 prompt templates updated on `gpt/kit-prompt-template-adaptability`; regression coverage added.
-- **Next step:** validate tests, inspect the complete diff, and open PR for owner review.
-- **Verified:** PR #10 merged; KIT-011 run `43345762282` passed all jobs.
-- **Not verified:** KIT-012 tests and Kit Validation are pending.
+- **Exact stopping point:** KIT-012 prompt templates and regression coverage are committed on `gpt/kit-prompt-template-adaptability`; PR #11 is open.
+- **Next step:** owner reviews PR #11; merge only after explicit approval.
+- **Verified:** PR #10 merged; KIT-011 run `43345762282` passed. KIT-012 run `43346247889` passed all jobs, including syntax validation, regression tests, actionlint, and the Unity metadata applicability check.
+- **Not verified:** consumer-specific Unity compilation/runtime validation; that belongs in the consumer project.
 - **Known risks:** keep prompts provider-neutral and consumer-adaptable; do not reintroduce mandatory tracking for trivial tasks.
