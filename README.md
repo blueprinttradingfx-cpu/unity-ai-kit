@@ -15,9 +15,9 @@ The kit is a reusable development framework, not a game-specific starter pack. I
 Before applying a rule, classify it. Keep the guardrails strong; adapt or replace recommendations when the consumer's architecture and constraints call for it. See [`ai/kit-principles.md`](ai/kit-principles.md).
 
 ## Set up a new project (10 minutes)
-1. Copy everything except `README.md` into the **root of your Unity project repo** (next to `Assets/`).
-2. Rename `examples/Unity.gitignore` → `.gitignore`, `examples/Unity.gitattributes` → `.gitattributes`, and `examples/Unity.editorconfig` → `.editorconfig` (skip any you already have good equivalents for). In Unity: Editor settings → Asset Serialization = Force Text, Version Control = Visible Meta Files.
-3. Edit `AGENTS.md`: game name, platform, folder layout, and the **Commands** section (Unity.exe path). This lets AIs that can run commands verify their work.
+1. Copy the guidance and only the examples you intend to use into your project repository; the kit does not require every template or tool pointer.
+2. Rename `examples/Unity.gitignore` → `.gitignore`, `examples/Unity.gitattributes` → `.gitattributes`, and `examples/Unity.editorconfig` → `.editorconfig` (skip any you already have good equivalents for). In Unity, consider Asset Serialization = Force Text and Version Control = Visible Meta Files when compatible with your project's asset workflow.
+3. Edit `AGENTS.md`: project name, actual Unity version, platforms, folder layout, and the **Commands** section (Editor path). This lets AIs that can run commands verify their work.
 4. Fill `ai/project-brief.md` (pillars, device, constraints). Short is fine.
 5. Delete the pointer files for tools you do not use (see table). Optional: `examples/claude-settings.json` → `.claude/settings.json`.
 6. First commit: "Add AI guidance kit".
@@ -33,7 +33,7 @@ The default ownership unit is a **phase or substantial work package**, not an in
 - Agents can complete several related sub-items before updating shared coordination state. Update the global summary only when ownership, status, blockers, priority, milestone, or handoff changes.
 - Parallel work is allowed only with explicit file/system boundaries and resolved dependencies. Do not assign two agents the same scene, prefab, asset, or high-conflict contract simultaneously.
 - Session username identifies the current agent; phase ownership is recorded separately in the tracker.
-- A phase must pass its readiness gate before work starts; the phase owner coordinates integration, and concurrency defaults to three active work-package owners unless the project sets another limit.
+- Use the phase readiness gate before dependent work starts; the phase owner coordinates integration. The suggested concurrency ceiling is three active work-package owners, but projects should tune it to team size and integration risk.
 
 ## GitHub CI/CD setup
 The kit includes optional, inactive templates for Unity CI and repository checks:
