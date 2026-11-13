@@ -1,5 +1,7 @@
 # Copy to .github/workflows/unity-ci.yml in a Unity game repository.
-# Configure projectPath and targetPlatform for that project before enabling.
+# This sample watches main and builds Linux Standalone; change branch filters, projectPath,
+# and targetPlatform/matrix to match the consumer's default branch and supported platforms.
+# Treat the job layout as an example; retain the protected-environment and fork-secret boundaries.
 name: Unity CI
 
 on:
