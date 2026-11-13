@@ -43,10 +43,12 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
         for job_name in ("compile", "playmode"):
             job = jobs[job_name]
             self.assertEqual(job["environment"], "unity-ci")
-            self.assertIn("github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", job["if"])
+            self.assertIn("github.event_name == 'push'", job["if"])
+            self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", job["if"])
             self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in job["steps"]))
         self.assertEqual(jobs["build"]["environment"], "unity-ci")
         self.assertIn("github.event_name == 'push'", jobs["build"]["if"])
+        self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", jobs["build"]["if"])
 
     def test_unity_checkout_does_not_persist_github_credentials(self) -> None:
         for name in ("unity-ci.yml", "unity-ci-mainline-only.yml", "unity-nightly.yml", "unity-release.yml"):
