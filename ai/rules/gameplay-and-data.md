@@ -2,6 +2,8 @@
 
 Applies to: `Assets/**/Gameplay/**`, ScriptableObjects, JSON data, balance, saves.
 
+**How to use this guide:** Data-driven configuration, plain-C# simulation, state machines, event messaging, and save patterns are recommended techniques. Apply them where they solve a real project need; a small game or an established architecture may reasonably use a simpler model. Preserve data integrity, validate untrusted input, and protect online economy/ranking decisions as security requirements.
+
 ## Data-driven
 - Every tunable number (damage, cost, speed, timers, drop rates) comes from a ScriptableObject or data file. Code holds rules; data holds numbers.
 - Each data type has a documented meaning for every field: unit (seconds, tiles, %), valid range, default.

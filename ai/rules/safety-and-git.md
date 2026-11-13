@@ -2,6 +2,8 @@
 
 Applies to: shell commands, file deletion, git, dependencies, anything hard to undo.
 
+**How to use this guide:** The destructive-operation, credential, and data-loss protections are safety guardrails. The exact Git workflow, dependency approval process, and repository layout are consumer-owned policies; adapt those to the team's controls. Never bypass a guardrail or perform a destructive action without the required owner authorization and a recoverable plan.
+
 ## Never, without explicit permission
 - `git push --force`, `git reset --hard`, `git clean -fd`, `git checkout .` / `restore .` on a dirty tree, rewriting shared history.
 - Deleting or overwriting files you did not create in this session (especially under `Assets/`).

@@ -2,6 +2,8 @@
 
 Applies to: every `.cs` file.
 
+**How to use this guide:** These are reusable C# and Unity starting conventions, not a required architecture. Follow the consuming project's existing style, assembly layout, dependency model, and ADRs. Adopt the examples that improve consistency; adapt or omit those that conflict with the project's constraints. Language/API correctness and safe handling of serialized data still matter regardless of style.
+
 ## Structure
 - One assembly definition per module (`Core`, `Gameplay`, `UI`, `Data`, `Tests`). Dependencies point one way: UI → Gameplay → Core. Gameplay never references UI.
 - Namespace = folder path under `Scripts/` (e.g. `Game.Gameplay.Combat`).

@@ -2,6 +2,8 @@
 
 Applies to: anything about frame time, memory, battery, heat, build size, Android.
 
+**How to use this guide:** The budgets and techniques are starting points, not universal pass/fail thresholds. Set targets from the consumer project's supported devices, genre, visual goals, platform requirements, and profiling evidence. Android-specific advice applies only when Android is a target; adapt equivalent checks for other platforms. Measure before treating an optimization as necessary.
+
 ## Budgets (set per project; defaults to start from)
 - Frame rate target: 60 fps (or 30 for heavy games). Set `Application.targetFrameRate` explicitly and decide VSync; mobile defaults surprise you.
 - Per-frame GC allocation in gameplay: **0 bytes** after warm-up.

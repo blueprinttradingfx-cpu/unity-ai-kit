@@ -1,6 +1,6 @@
 # <GAME NAME> — Instructions for AI coding assistants
 
-Unity 6.3 LTS · C# · Target: Android first (IL2CPP, ARM64) · <add/remove>
+Unity <version> · C# <version/standard> · Targets: <platforms and build targets>
 This file is read by any AI tool (Claude, Codex, Gemini, Cursor, Copilot, local models).
 Keep it short. Detail lives in `ai/`. Fill in the `<...>` fields once per project.
 

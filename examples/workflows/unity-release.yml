@@ -1,4 +1,6 @@
 # Copy to .github/workflows/unity-release.yml in a Unity game repository.
+# The sample release matrix (Linux Standalone + Android), tag convention, and artifact policy
+# are examples; select supported platforms and release controls for the consuming project.
 # Produces version-tagged build artifacts; store publishing is intentionally separate.
 name: Unity Release Build
 on:

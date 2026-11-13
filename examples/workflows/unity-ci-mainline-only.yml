@@ -1,7 +1,9 @@
 # Copy to .github/workflows/unity-ci.yml when no independent PR deployment approver is available.
 # This variant deliberately runs licensed Unity jobs only on the default branch.
 # PRs must still run the separate unlicensed repository-quality workflow.
-# Configure projectPath and targetPlatform for the consuming project before enabling.
+# This sample watches main and builds Linux Standalone; change the branch filter,
+# projectPath, and targetPlatform to match the consumer's default branch and platforms.
+# Keep licensed jobs restricted to trusted default-branch pushes/manual dispatch.
 name: Unity CI (mainline only)
 
 on:
