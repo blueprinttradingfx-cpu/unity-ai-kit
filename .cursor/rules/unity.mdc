@@ -1,8 +1,0 @@
----
-description: Project rules for this Unity game. Follow AGENTS.md and the files it points to.
-alwaysApply: true
----
-
-Read and follow `AGENTS.md` in the repository root before doing any work.
-It lists the hard rules, which `ai/rules/*.md` file to read for each kind of task,
-and how to record session state and decisions.
