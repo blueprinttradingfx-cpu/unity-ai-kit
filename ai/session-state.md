@@ -9,7 +9,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 ## Active work
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-012 — Prompt template adaptability audit | Awaiting owner review | `Gpt` | `gpt/kit-prompt-template-adaptability` / `ai/phase-KIT-012-prompt-template-adaptability.md` | PR #11 is open, mergeable, and all Kit Validation jobs passed; owner review is next |
+| None | — | — | — | KIT-012 is merged; identify the next highest-value kit improvement before starting another phase |
 
 ## Completed milestones
 | Task | Status | Evidence |
@@ -22,6 +22,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 | KIT-009 — Flexible kit guidance principles | Done | PR #8 merged; `b71a570f7630faa48a62268bb3474e180d682068`; run `43343527260` passed |
 | KIT-010 — Guidance consistency audit | Done | PR #9 merged; `e74588f3ee6e647de6d65098c0a885f928fdbb89`; run `43344606497` passed |
 | KIT-011 — Agent workflow adaptability audit | Done | PR #10 merged; `0a033205f7b76ea0e58dd6c833f6424db38e2e34`; run `43345762282` passed |
+| KIT-012 — Prompt template adaptability audit | Done | PR #11 merged; `8c3a5b57ff4d84993f67955439bf0e2360ad2bf6`; validation run `43346247889` passed all jobs |
 
 ## Coordination rules at a glance
 - Phase/work-package ownership is for substantial or shared work; small solo tasks may proceed directly.
@@ -32,13 +33,13 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 ## Project context
 - **Repository:** reusable Unity AI guidance and optional CI templates; no Unity game project is hosted here.
-- **Base:** `main`; KIT-001 through KIT-011 are merged. KIT-012 is awaiting owner review.
+- **Base:** `main`; KIT-001 through KIT-012 are merged.
 - **Consumer validation target:** Garden Alchemy was the first consumer; PR #41 is merged. Consumer-specific Unity validation remains separate.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-012 prompt templates and regression coverage are committed on `gpt/kit-prompt-template-adaptability`; PR #11 is open.
-- **Next step:** owner reviews PR #11; merge only after explicit approval.
-- **Verified:** PR #10 merged; KIT-011 run `43345762282` passed. KIT-012 run `43346247889` passed all jobs, including syntax validation, regression tests, actionlint, and the Unity metadata applicability check.
+- **Exact stopping point:** KIT-012 prompt templates and regression coverage are merged to `main`.
+- **Next step:** review the kit backlog and consumer feedback for the next high-value phase; do not start speculative work without a defined outcome.
+- **Verified:** PR #11 merged as `8c3a5b57ff4d84993f67955439bf0e2360ad2bf6`; KIT-012 validation run `43346247889` passed all jobs.
 - **Not verified:** consumer-specific Unity compilation/runtime validation; that belongs in the consumer project.
 - **Known risks:** keep prompts provider-neutral and consumer-adaptable; do not reintroduce mandatory tracking for trivial tasks.
