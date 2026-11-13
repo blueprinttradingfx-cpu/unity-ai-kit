@@ -17,9 +17,12 @@ Do not run every expensive platform build on every PR by default. Start with one
 
 ## 1. Unity test and build workflow
 
-Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml` in the game repository.
+Choose exactly one licensed Unity CI trust model and copy its template to `.github/workflows/`:
 
-The template:
+- **Reviewer-gated PR validation:** `examples/workflows/unity-ci.yml`. Use when a person other than the PR author can approve the protected `unity-pr-validation` environment and prevent self-review is enabled.
+- **Mainline-only licensed validation:** `examples/workflows/unity-ci-mainline-only.yml`. Use when the repository is owner-operated or no independent deployment approver exists. Licensed compile/EditMode, PlayMode, and build jobs run only after merge to the default branch or manual dispatch from that branch. Pull requests still receive the separate unlicensed `repository-quality.yml` checks; no Unity license is exposed to PR code.
+
+Do not enable both templates for the same project; choose the trust model that matches the actual review process. The reviewer-gated template:
 - Imports the project, compiles runtime/editor/test C# assemblies, and runs EditMode tests through GameCI on same-repository PRs only after approval of the protected `unity-pr-validation` environment, and on pushes to main through `unity-ci`.
 - Runs PlayMode integration tests in a separate job with the same protected-environment boundary.
 - Builds a sample Linux Standalone player after tests pass on main, or on a manual dispatch from the default branch only.
@@ -34,13 +37,14 @@ The template:
 2. Change `targetPlatform` from the sample `StandaloneLinux64` to a platform the project actually ships.
 3. Set the exact Editor version in `ProjectSettings/ProjectVersion.txt`; GameCI's `auto` mode reads this file.
 4. Configure GitHub Environments before adding Unity credentials. Store Unity license values only as environment secrets: remove any repository-level or organization-level secrets with the same names (`UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`, `UNITY_SERIAL`) so they cannot bypass environment approval.
-   - `unity-pr-validation`: add the required Unity license secrets and configure required reviewers; enable **prevent self-review** where available. Allow the PR deployment refs used by your repository. Every same-repository PR that reaches licensed Unity jobs must be explicitly approved before those secrets are released.
-   - `unity-ci`: add the Unity license secrets; restrict deployments to the default branch. Main-branch CI and the default-branch-only nightly workflow use this environment.
+   - `unity-pr-validation`: required only for the reviewer-gated template. Add the required Unity license secrets and configure an independent required reviewer; enable **prevent self-review** where available. Allow the PR deployment refs used by your repository. Every same-repository PR that reaches licensed Unity jobs must be explicitly approved before those secrets are released.
+   - `unity-ci`: add the Unity license secrets; restrict deployments to the default branch. Main-branch CI, the mainline-only template, and the default-branch-only nightly workflow use this environment.
+   - If no independent approver is available, use the mainline-only template instead of weakening or bypassing the reviewer gate. Do not make self-approval the security control.
    - `release`: add the Unity license secrets plus only the signing credentials required by the project. Configure required reviewers, enable prevent self-review where available, and allow only the intended version tags plus the default branch for manual dispatch. Release tests and builds wait for this protected environment.
    - Fork PRs continue to skip licensed jobs and run repository-quality checks. Never switch to `pull_request_target` to expose secrets to fork code.
 5. Run the workflow manually from the default branch and inspect the test report/build artifact before making checks required.
 
-GameCI is community-maintained, not an official Unity service. Review action releases and permissions before adopting it. The examples pin actions to full commit SHAs; update pins deliberately and review upstream changes.
+GameCI is community-maintained, not an official Unity service. Review action releases and permissions before adopting it. The examples pin actions to full commit SHAs; update pins deliberately and review upstream changes. Unity jobs set `persist-credentials: false` on checkout to avoid leaving the workflow token in the local Git configuration. Keep explicit job timeouts and per-ref concurrency cancellation. Add path filters only after checking the real project layout: include all C# / asset / package / project-setting inputs plus the workflow files themselves, and keep an unfiltered manual dispatch for deliberate verification. A subfolder project must use that project's actual paths; do not copy another consumer's filters verbatim.
 
 ### Fork pull requests and secrets
 
