@@ -25,11 +25,12 @@ Use this checklist when installing the kit into a real Unity game repository. Th
 
 - [ ] Copy only the workflow templates the project intends to use into `.github/workflows/`.
 - [ ] Set `UNITY_PROJECT_PATH` when the Unity project is not at repository root.
-- [ ] Configure `unity-pr-validation` with Unity license environment secrets and required reviewers; enable prevent self-review where available.
-- [ ] Configure `unity-ci` with Unity license environment secrets and restrict deployments to the default branch.
+- [ ] Choose the licensed CI trust model: reviewer-gated PR validation only when an independent approver is available, or mainline-only licensed validation when it is not. Do not enable both templates.
+- [ ] For reviewer-gated PR validation, configure `unity-pr-validation` with Unity license environment secrets, independent required reviewers, and prevent self-review where available.
+- [ ] Configure `unity-ci` with Unity license environment secrets and restrict deployments to the default branch; use it for mainline-only validation and trusted mainline/nightly jobs.
 - [ ] Configure `release` with Unity license secrets and only required signing secrets; require reviewers and restrict deployment refs to intended version tags plus the default branch for manual dispatch.
 - [ ] Remove repository-level and organization-level secrets named `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`, or `UNITY_SERIAL` if those credentials are now stored in protected environments. Otherwise they can bypass environment approval.
-- [ ] Confirm the PR deployment-ref policy permits the intended pull-request jobs, then test that approval is required before the licensed job starts.
+- [ ] If using reviewer-gated PR validation, confirm the PR deployment-ref policy permits intended jobs and test that independent approval is required before licensed jobs start. If using mainline-only validation, confirm no licensed job is triggered by a PR and that PRs still run unlicensed repository-quality checks.
 - [ ] Keep fork PRs on repository-quality checks; do not use `pull_request_target` to check out and run untrusted PR code with secrets.
 - [ ] Configure a ruleset/branch protection with PR requirement, actual successful required checks, and independent review. Do not require check names before they have reported successfully.
 - [ ] Enable secret scanning, push protection, and Dependabot features where available; assign real CODEOWNERS only after maintainers are chosen.
@@ -37,7 +38,7 @@ Use this checklist when installing the kit into a real Unity game repository. Th
 ## 4. Validate in increasing cost order
 
 - [ ] Run the repository-quality workflow on a PR, including whitespace, actionlint, source/config syntax, and Unity metadata checks.
-- [ ] Run the Unity CI workflow from the default branch and inspect the Unity Editor import/compile and EditMode report.
+- [ ] Run the Unity CI workflow from the default branch and inspect the Unity Editor import/compile and EditMode report. For mainline-only validation, confirm the workflow cannot be dispatched from a non-default branch.
 - [ ] Inspect PlayMode results separately; record skipped or missing test assemblies rather than treating them as passes.
 - [ ] Run one representative target build and inspect its artifact.
 - [ ] Run the nightly workflow and confirm its platform matrix, timeouts, and artifact retention match the project.
@@ -47,7 +48,7 @@ Use this checklist when installing the kit into a real Unity game repository. Th
 
 ## 5. Record evidence and close the handoff
 
-- [ ] Record exact workflow run URLs, commit SHAs, Unity version, target platform, test counts, build result, and artifact links.
+- [ ] Record exact workflow run URLs, commit SHAs, Unity version, target platform, test counts, build result, and artifact links. If hosted Unity activation is unavailable or unsuitable, record the failure boundary and hand off local Editor compile/test steps without claiming them as CI passes.
 - [ ] Record failures, skipped jobs, missing secrets, and human-only checks as blockers; do not relabel them as passed.
 - [ ] Request independent review for workflow/security/architecture changes and resolve or explicitly accept each finding.
 - [ ] Update the consumer phase tracker and `ai/session-state.md` only for meaningful ownership, status, blocker, priority, milestone, or handoff changes.

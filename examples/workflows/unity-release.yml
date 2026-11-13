@@ -55,6 +55,7 @@ jobs:
         with:
           ref: ${{ steps.ref.outputs.tag }}
           fetch-depth: 0
+          persist-credentials: false
       - name: Record immutable release commit
         id: commit
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -70,6 +71,7 @@ jobs:
           ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - id: tests
         uses: game-ci/unity-test-runner@fa6ced25861c16ef56187828c43f76d00df43a23 # v4.3.2
         env:
@@ -101,6 +103,7 @@ jobs:
           ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - id: tests
         uses: game-ci/unity-test-runner@fa6ced25861c16ef56187828c43f76d00df43a23 # v4.3.2
         env:
@@ -136,6 +139,7 @@ jobs:
           ref: ${{ needs.validate-tag.outputs.commit }}
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - uses: game-ci/unity-builder@eb1b9fba120c6e62c9fb7a7a81d6c107ce004c45 # v6.0.0
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}

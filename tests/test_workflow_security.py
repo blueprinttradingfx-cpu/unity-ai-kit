@@ -19,7 +19,7 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.workflows = {
             name: yaml.load((WORKFLOWS / name).read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
-            for name in ("unity-ci.yml", "unity-nightly.yml", "unity-release.yml")
+            for name in ("unity-ci.yml", "unity-ci-mainline-only.yml", "unity-nightly.yml", "unity-release.yml")
         }
 
     def test_unity_ci_pull_requests_use_reviewer_gated_environment(self) -> None:
@@ -33,6 +33,30 @@ class LicensedWorkflowSecurityTests(unittest.TestCase):
             self.assertIn("github.event.pull_request.head.repo.full_name == github.repository", job["if"])
         self.assertEqual(jobs["build"]["environment"], "unity-ci")
         self.assertNotIn("pull_request_target", workflow)
+
+    def test_mainline_only_template_never_runs_licensed_jobs_on_prs(self) -> None:
+        workflow = self.workflows["unity-ci-mainline-only.yml"]
+        self.assertNotIn("pull_request", workflow["on"])
+        self.assertNotIn("pull_request_target", workflow)
+        self.assertEqual(workflow["on"]["push"]["branches"], ["main"])
+        jobs = workflow["jobs"]
+        for job_name in ("compile", "playmode"):
+            job = jobs[job_name]
+            self.assertEqual(job["environment"], "unity-ci")
+            self.assertIn("github.event_name == 'push'", job["if"])
+            self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", job["if"])
+            self.assertTrue(any("UNITY_LICENSE" in step.get("env", {}) for step in job["steps"]))
+        self.assertEqual(jobs["build"]["environment"], "unity-ci")
+        self.assertIn("github.event_name == 'push'", jobs["build"]["if"])
+        self.assertIn("github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)", jobs["build"]["if"])
+
+    def test_unity_checkout_does_not_persist_github_credentials(self) -> None:
+        for name in ("unity-ci.yml", "unity-ci-mainline-only.yml", "unity-nightly.yml", "unity-release.yml"):
+            workflow = self.workflows[name]
+            for job in workflow["jobs"].values():
+                for step in job.get("steps", []):
+                    if step.get("uses", "").startswith("actions/checkout@"):
+                        self.assertEqual(step.get("with", {}).get("persist-credentials"), "false", msg=f"{name}: checkout should not persist credentials")
 
     def test_nightly_jobs_use_default_branch_unity_environment(self) -> None:
         jobs = self.workflows["unity-nightly.yml"]["jobs"]
