@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-011 — Agent workflow adaptability audit | In Progress | `Gpt` | `gpt/kit-agent-workflow-adaptability` / `ai/phase-KIT-011-agent-workflow-adaptability.md` | Guidance and templates updated; regression coverage added; next validate the PR and review the complete diff |
+| KIT-011 — Agent workflow adaptability audit | Ready for owner review | `Gpt` | `gpt/kit-agent-workflow-adaptability` / `ai/phase-KIT-011-agent-workflow-adaptability.md` | PR #10 open; Kit Validation run `43345609486` passed; awaiting owner review |
 
 ## Completed milestones
 
@@ -33,13 +33,13 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 ## Project context
 - **Repository:** reusable Unity AI guidance and optional CI templates; no Unity game project is hosted here.
-- **Base:** `main`; KIT-001 through KIT-010 are merged. KIT-011 is the active workflow adaptability audit.
+- **Base:** `main`; KIT-001 through KIT-010 are merged. KIT-011 is awaiting owner review.
 - **Consumer validation target:** Garden Alchemy was the first consumer; PR #41 is merged. Consumer-specific Unity validation remains owned by Garden Alchemy and is not a universal kit completion gate.
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-011 WP1/WP2 guidance and onboarding changes committed; focused workflow regression tests added on `gpt/kit-agent-workflow-adaptability`.
-- **Next step:** validate the branch, inspect the full diff, and prepare owner review.
-- **Verified:** KIT-010 latest Kit Validation run `43344606497` passed; KIT-011 source changes and test file are committed.
-- **Not verified:** KIT-011 tests, syntax checks, actionlint, and full PR review are pending. No Unity Editor execution is applicable to this kit repository.
-- **Known risks:** simplify optional workflow ceremony without weakening explicit ownership, safe handoffs, security, or truthful verification.
+- **Exact stopping point:** KIT-011 workflow and task lifecycle guidance updated; PR #10 is open for owner review.
+- **Next step:** owner review PR #10. Do not merge without explicit approval.
+- **Verified:** Kit Validation run `43345609486` passed all jobs including regression tests, actionlint, and metadata applicability checks.
+- **Not applicable:** Unity Editor execution; this is a reusable guidance/template repository.
+- **Known risks:** consumers should adapt optional coordination artifacts to team size and their existing issue-tracking source of truth.
