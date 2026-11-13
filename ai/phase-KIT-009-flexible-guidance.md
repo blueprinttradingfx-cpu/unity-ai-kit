@@ -6,7 +6,7 @@ Make the kit explicitly reusable across Unity projects by distinguishing safety/
 
 ## Status and ownership
 
-- Status: In Progress
+- Status: Done
 - Phase owner: Gpt
 - Integration owner: Gpt
 - Branch: `gpt/kit-flexible-guidance-principles`
@@ -19,20 +19,21 @@ Make the kit explicitly reusable across Unity projects by distinguishing safety/
 |---|---|---|---|---|
 | KIT-009-WP1 | Define reusable guidance categories and adaptation rules | Gpt | Done | `ai/kit-principles.md` |
 | KIT-009-WP2 | Align the consumer-facing AGENTS template and onboarding docs | Gpt | Done | `AGENTS.md`, `README.md`, `ai/consumer-validation-checklist.md` |
-| KIT-009-WP3 | Validate consistency and open owner-review PR | Gpt | In Progress | Kit docs and validation workflow |
+| KIT-009-WP3 | Validate consistency and open owner-review PR | Gpt | Done | Kit docs and validation workflow |
 
 ## Acceptance criteria
 
 - [x] Clearly distinguish safety/integrity guardrails, recommended engineering defaults, and consumer-owned decisions.
 - [x] Explain how a consumer adapts or replaces a recommendation without weakening safety.
 - [x] Avoid implying that one Unity version, architecture, team size, platform, or CI strategy is universal.
-- [ ] Kit Validation passes all checks.
-- [ ] Full diff reviewed and PR opened.
+- [x] Kit Validation passes all checks.
+- [x] Full diff reviewed and PR #8 merged.
 
 ## Checkpoint log
 
 - 2026-11-13 — Owner clarified the kit should be a reusable development framework rather than a dev-specific starter pack. Adopted the principle: strong defaults, flexible implementation, project-owned decisions.
 - 2026-11-13 — Added explicit guidance categories and updated the AGENTS template, README, and consumer validation checklist to make configuration and adaptation first-class.
+- 2026-11-13 — PR #8 merged as `b71a570f7630faa48a62268bb3474e180d682068`; Kit Validation run `43343527260` passed.
 
 ## Handoff
 
