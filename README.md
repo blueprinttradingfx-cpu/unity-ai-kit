@@ -1,4 +1,4 @@
-# Unity AI Kit — provider-neutral starter for new Unity games
+# Unity AI Kit — provider-neutral development framework for Unity projects
 
 Drop-in guidance and optional CI templates so any AI coding assistant (Claude, Codex, Gemini, Cursor, Copilot, local models, web chat) works the same way on your Unity projects. The core guidance is plain Markdown; the kit itself has a lightweight validation workflow, while optional examples provide Unity consumer CI/CD templates and read-only validators.
 
