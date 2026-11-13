@@ -24,16 +24,18 @@ Before applying a rule, classify it. Keep the guardrails strong; adapt or replac
 
 Before enabling required checks or integrating the templates into a real game, follow [`ai/consumer-validation-checklist.md`](ai/consumer-validation-checklist.md) to configure protected environments and record actual Unity consumer evidence.
 
-## Multi-agent coordination model
+## Coordination: choose the lightest workflow
 
-The default ownership unit is a **phase or substantial work package**, not an individual micro-task. See `ai/coordination-model.md` and copy `examples/phase-tracker-template.md` when a project needs a phase tracker.
+The coordination model is optional. A solo developer can work directly from the request and project guidance; a short handoff note is useful only when work spans sessions. Do not create a phase tracker, task ID, or status-board row for every small change.
 
-- `ai/session-state.md` is a concise global coordination summary: active phases, owners, blockers, next milestones, and handoffs.
-- The phase tracker is the source of truth for scope, work packages, sub-items, dependencies, acceptance criteria, and checkpoint evidence.
-- Agents can complete several related sub-items before updating shared coordination state. Update the global summary only when ownership, status, blockers, priority, milestone, or handoff changes.
-- Parallel work is allowed only with explicit file/system boundaries and resolved dependencies. Do not assign two agents the same scene, prefab, asset, or high-conflict contract simultaneously.
-- Session username identifies the current agent; phase ownership is recorded separately in the tracker.
-- Use the phase readiness gate before dependent work starts; the phase owner coordinates integration. The suggested concurrency ceiling is three active work-package owners, but projects should tune it to team size and integration risk.
+For substantial work or multiple agents, see `ai/coordination-model.md` and copy `examples/phase-tracker-template.md` when a phase tracker adds value:
+- `ai/session-state.md` is a concise global summary of active shared phases, owners, blockers, next milestones, and handoffs.
+- The phase tracker owns scope, work packages, sub-items, dependencies, acceptance criteria, and checkpoint evidence.
+- Group related sub-items under a coherent work package; do not make each checklist item a global task.
+- Update shared state only when ownership, status, blockers, priority, milestone, or handoff changes—not on every edit or command.
+- Parallel work requires explicit, non-overlapping file/system boundaries and resolved dependencies. Serialize changes to shared scenes, prefabs, assets, and high-conflict contracts.
+- A session username identifies the current agent; it is not automatically the phase owner.
+- The suggested concurrency ceiling is three active work-package owners, but tune it to team size and integration risk.
 
 ## GitHub CI/CD setup
 The kit includes optional, inactive templates for Unity CI and repository checks:
@@ -52,8 +54,8 @@ Do not copy the templates blindly: set the project's actual Editor version, proj
 - `AGENTS.md` is the single source of truth for the consumer's adapted instructions. It stays short: guardrails, a routing table, commands, and working style.
 - Each tool gets a 1–3 line pointer to it, so you maintain one file.
 - Detail is in `ai/rules/*.md`, read only when the work matches (saves context, works in any tool).
-- `ai/session-state.md` carries "where we stopped" between sessions and between **different AIs**.
-- `ai/task-lifecycle.md` defines how tasks are created, claimed, handed off, and closed; task IDs stay with a task as it moves between status lists.
+- `ai/session-state.md` carries "where we stopped" between sessions and between **different AIs** when shared continuity is useful.
+- `ai/task-lifecycle.md` describes optional task IDs/status lists and the stronger claim/handoff rules for shared work.
 - `ai/decisions/` holds one-page decisions so a new AI doesn't re-open or contradict an earlier project decision.
 - `ai/definition-of-done.md` requires evidence, not an unsupported "done" claim.
 
@@ -69,11 +71,11 @@ Do not copy the templates blindly: set the project's actual Editor version, proj
 Tool conventions change often. If a tool ignores its pointer, open its docs and look for "custom instructions" / "context file", or paste `AGENTS.md` into its instructions field. Windows note: the kit uses small pointer files instead of symlinks, because symlinks are unreliable on Windows git.
 
 ## Daily use
-- **Start:** identify your session username, read `ai/task-lifecycle.md` and `ai/session-state.md`, then claim the matching Ready task before editing. If the user's explicit goal has no board row, create and claim one; do not invent unrelated work.
+- **Start:** for a small task, work directly from the request and relevant project guidance. For shared or multi-session work, identify your session username, read the task lifecycle and current coordination source, then claim the matching Ready phase/work package before editing. Create a tracked entry only when the work benefits from prioritization or handoff.
 - **Feature:** use `ai/prompts/new-feature.md` (plan first, then "go").
 - **Unsure about a technical choice:** use `ai/prompts/spike.md`, then record an ADR.
 - **Review:** use `ai/prompts/review.md` with a different provider for meaningful code changes and high-risk guidance/architecture changes.
-- **End:** report the exact checks and evidence, update the handoff, and move the task to `ai/done-tasks.md`, `ai/blocked-tasks.md`, or `ai/backlog-tasks.md` as appropriate.
+- **End:** report exact checks and evidence. Update shared handoff/status artifacts when ownership or next steps change; a small completed task needs no formal handoff.
 - **Milestone:** run the 10-minute smoke test at the bottom of `ai/definition-of-done.md` on a real phone.
 
 ## Limits (be aware)
