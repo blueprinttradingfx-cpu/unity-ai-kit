@@ -32,28 +32,32 @@ Review the coordination model, task lifecycle, task boards, and consumer-facing 
 
 | ID | Outcome | Owner | Status | File/system boundary |
 |---|---|---|---|---|
-| KIT-011-WP1 | Audit coordination and lifecycle guidance for duplication, rigidity, and unnecessary overhead | Gpt | In Progress | `ai/coordination-model.md`, `ai/task-lifecycle.md` |
-| KIT-011-WP2 | Align task-board, session-state, and consumer onboarding templates with scalable workflow choices | Gpt | Planned | `ai/backlog-tasks.md`, `ai/blocked-tasks.md`, `ai/done-tasks.md`, `ai/session-state.md`, `AGENTS.md`, `README.md` |
-| KIT-011-WP3 | Add/update regression coverage and validate the integrated guidance | Gpt | Planned | `tests/**`, relevant docs, Kit Validation |
+| KIT-011-WP1 | Audit coordination and lifecycle guidance for duplication, rigidity, and unnecessary overhead | Gpt | Done | `ai/coordination-model.md`, `ai/task-lifecycle.md` |
+| KIT-011-WP2 | Align task-board, session-state, and consumer onboarding templates with scalable workflow choices | Gpt | Done | `ai/backlog-tasks.md`, `ai/blocked-tasks.md`, `ai/done-tasks.md`, `ai/session-state.md`, `AGENTS.md`, `README.md`, `examples/phase-tracker-template.md` |
+| KIT-011-WP3 | Add/update regression coverage and validate the integrated guidance | Gpt | In Progress | `tests/**`, relevant docs, Kit Validation |
 
 ## Acceptance criteria
 
-- [ ] A solo/small project can follow a clear lightweight path without creating a phase tracker or multi-agent board for every task.
-- [ ] Multi-agent projects retain explicit phase/work-package ownership and non-overlapping file boundaries.
-- [ ] Shared session-state updates remain limited to meaningful ownership, status, blocker, priority, milestone, and handoff changes.
-- [ ] Stable IDs and status lists have a clear purpose and do not duplicate detailed phase sub-item tracking.
-- [ ] Handoff and takeover rules are clear, practical, and do not imply an agent may seize another owner's work.
-- [ ] Safety, Git integrity, secret handling, and evidence-based verification remain firm guardrails.
+- [x] A solo/small project can follow a clear lightweight path without creating a phase tracker or multi-agent board for every task.
+- [x] Multi-agent projects retain explicit phase/work-package ownership and non-overlapping file boundaries.
+- [x] Shared session-state updates remain limited to meaningful ownership, status, blocker, priority, milestone, and handoff changes.
+- [x] Stable IDs and status lists have a clear purpose and do not duplicate detailed phase sub-item tracking.
+- [x] Handoff and takeover rules are clear, practical, and do not imply an agent may seize another owner's work.
+- [x] Safety, Git integrity, secret handling, and evidence-based verification remain firm guardrails.
 - [ ] Regression tests and all applicable Kit Validation checks pass.
 - [ ] Complete diff is reviewed and a PR is opened for owner review; do not merge without explicit approval.
 
 ## Checkpoints
 
-- 2026-11-13 — Started after KIT-010 merge. Initial review confirms the coordination model already has a good lightweight-project allowance, but task lifecycle and startup instructions should be checked for consistency and unnecessary mandatory ceremony.
+- 2026-11-13 — Started after KIT-010 merge. Initial review confirmed the coordination model already allowed lighter workflows, but task lifecycle and startup instructions still implied tracking every user goal.
+- 2026-11-13 — WP1 completed: coordination and task lifecycle now distinguish direct small tasks, tracked multi-session work, and substantial shared phases. The three-owner concurrency ceiling is explicitly a tunable suggestion.
+- 2026-11-13 — WP2 completed: AGENTS startup, README onboarding, and phase tracker template now make coordination artifacts optional and proportional to the work. Explicit ownership, non-overlapping file boundaries, no takeover without approval, and evidence/secret safeguards remain firm.
+- 2026-11-13 — Added focused regression tests in `tests/test_workflow_guidance.py`; awaiting Kit Validation.
 
 ## Handoff
 
-- Current owner/status: Gpt / In Progress.
-- Next: complete WP1 audit, then align task boards and onboarding in WP2.
-- Verification: not run yet; documentation and regression changes are pending.
-- Risks: avoid weakening explicit ownership or safe-handoff rules while reducing overhead.
+- Current owner/status: Gpt / WP3 validation and review.
+- Next: open/update PR, verify all Kit Validation jobs, inspect the full diff, and prepare owner review.
+- Verified: source edits committed to `gpt/kit-agent-workflow-adaptability`; workflow guidance regression tests added.
+- Not verified: automated tests, syntax checks, and actionlint have not yet run on this branch.
+- Risks: ensure test assertions match the intended guidance without overfitting exact prose.
