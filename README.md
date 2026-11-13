@@ -27,7 +27,7 @@ The default ownership unit is a **phase or substantial work package**, not an in
 
 ## GitHub CI/CD setup
 The kit includes optional, inactive templates for Unity CI and repository checks:
-- Copy `examples/workflows/unity-ci.yml` to `.github/workflows/unity-ci.yml`, then configure the target platform and Unity license secrets.
+- Choose one licensed Unity PR trust model: copy `examples/workflows/unity-ci.yml` when an independent reviewer can approve the protected PR environment, or `examples/workflows/unity-ci-mainline-only.yml` when no independent approver is available. Both keep fork PRs away from license secrets. Configure the target platform and Unity license secrets.
 - Copy `examples/workflows/repository-quality.yml` to `.github/workflows/repository-quality.yml` and both `examples/scripts/validate_unity_meta.py` and `examples/scripts/validate_source_syntax.py` to `examples/scripts/` in the project. This runs without Unity licensing secrets and checks source/config syntax, conflict markers, diff whitespace, workflow lint, and metadata integrity.
 - For separate SDK-style .NET tools/services/tests, optionally copy `examples/workflows/dotnet-validation.yml` and configure the newline-separated `DOTNET_PROJECT_PATHS` and optional `DOTNET_TEST_PROJECT_PATHS` repository variables. It runs restore, Release build, configured tests, and `dotnet format` verification.
 - Copy `examples/github/dependabot.yml` to `.github/dependabot.yml` and `examples/github/PULL_REQUEST_TEMPLATE.md` to `.github/PULL_REQUEST_TEMPLATE.md`.
