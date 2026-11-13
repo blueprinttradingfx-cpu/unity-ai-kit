@@ -2,6 +2,8 @@
 
 This guide defines a practical CI/CD baseline for Unity game repositories. Files under `examples/workflows/` are **templates**: copy and configure them in a game repository. They are deliberately not stored in this kit's active `.github/workflows/`, because this reusable guidance repository is not itself a Unity project.
 
+**How to use this guide:** This is a menu of reusable CI/CD patterns, not a mandatory pipeline. Select only the checks, trust model, platforms, runners, and cadence that fit the consumer repository. Treat secret isolation, least privilege, and safe handling of untrusted PR code as security guardrails; treat job matrices, required checks, build frequency, and release process as project-owned decisions.
+
 ## Recommended pipeline
 
 | When | Required checks | Why |
