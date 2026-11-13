@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-010 — Guidance consistency audit | In Progress | `Gpt` | `gpt/kit-guidance-consistency-audit` / `ai/phase-KIT-010-guidance-consistency-audit.md` | Detailed rules and project templates now classify defaults vs guardrails; review remaining examples and validate |
+| KIT-010 — Guidance consistency audit | In Progress | `Gpt` | `gpt/kit-guidance-consistency-audit` / `ai/phase-KIT-010-guidance-consistency-audit.md` | Detailed rules, project brief, and workflow examples updated; Kit Validation run `43344486573` passed; PR #9 awaits owner review |
 
 ## Completed milestones
 
@@ -37,8 +37,8 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-009 is merged. KIT-010 adds category/adaptation notes to the detailed rule files, makes the project brief engine/platform-neutral, and removes fixed Unity/Android assumptions from the AGENTS template.
-- **Next step:** review the remaining examples and template defaults, run Kit Validation, inspect the diff, and open an owner-review PR.
-- **Verified:** KIT-009 PR #8 is merged; Kit Validation run `43343527260` passed.
-- **Not verified:** KIT-010 validation has not yet run. No Unity Editor execution is applicable to this kit repository.
-- **Known risks:** Individual example recommendations may still need consumer-side tuning; the kit should avoid presenting them as mandatory unless they protect security or data integrity.
+- **Exact stopping point:** KIT-010 has aligned detailed rule files and consumer templates with KIT-009's flexible-guidance principle. The complete PR #9 diff has been reviewed; Kit Validation run `43344486573` passed.
+- **Next step:** owner review of PR #9. Do not merge without explicit approval.
+- **Verified:** KIT-009 PR #8 merged; KIT-010 source/config syntax, regression tests, actionlint, and metadata applicability checks passed.
+- **Not verified:** No Unity Editor execution is applicable to this kit repository; consumer-specific Unity validation remains outside kit-level checks.
+- **Known risks:** Individual example recommendations may still need consumer-side tuning; consumers should select and configure only the examples they intend to use.
