@@ -4,6 +4,8 @@
 
 Coordinate several AI agents without turning a shared session file into a high-frequency micro-task log. The default unit of ownership is a **phase** or a substantial **work package** inside a phase. Sub-items are the execution checklist, not separate global-board tasks.
 
+This is a recommended coordination model, not a requirement to run multiple agents or create phase trackers for every small project. A single-agent or small project can use a lighter version. Keep the ownership boundaries, truthful handoffs, and protection against conflicting edits; tune the concurrency limit, checkpoint cadence, and artifact set to the team.
+
 ## Sources of truth
 
 | Artifact | Owns | Update cadence |
