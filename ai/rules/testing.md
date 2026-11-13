@@ -2,6 +2,8 @@
 
 Applies to: writing tests, fixing bugs, claiming something works.
 
+**How to use this guide:** Test layers, naming, determinism, and regression techniques are recommended defaults. Choose coverage and execution frequency according to project risk, runtime cost, and available infrastructure. Honest reporting is a firm guardrail: distinguish checks that ran, checks that were skipped, and behavior that remains unverified.
+
 ## What to test where
 - **EditMode tests (Unity Test Framework):** pure logic, data validation, save migration, balance math. Fast; run on every change.
 - **PlayMode tests:** scene wiring, spawning, input-to-effect flows. Slower; run before merge and on milestone gates.
