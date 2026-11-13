@@ -1,6 +1,6 @@
-# Project brief — <GAME NAME>
+# Project brief — <PROJECT NAME>
 
-Fill in at project start (15 minutes). Update when a decision changes (and add an ADR).
+Fill in at project start. This is a consumer-owned configuration record; remove fields that do not apply and replace every example with the actual project decision. Update when a decision changes (and add an ADR).
 
 ## One-liner
 <What is the game in one sentence, for whom, on what platform.>
@@ -11,8 +11,12 @@ Fill in at project start (15 minutes). Update when a decision changes (and add a
 3.
 
 ## Platform and constraints
-- Engine: Unity 6.3 LTS, render pipeline: <URP>, UI: <UI Toolkit | uGUI>, input: Input System
-- Platforms: <Android first | iOS later | PC>, orientation: <landscape | portrait>
+- Engine/version: <Unity version>
+- Render pipeline: <URP | Built-in | HDRP | other>
+- UI technology: <UI Toolkit | uGUI | IMGUI where appropriate | other>
+- Input approach: <Input System | legacy input | custom>
+- Platforms and priority: <list supported platforms and order>
+- Orientation: <landscape | portrait | both | not applicable>
 - Lowest supported device: <model / RAM / API level>
 - Frame target: <60 | 30>. Build size limit: <MB>
 - Minimum player age / store rating: <>
