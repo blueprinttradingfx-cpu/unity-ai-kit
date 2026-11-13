@@ -1,6 +1,6 @@
 # Consumer project validation checklist
 
-Use this checklist when installing the kit into a real Unity game repository. The kit repository itself is not a Unity project, so passing its source checks does not validate Unity import, compilation, tests, builds, or device behavior.
+Use this checklist when installing the kit into a real Unity game repository. The kit repository itself is not a Unity project, so passing its source checks does not validate Unity import, compilation, tests, builds, or device behavior. Treat this as a configurable checklist: remove irrelevant steps, add project-specific checks, and do not enable every example by default.
 
 ## 1. Record the consumer baseline
 
@@ -17,9 +17,9 @@ Use this checklist when installing the kit into a real Unity game repository. Th
 - [ ] Replace placeholders in `AGENTS.md`, especially project name, Unity version, platforms, folder layout, and executable commands.
 - [ ] Complete `ai/project-brief.md`; retain only the AI-tool pointer files the team uses.
 - [ ] Apply the Unity `.gitignore`, `.gitattributes`, and `.editorconfig` examples only where the project lacks equivalent configuration.
-- [ ] Configure Unity Asset Serialization = Force Text and Version Control = Visible Meta Files in the Editor.
-- [ ] Read the relevant rules and record any consumer-specific deviations as ADRs.
-- [ ] Follow `ai/coordination-model.md`; assign phase/work-package owners and avoid micro-task churn in session state.
+- [ ] Configure Unity Asset Serialization = Force Text and Version Control = Visible Meta Files in the Editor when compatible with the project's workflow.
+- [ ] Read `ai/kit-principles.md` and relevant rules; classify each as a safety guardrail, recommended default, or consumer-owned decision. Adapt or omit recommendations that do not fit, and record consequential deviations/decisions in project ADRs.
+- [ ] Follow `ai/coordination-model.md` as a starting point; set phase/work-package ownership, agent concurrency, and checkpoint cadence to fit the team.
 
 ## 3. Configure GitHub workflow security
 
@@ -52,7 +52,7 @@ Use this checklist when installing the kit into a real Unity game repository. Th
 - [ ] Record failures, skipped jobs, missing secrets, and human-only checks as blockers; do not relabel them as passed.
 - [ ] Request independent review for workflow/security/architecture changes and resolve or explicitly accept each finding.
 - [ ] Update the consumer phase tracker and `ai/session-state.md` only for meaningful ownership, status, blocker, priority, milestone, or handoff changes.
-- [ ] Mark consumer validation complete only when the required Unity Editor, test, build, and human/device acceptance evidence exists.
+- [ ] Mark consumer validation complete only when the project's required Unity Editor, test, build, and human/device acceptance evidence exists.
 
 ## Planned first consumer
 
