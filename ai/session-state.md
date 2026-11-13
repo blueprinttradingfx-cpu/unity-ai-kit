@@ -10,7 +10,7 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 
 | Phase / task | Status | Owner | Branch / tracker | Current checkpoint / next milestone |
 |---|---|---|---|---|
-| KIT-008 — Garden Alchemy consumer feedback and CI template adaptation | In Progress | `Gpt` | `gpt/garden-alchemy-consumer-feedback` / `ai/phase-KIT-008-consumer-feedback.md` | Add mainline-only licensed CI option, credential minimization, path-filter guidance, and adoption lessons from Garden Alchemy |
+| KIT-008 — Garden Alchemy consumer feedback and CI template adaptation | Ready for review | `Gpt` | `gpt/garden-alchemy-consumer-feedback` / PR #7 | Kit Validation run `43340306384` passed 18 tests, syntax checks, and actionlint; owner review before merge |
 
 ## Completed milestones
 
@@ -35,8 +35,8 @@ Read `ai/coordination-model.md` before coordinating parallel work. Backlog, bloc
 - **Last known good build:** Not applicable to this documentation/workflow-template repository.
 
 ## Handoff
-- **Exact stopping point:** KIT-007 is complete and merged as PR #5 (`f814ac4`). Garden Alchemy PR #41 is merged. Consumer feedback is being folded into KIT-008: support a mainline-only licensed CI model when independent PR approval is unavailable; minimize checkout token persistence; document safe path-filtering and disk-cleanup decisions. Garden Alchemy's hosted Unity activation failed before import/compile and the owner chose local validation. PRs #45 and #46 remain open for owner review.
-- **Next step:** finish KIT-008, validate the templates and regression tests, then open a PR for owner review. After the kit feedback is merged, return to Garden Alchemy Phase 10 local Unity/runtime acceptance.
+- **Exact stopping point:** KIT-008 changes are on PR #7. The new mainline-only Unity CI template, checkout credential minimization, trust-model docs, path-filter and runner-cleanup guidance, and security regression tests are complete. Kit Validation run `43340306384` passed 18 tests, source/config syntax checks, and actionlint. Garden Alchemy PRs #45 and #46 remain open for owner review; local Unity validation remains with the owner.
+- **Next step:** owner reviews and merges PR #7; then return to Garden Alchemy Phase 10 local Unity/runtime acceptance.
 - **Verified:** PRs #1–#3 and #5 are merged into `main`; PR #5 merge SHA is recorded above. Garden Alchemy's CI-hardening PR is merged; .NET balance smoke passed.
 - **Not verified:** successful hosted Unity Editor import/compile and EditMode tests (run in progress), PlayMode tests, target builds, and real-device behavior.
 - **Owner decisions waiting:** Phase 10 runtime flow and Android/device acceptance remain with Garden Alchemy owner.
